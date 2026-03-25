@@ -26,8 +26,23 @@ export function ThemeProvider({ children }) {
     }))
   }
 
+  function addSection(id) {
+    setTheme(prev => ({
+      ...prev,
+      [id]: { data: {}, template: {} },
+    }))
+  }
+
+  function removeSection(id) {
+    setTheme(prev => {
+      const next = { ...prev }
+      delete next[id]
+      return next
+    })
+  }
+
   return (
-    <ThemeContext.Provider value={{ theme, setTheme, updateSection }}>
+    <ThemeContext.Provider value={{ theme, setTheme, updateSection, addSection, removeSection }}>
       {children}
     </ThemeContext.Provider>
   )

@@ -59,12 +59,13 @@ function IconBtn({ onClick, title, disabled, children, t }) {
 }
 
 export default function SortablePanelItem({
-  id, label, isActive, isVis,
+  id, label, typeColor, isActive, isVis,
   index, orderLength, t,
-  onSelect, onMoveUp, onMoveDown, onToggleVisibility,
+  onSelect, onMoveUp, onMoveDown, onToggleVisibility, onDelete,
 }) {
   const [hovered, setHovered] = useState(false)
 
+  /* Use panel__${id} as the sortable ID to avoid collisions with canvas IDs */
   const {
     attributes,
     listeners,
@@ -72,7 +73,7 @@ export default function SortablePanelItem({
     transform,
     transition,
     isDragging,
-  } = useSortable({ id })
+  } = useSortable({ id: `panel__${id}` })
 
   return (
     <li
@@ -87,9 +88,9 @@ export default function SortablePanelItem({
       onMouseLeave={() => setHovered(false)}
     >
       <div style={{
-        display: 'flex', alignItems: 'center', gap: '4px',
-        padding: '4px 4px 4px 0', borderRadius: '6px',
-        borderLeft: isActive ? '3px solid #6366f1' : '3px solid transparent',
+        display: 'flex', alignItems: 'center', gap: '3px',
+        padding: '3px 3px 3px 0', borderRadius: '6px',
+        borderLeft: isActive ? `3px solid ${typeColor ?? '#6366f1'}` : '3px solid transparent',
         background: isActive ? t.activeItemBg : 'transparent',
         transition: 'all 0.2s ease',
       }}>
@@ -97,10 +98,10 @@ export default function SortablePanelItem({
         <button
           onClick={onSelect}
           style={{
-            flex: 1, textAlign: 'left', padding: '4px 8px',
+            flex: 1, textAlign: 'left', padding: '4px 6px',
             border: 'none', background: 'transparent',
             color: isActive ? t.textActive : (isVis ? t.textMuted : t.textLabel),
-            fontSize: '13px', fontWeight: isActive ? '500' : '400',
+            fontSize: '12px', fontWeight: isActive ? '500' : '400',
             cursor: 'pointer', fontFamily: 'Inter, sans-serif',
             whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
             opacity: isVis ? 1 : 0.45,
@@ -123,6 +124,31 @@ export default function SortablePanelItem({
         <IconBtn onClick={onToggleVisibility} title={isVis ? 'Hide' : 'Show'} t={t}>
           <IconEye color={isVis ? t.textMuted : t.textLabel} crossed={!isVis} />
         </IconBtn>
+
+        {/* Delete button */}
+        <button
+          onClick={onDelete}
+          title="Remove"
+          style={{
+            background: 'none',
+            border: `1px solid ${t.border}`,
+            borderRadius: '5px',
+            padding: '3px 5px',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexShrink: 0,
+            color: hovered ? '#f87171' : t.textLabel,
+            fontSize: '10px',
+            transition: 'color 0.15s, border-color 0.15s',
+            lineHeight: 1,
+          }}
+          onMouseEnter={e => { e.currentTarget.style.borderColor = '#f87171'; e.currentTarget.style.color = '#f87171' }}
+          onMouseLeave={e => { e.currentTarget.style.borderColor = t.border;   e.currentTarget.style.color = t.textLabel }}
+        >
+          ✕
+        </button>
 
         {/* Drag handle — right side, hover-only */}
         <div

@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 
-export default function SortableCanvasItem({ id, children, onSelect }) {
+export default function SortableCanvasItem({ id, children, onSelect, onDelete, onDuplicate }) {
   const [hovered, setHovered] = useState(false)
 
   const {
@@ -55,6 +55,70 @@ export default function SortableCanvasItem({ id, children, onSelect }) {
           ⠿
         </span>
       </div>
+
+      {/* Hover toolbar — top right corner */}
+      {hovered && (
+        <div
+          style={{
+            position: 'absolute',
+            top: 6,
+            right: 8,
+            display: 'flex',
+            gap: '4px',
+            zIndex: 20,
+          }}
+          onMouseEnter={e => e.stopPropagation()}
+        >
+          {/* Duplicate button */}
+          <button
+            onClick={e => { e.stopPropagation(); onDuplicate() }}
+            title="Duplicate"
+            style={{
+              background: 'rgba(20,20,20,0.85)',
+              border: '1px solid rgba(255,255,255,0.12)',
+              borderRadius: '5px',
+              color: '#ccc',
+              fontSize: '11px',
+              padding: '3px 7px',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '4px',
+              fontFamily: 'Inter, sans-serif',
+              backdropFilter: 'blur(4px)',
+              transition: 'background 0.12s',
+            }}
+            onMouseEnter={e => e.currentTarget.style.background = 'rgba(99,102,241,0.7)'}
+            onMouseLeave={e => e.currentTarget.style.background = 'rgba(20,20,20,0.85)'}
+          >
+            ⧉
+          </button>
+
+          {/* Delete button */}
+          <button
+            onClick={e => { e.stopPropagation(); onDelete() }}
+            title="Remove from canvas"
+            style={{
+              background: 'rgba(20,20,20,0.85)',
+              border: '1px solid rgba(255,255,255,0.12)',
+              borderRadius: '5px',
+              color: '#f87171',
+              fontSize: '11px',
+              padding: '3px 7px',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              fontFamily: 'Inter, sans-serif',
+              backdropFilter: 'blur(4px)',
+              transition: 'background 0.12s',
+            }}
+            onMouseEnter={e => e.currentTarget.style.background = 'rgba(239,68,68,0.6)'}
+            onMouseLeave={e => e.currentTarget.style.background = 'rgba(20,20,20,0.85)'}
+          >
+            ✕
+          </button>
+        </div>
+      )}
 
       {/* Preview — click to select */}
       <div onClick={() => onSelect(id)} style={{ cursor: 'pointer' }}>
