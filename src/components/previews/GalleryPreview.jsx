@@ -1,0 +1,128 @@
+import { useTheme } from '../../store/themeStore.jsx'
+
+const GRID_COLS = { '2': '1fr 1fr', '3': '1fr 1fr 1fr', '4': '1fr 1fr 1fr 1fr' }
+
+function hexToRgba(hex, alpha) {
+  const c = (hex || '').replace('#', '')
+  if (c.length !== 6) return `rgba(0,0,0,${alpha})`
+  return `rgba(${parseInt(c.slice(0,2),16)},${parseInt(c.slice(2,4),16)},${parseInt(c.slice(4,6),16)},${alpha})`
+}
+
+export default function GalleryPreview() {
+  const { theme } = useTheme()
+  const { data, template } = theme.gallery
+
+  const heading    = data.heading    || ''
+  const subheading = data.subheading || ''
+  const items      = data.items      || []
+
+  const textColor  = template.textColor  || '#111827'
+  const fontSize   = template.fontSize   || '14px'
+  const columns    = template.columns    || '3'
+  const gap        = template.gap        || '12px'
+  const radius     = template.borderRadius || '8px'
+  const captionBg  = template.captionBg  || '#000000'
+
+  const sectionStyle = {
+    backgroundColor: template.bgColor || '#f9fafb',
+    padding:         template.padding || '64px 32px',
+    width:           '100%',
+    boxSizing:       'border-box',
+  }
+
+  const headingStyle = {
+    color:      textColor,
+    fontSize:   `calc(${fontSize} * 1.9)`,
+    fontWeight: '800',
+    margin:     '0 0 10px',
+    textAlign:  'center',
+    lineHeight: '1.2',
+  }
+
+  const subheadingStyle = {
+    color:      textColor,
+    fontSize:   `calc(${fontSize} * 1.05)`,
+    opacity:    0.6,
+    margin:     '0 0 32px',
+    textAlign:  'center',
+    lineHeight: '1.6',
+  }
+
+  const gridStyle = {
+    display:             'grid',
+    gridTemplateColumns: GRID_COLS[columns] || GRID_COLS['3'],
+    gap,
+  }
+
+  const itemWrapStyle = {
+    position:     'relative',
+    paddingBottom:'75%',
+    borderRadius: radius,
+    overflow:     'hidden',
+    background:   '#e5e7eb',
+  }
+
+  const imgStyle = {
+    position:   'absolute',
+    top:        0,
+    left:       0,
+    width:      '100%',
+    height:     '100%',
+    objectFit:  'cover',
+  }
+
+  const placeholderStyle = {
+    position:       'absolute',
+    inset:          0,
+    display:        'flex',
+    alignItems:     'center',
+    justifyContent: 'center',
+    fontSize:       '28px',
+    opacity:        0.25,
+  }
+
+  const emptyStyle = {
+    color:     textColor,
+    opacity:   0.3,
+    fontSize,
+    textAlign: 'center',
+    padding:   '24px 0',
+  }
+
+  return (
+    <section style={sectionStyle}>
+      {heading    && <h2 style={headingStyle}>{heading}</h2>}
+      {subheading && <p style={subheadingStyle}>{subheading}</p>}
+
+      {items.length === 0 ? (
+        <p style={emptyStyle}>No images yet — add some in the editor.</p>
+      ) : (
+        <div style={gridStyle}>
+          {items.map((item, i) => (
+            <div key={i} style={itemWrapStyle}>
+              {item.image
+                ? <img src={item.image} alt={item.caption || ''} style={imgStyle} />
+                : <div style={placeholderStyle}>🖼</div>
+              }
+              {item.caption && (
+                <div style={{
+                  position:        'absolute',
+                  bottom:          0,
+                  left:            0,
+                  right:           0,
+                  background:      hexToRgba(captionBg, 0.72),
+                  color:           textColor,
+                  fontSize:        `calc(${fontSize} * 0.85)`,
+                  padding:         '6px 10px',
+                  backdropFilter:  'blur(4px)',
+                }}>
+                  {item.caption}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+    </section>
+  )
+}

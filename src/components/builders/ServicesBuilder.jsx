@@ -1,0 +1,136 @@
+import { useTheme } from '../../store/themeStore.jsx'
+import ColorInput from '../ui/ColorInput.jsx'
+
+const textTemplateFields = [
+  { key: 'fontSize',     label: 'Font Size',     placeholder: 'e.g. 15px' },
+  { key: 'borderRadius', label: 'Card Radius',   placeholder: 'e.g. 12px' },
+  { key: 'padding',      label: 'Section Padding', placeholder: 'e.g. 64px 32px' },
+]
+
+export default function ServicesBuilder() {
+  const { theme, updateSection } = useTheme()
+  const { data, template } = theme.services
+
+  const heading    = data.heading    ?? ''
+  const subheading = data.subheading ?? ''
+  const items      = data.items      ?? []
+
+  function handleData(key, value) {
+    updateSection('services', 'data', { ...data, [key]: value })
+  }
+
+  function handleTemplate(key, value) {
+    updateSection('services', 'template', { ...template, [key]: value })
+  }
+
+  function handleItemChange(index, field, value) {
+    const updated = items.map((item, i) =>
+      i === index ? { ...item, [field]: value } : item
+    )
+    updateSection('services', 'data', { ...data, items: updated })
+  }
+
+  function addItem() {
+    updateSection('services', 'data', {
+      ...data,
+      items: [...items, { icon: '', title: '', description: '', linkText: '', linkUrl: '' }],
+    })
+  }
+
+  function removeItem(index) {
+    updateSection('services', 'data', {
+      ...data,
+      items: items.filter((_, i) => i !== index),
+    })
+  }
+
+  return (
+    <div className="p-4 space-y-6">
+      <h2 className="text-lg font-semibold">Services</h2>
+
+      <section>
+        <h3 className="mb-3">Content</h3>
+        <div className="space-y-3">
+          <label className="flex flex-col gap-1">
+            Heading
+            <input type="text" value={heading} placeholder="e.g. What we offer"
+              onChange={e => handleData('heading', e.target.value)} />
+          </label>
+          <label className="flex flex-col gap-1">
+            Subheading
+            <input type="text" value={subheading} placeholder="e.g. Everything you need to grow."
+              onChange={e => handleData('subheading', e.target.value)} />
+          </label>
+        </div>
+      </section>
+
+      <section>
+        <h3 className="mb-3">Service Items</h3>
+        <div className="space-y-4">
+          {items.map((item, i) => (
+            <div key={i} style={{ borderRadius: '8px', border: '1px solid #3a3a3a', padding: '12px', position: 'relative' }}>
+              <button onClick={() => removeItem(i)} title="Remove link"
+                style={{ position: 'absolute', top: '8px', right: '8px' }}>×</button>
+              <div className="space-y-2 pr-6">
+                <label className="flex flex-col gap-1">
+                  Icon <span style={{ fontWeight: 400, opacity: 0.5 }}>(emoji or text)</span>
+                  <input type="text" value={item.icon} placeholder="e.g. 🚀"
+                    onChange={e => handleItemChange(i, 'icon', e.target.value)} />
+                </label>
+                <label className="flex flex-col gap-1">
+                  Title
+                  <input type="text" value={item.title} placeholder="e.g. Fast Delivery"
+                    onChange={e => handleItemChange(i, 'title', e.target.value)} />
+                </label>
+                <label className="flex flex-col gap-1">
+                  Description
+                  <input type="text" value={item.description} placeholder="e.g. Ship faster with our tools."
+                    onChange={e => handleItemChange(i, 'description', e.target.value)} />
+                </label>
+                <label className="flex flex-col gap-1">
+                  Link Text <span style={{ fontWeight: 400, opacity: 0.5 }}>(optional)</span>
+                  <input type="text" value={item.linkText} placeholder="e.g. Learn more"
+                    onChange={e => handleItemChange(i, 'linkText', e.target.value)} />
+                </label>
+                <label className="flex flex-col gap-1">
+                  Link URL
+                  <input type="text" value={item.linkUrl} placeholder="https://..."
+                    onChange={e => handleItemChange(i, 'linkUrl', e.target.value)} />
+                </label>
+              </div>
+            </div>
+          ))}
+          <button onClick={addItem}>+ Add Service</button>
+        </div>
+      </section>
+
+      <section>
+        <h3 className="mb-3">Style</h3>
+        <div className="space-y-3">
+          <ColorInput label="Background Color" value={template.bgColor      ?? '#000000'} onChange={v => handleTemplate('bgColor', v)} />
+          <ColorInput label="Text Color"        value={template.textColor    ?? '#000000'} onChange={v => handleTemplate('textColor', v)} />
+          <ColorInput label="Card Background"   value={template.cardBg       ?? '#000000'} onChange={v => handleTemplate('cardBg', v)} />
+          <ColorInput label="Accent Color"      value={template.accentColor  ?? '#000000'} onChange={v => handleTemplate('accentColor', v)} />
+
+          {textTemplateFields.map(({ key, label, placeholder }) => (
+            <label key={key} className="flex flex-col gap-1">
+              {label}
+              <input type="text" value={template[key] ?? ''} placeholder={placeholder}
+                onChange={e => handleTemplate(key, e.target.value)} />
+            </label>
+          ))}
+
+          <label className="flex flex-col gap-1">
+            Columns
+            <select value={template.columns ?? '3'} onChange={e => handleTemplate('columns', e.target.value)}
+              style={{ width: '100%' }}>
+              <option value="1">1 Column</option>
+              <option value="2">2 Columns</option>
+              <option value="3">3 Columns</option>
+            </select>
+          </label>
+        </div>
+      </section>
+    </div>
+  )
+}

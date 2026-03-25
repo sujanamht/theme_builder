@@ -1,0 +1,178 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+
+  html, body, #root {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', sans-serif;
+    background: #0f0f0f;
+    color: #ffffff;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── Builder panel inputs: shared ── */
+  .builder-panel input[type="text"],
+  .builder-panel input[type="url"],
+  .builder-panel input[type="email"] {
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-size: 13px;
+    width: 100%;
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s, background 0.2s, color 0.2s;
+    font-family: 'Inter', sans-serif;
+  }
+
+  .builder-panel input[type="text"]:focus,
+  .builder-panel input[type="url"]:focus,
+  .builder-panel input[type="email"]:focus {
+    border-color: #6366f1;
+    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+  }
+
+  .builder-panel input[type="color"] {
+    border-radius: 6px;
+    cursor: pointer;
+    padding: 2px;
+    width: 36px;
+    height: 30px;
+    transition: background 0.2s;
+  }
+
+  /* Remove button */
+  .builder-panel button[title="Remove link"] {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    line-height: 1;
+    padding: 0 4px;
+    transition: color 0.15s;
+  }
+
+  .builder-panel button[title="Remove link"]:hover {
+    color: #ef4444 !important;
+  }
+
+  /* Add link / generic builder buttons */
+  .builder-panel button:not([title="Remove link"]) {
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 12px;
+    cursor: pointer;
+    width: 100%;
+    transition: border-color 0.15s, color 0.15s, background 0.2s;
+    font-family: 'Inter', sans-serif;
+    background: none;
+  }
+
+  .builder-panel button:not([title="Remove link"]):hover {
+    border-color: #6366f1 !important;
+    color: #818cf8 !important;
+  }
+
+  /* ── DARK theme ── */
+  .builder-panel[data-theme="dark"] input[type="text"],
+  .builder-panel[data-theme="dark"] input[type="url"],
+  .builder-panel[data-theme="dark"] input[type="email"] {
+    background-color: #2a2a2a;
+    border: 1px solid #3a3a3a;
+    color: #ffffff;
+  }
+
+  .builder-panel[data-theme="dark"] input[type="text"]::placeholder,
+  .builder-panel[data-theme="dark"] input[type="url"]::placeholder {
+    color: #555;
+  }
+
+  .builder-panel[data-theme="dark"] input[type="color"] {
+    background: #2a2a2a;
+    border: 1px solid #3a3a3a;
+  }
+
+  .builder-panel[data-theme="dark"] label {
+    color: #aaa;
+    font-size: 12px;
+    font-weight: 500;
+  }
+
+  .builder-panel[data-theme="dark"] h3 {
+    color: #555;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .builder-panel[data-theme="dark"] h2 {
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .builder-panel[data-theme="dark"] button[title="Remove link"] {
+    color: #555;
+  }
+
+  .builder-panel[data-theme="dark"] button:not([title="Remove link"]) {
+    border: 1px dashed #3a3a3a;
+    color: #666;
+  }
+
+  /* ── LIGHT theme ── */
+  .builder-panel[data-theme="light"] input[type="text"],
+  .builder-panel[data-theme="light"] input[type="url"],
+  .builder-panel[data-theme="light"] input[type="email"] {
+    background-color: #f4f4f5;
+    border: 1px solid #d4d4d8;
+    color: #111111;
+  }
+
+  .builder-panel[data-theme="light"] input[type="text"]::placeholder,
+  .builder-panel[data-theme="light"] input[type="url"]::placeholder {
+    color: #a1a1aa;
+  }
+
+  .builder-panel[data-theme="light"] input[type="color"] {
+    background: #f4f4f5;
+    border: 1px solid #d4d4d8;
+  }
+
+  .builder-panel[data-theme="light"] label {
+    color: #52525b;
+    font-size: 12px;
+    font-weight: 500;
+  }
+
+  .builder-panel[data-theme="light"] h3 {
+    color: #a1a1aa;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .builder-panel[data-theme="light"] h2 {
+    color: #111111;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .builder-panel[data-theme="light"] button[title="Remove link"] {
+    color: #a1a1aa;
+  }
+
+  .builder-panel[data-theme="light"] button:not([title="Remove link"]) {
+    border: 1px dashed #d4d4d8;
+    color: #a1a1aa;
+  }
+}
