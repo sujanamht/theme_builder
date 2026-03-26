@@ -1,7 +1,7 @@
 import { useTheme } from '../../store/themeStore.jsx'
 
 /* ── Inline SVG icons ──────────────────────────────────────────────── */
-function IconInstagram({ size = 20, color }) {
+function IconInstagram({ size = 18, color }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
@@ -11,23 +11,7 @@ function IconInstagram({ size = 20, color }) {
   )
 }
 
-function IconTwitterX({ size = 20, color }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill={color}>
-      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-    </svg>
-  )
-}
-
-function IconLinkedIn({ size = 20, color }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill={color}>
-      <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-    </svg>
-  )
-}
-
-function IconFacebook({ size = 20, color }) {
+function IconFacebook({ size = 18, color }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill={color}>
       <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
@@ -35,189 +19,184 @@ function IconFacebook({ size = 20, color }) {
   )
 }
 
-const SOCIAL_ICONS = {
-  instagram: IconInstagram,
-  twitter:   IconTwitterX,
-  linkedin:  IconLinkedIn,
-  facebook:  IconFacebook,
+function IconTikTok({ size = 18, color }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill={color}>
+      <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.34 6.34 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.18 8.18 0 004.78 1.52V6.76a4.85 4.85 0 01-1.01-.07z"/>
+    </svg>
+  )
 }
 
-const SOCIAL_KEYS = ['instagram', 'twitter', 'linkedin', 'facebook']
+function IconPin({ size = 15, color }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/>
+    </svg>
+  )
+}
+
+function IconPhone({ size = 15, color }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.01 1.19 2 2 0 012 .01h3a2 2 0 012 1.72c.13 1 .37 1.97.72 2.9a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.17-1.17a2 2 0 012.11-.45c.93.35 1.9.59 2.9.72A2 2 0 0122 14.92v2z"/>
+    </svg>
+  )
+}
+
+function IconMail({ size = 15, color }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>
+    </svg>
+  )
+}
+
+function IconClock({ size = 15, color }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/>
+    </svg>
+  )
+}
+
+const SOCIAL_ICONS = { instagram: IconInstagram, facebook: IconFacebook, tiktok: IconTikTok }
+const SOCIAL_COLORS = { instagram: '#e1306c', facebook: '#1877f2', tiktok: '#010101' }
 
 export default function ContactPreview() {
   const { theme } = useTheme()
   const { data, template } = theme.contact
 
-  const bgColor     = template.bgColor     || '#f9fafb'
+  const bg          = template.bgColor     || '#ffffff'
   const textColor   = template.textColor   || '#111827'
   const accentColor = template.accentColor || '#6366f1'
-  const inputBg     = template.inputBg     || '#ffffff'
-  const fontSize    = template.fontSize    || '14px'
-  const padding     = template.padding     || '64px'
+  const padding     = `${template.padding ?? 64}px 32px`
 
-  const nameLabel    = data.nameLabel    || 'Your Name'
-  const emailLabel   = data.emailLabel   || 'Email Address'
-  const messageLabel = data.messageLabel || 'Message'
-  const submitText   = data.submitText   || 'Send Message'
+  const hasMap     = Boolean(data.mapsUrl)
+  const activeSocials = Object.entries(data.socials ?? {}).filter(([, url]) => Boolean(url))
 
-  const hasMap     = Boolean(data.mapUrl)
-  const socialUrls = SOCIAL_KEYS.filter(k => data[k])
+  const infoItems = [
+    data.address && { icon: IconPin,   label: 'Address', value: data.address },
+    data.phone   && { icon: IconPhone, label: 'Phone',   value: data.phone   },
+    data.email   && { icon: IconMail,  label: 'Email',   value: data.email   },
+    data.hours   && { icon: IconClock, label: 'Hours',   value: data.hours   },
+  ].filter(Boolean)
 
-  const sectionStyle = {
-    backgroundColor: bgColor,
-    padding:         `${parseInt(padding) || 64}px 32px`,
-    width:           '100%',
-    boxSizing:       'border-box',
-    color:           textColor,
-    fontSize,
-  }
+  const isEmpty = !data.heading && !data.subheading && infoItems.length === 0
 
-  const innerStyle = {
-    display:             'grid',
-    gridTemplateColumns: hasMap ? '1fr 1fr' : '1fr',
-    gap:                 '40px',
-    maxWidth:            '860px',
-    margin:              '0 auto',
-    alignItems:          'start',
-  }
-
-  const labelStyle = {
-    display:      'block',
-    fontSize:     `calc(${fontSize} * 0.9)`,
-    fontWeight:   '500',
-    color:        textColor,
-    marginBottom: '5px',
-  }
-
-  const inputStyle = {
-    width:        '100%',
-    boxSizing:    'border-box',
-    padding:      '9px 12px',
-    fontSize,
-    color:        textColor,
-    background:   inputBg,
-    border:       `1px solid ${accentColor}33`,
-    borderRadius: '6px',
-    outline:      'none',
-    display:      'block',
-  }
-
-  const textareaStyle = {
-    ...inputStyle,
-    minHeight:  '100px',
-    resize:     'vertical',
-    fontFamily: 'inherit',
-  }
-
-  const submitStyle = {
-    backgroundColor: accentColor,
-    color:           '#ffffff',
-    fontSize,
-    fontWeight:      '600',
-    padding:         '10px 28px',
-    borderRadius:    '6px',
-    border:          'none',
-    cursor:          'pointer',
-    marginTop:       '4px',
-    display:         'inline-block',
-  }
-
-  const socialRowStyle = {
-    display:    'flex',
-    gap:        '14px',
-    marginTop:  '20px',
-    flexWrap:   'wrap',
-    alignItems: 'center',
-  }
-
-  const iconLinkStyle = {
-    display:        'flex',
-    alignItems:     'center',
-    justifyContent: 'center',
-    width:          '38px',
-    height:         '38px',
-    borderRadius:   '50%',
-    background:     `${accentColor}18`,
-    flexShrink:     0,
-    textDecoration: 'none',
-  }
-
-  const mapStyle = {
-    width:        '100%',
-    aspectRatio:  '4/3',
-    borderRadius: '10px',
-    border:       'none',
-    display:      'block',
-  }
-
-  const mapPlaceholderStyle = {
-    width:          '100%',
-    aspectRatio:    '4/3',
-    borderRadius:   '10px',
-    background:     `${accentColor}10`,
-    border:         `2px dashed ${accentColor}40`,
-    display:        'flex',
-    alignItems:     'center',
-    justifyContent: 'center',
-    color:          textColor,
-    opacity:        0.4,
-    fontSize:       `calc(${fontSize} * 0.9)`,
-  }
+  const skel = (w, h, mb = 0) => ({
+    width: w, height: h, borderRadius: '6px',
+    backgroundColor: '#d1d5db', marginBottom: mb,
+  })
 
   return (
-    <section style={sectionStyle}>
-      <div style={innerStyle}>
-        {/* Left — form + social */}
-        <div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-            <div>
-              <span style={labelStyle}>{nameLabel}</span>
-              <input readOnly style={inputStyle} placeholder={nameLabel} />
-            </div>
-            <div>
-              <span style={labelStyle}>{emailLabel}</span>
-              <input readOnly style={inputStyle} placeholder={emailLabel} />
-            </div>
-            <div>
-              <span style={labelStyle}>{messageLabel}</span>
-              <textarea readOnly style={textareaStyle} placeholder={messageLabel} />
-            </div>
-            <div>
-              <button style={submitStyle}>{submitText}</button>
-            </div>
-          </div>
+    <section style={{ backgroundColor: bg, padding, width: '100%', boxSizing: 'border-box' }}>
+      <div style={{
+        display:             'grid',
+        gridTemplateColumns: '1fr 1fr',
+        gap:                 '48px',
+        maxWidth:            '1000px',
+        margin:              '0 auto',
+        alignItems:          'start',
+      }}>
 
-          {socialUrls.length > 0 && (
-            <div style={socialRowStyle}>
-              {socialUrls.map(key => {
-                const Icon = SOCIAL_ICONS[key]
-                return (
-                  <a
-                    key={key}
-                    href={data[key]}
-                    style={iconLinkStyle}
-                    onClick={e => e.preventDefault()}
-                    title={key.charAt(0).toUpperCase() + key.slice(1)}
-                  >
-                    <Icon size={18} color={accentColor} />
-                  </a>
-                )
-              })}
+        {/* ── Left: info ── */}
+        <div>
+          {isEmpty ? (
+            <>
+              <div style={skel('55%', '28px', 12)} />
+              <div style={skel('80%', '14px', 32)} />
+              <div style={skel('70%', '14px', 12)} />
+              <div style={skel('60%', '14px', 12)} />
+              <div style={skel('65%', '14px', 12)} />
+            </>
+          ) : (
+            <>
+              {data.heading && (
+                <h2 style={{ color: textColor, fontSize: '26px', fontWeight: '700', margin: '0 0 8px', lineHeight: '1.2' }}>
+                  {data.heading}
+                </h2>
+              )}
+              {data.subheading && (
+                <p style={{ color: textColor, fontSize: '15px', opacity: 0.7, margin: '0 0 28px', lineHeight: '1.6' }}>
+                  {data.subheading}
+                </p>
+              )}
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                {infoItems.map(({ icon: Icon, label, value }) => (
+                  <div key={label} style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
+                    <div style={{
+                      width: '34px', height: '34px', borderRadius: '8px',
+                      background: `${accentColor}15`, flexShrink: 0,
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    }}>
+                      <Icon size={15} color={accentColor} />
+                    </div>
+                    <div>
+                      <div style={{ color: textColor, fontSize: '11px', fontWeight: '600', opacity: 0.5, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '2px' }}>
+                        {label}
+                      </div>
+                      <div style={{ color: textColor, fontSize: '14px', lineHeight: '1.5', whiteSpace: 'pre-line' }}>
+                        {value}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {activeSocials.length > 0 && (
+                <div style={{ display: 'flex', gap: '10px', marginTop: '28px', flexWrap: 'wrap' }}>
+                  {activeSocials.map(([key, url]) => {
+                    const Icon  = SOCIAL_ICONS[key]
+                    const color = SOCIAL_COLORS[key] || accentColor
+                    return (
+                      <a
+                        key={key}
+                        href={url}
+                        onClick={e => e.preventDefault()}
+                        title={key.charAt(0).toUpperCase() + key.slice(1)}
+                        style={{
+                          width: '38px', height: '38px', borderRadius: '50%',
+                          background: `${color}18`,
+                          display: 'flex', alignItems: 'center', justifyContent: 'center',
+                          textDecoration: 'none', flexShrink: 0,
+                        }}
+                      >
+                        <Icon size={18} color={color} />
+                      </a>
+                    )
+                  })}
+                </div>
+              )}
+            </>
+          )}
+        </div>
+
+        {/* ── Right: map ── */}
+        <div>
+          {hasMap ? (
+            <iframe
+              src={data.mapsUrl}
+              style={{ width: '100%', aspectRatio: '4/3', borderRadius: '10px', border: 'none', display: 'block' }}
+              allowFullScreen=""
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              title="Map"
+            />
+          ) : (
+            <div style={{
+              width: '100%', aspectRatio: '4/3', borderRadius: '10px',
+              background: '#f3f4f6',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+            }}>
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px', opacity: 0.35 }}>
+                <IconPin size={28} color={textColor} />
+                <span style={{ fontSize: '12px', color: textColor, fontFamily: 'Inter, sans-serif' }}>Paste a Maps embed URL</span>
+              </div>
             </div>
           )}
         </div>
 
-        {/* Right — map (only rendered if hasMap or always shown as placeholder in two-col) */}
-        {hasMap ? (
-          <iframe
-            src={data.mapUrl}
-            style={mapStyle}
-            allowFullScreen=""
-            loading="lazy"
-            referrerPolicy="no-referrer-when-downgrade"
-            title="Map"
-          />
-        ) : null}
       </div>
     </section>
   )

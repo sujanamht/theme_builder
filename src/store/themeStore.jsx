@@ -104,7 +104,52 @@ const initialState = {
   cta:     { data: {}, template: {} },
   footer:  { data: {}, template: {} },
   hero:    { data: {}, template: {} },
-  contact: { data: {}, template: {} },
+  contact: {
+    data: {
+      heading:    '',
+      subheading: '',
+      address:    '',
+      phone:      '',
+      email:      '',
+      hours:      '',
+      mapsUrl:    '',
+      socials: {
+        instagram: '',
+        facebook:  '',
+        tiktok:    '',
+      },
+    },
+    template: {
+      bgColor:     '#ffffff',
+      textColor:   '#111827',
+      accentColor: '#6366f1',
+      padding:     64,
+    },
+  },
+
+  form: {
+    data: {
+      heading:     '',
+      subheading:  '',
+      submitLabel: '',
+      fields: {
+        name:     true,
+        email:    true,
+        phone:    false,
+        subject:  false,
+        message:  true,
+        consent:  false,
+      },
+      consentText: '',
+    },
+    template: {
+      bgColor:     '#ffffff',
+      textColor:   '#000000',
+      buttonBg:    '#6366f1',
+      buttonText:  '#ffffff',
+      padding:     48,
+    },
+  },
 }
 
 const ThemeContext = createContext(null)

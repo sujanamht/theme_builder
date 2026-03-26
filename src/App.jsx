@@ -24,6 +24,7 @@ import CTABuilder           from './components/builders/CTABuilder.jsx'
 import FooterBuilder        from './components/builders/FooterBuilder.jsx'
 import HeroBuilder          from './components/builders/HeroBuilder.jsx'
 import ContactBuilder       from './components/builders/ContactBuilder.jsx'
+import FormBuilder          from './components/builders/FormBuilder.jsx'
 
 import AnnouncementPreview  from './components/previews/AnnouncementPreview.jsx'
 import NavbarPreview        from './components/previews/NavbarPreview.jsx'
@@ -36,6 +37,7 @@ import CTAPreview           from './components/previews/CTAPreview.jsx'
 import FooterPreview        from './components/previews/FooterPreview.jsx'
 import HeroPreview          from './components/previews/HeroPreview.jsx'
 import ContactPreview       from './components/previews/ContactPreview.jsx'
+import FormPreview          from './components/previews/FormPreview.jsx'
 
 /* ─── registries (keyed by type, not instance id) ─── */
 const COMPONENT_LABELS = {
@@ -47,9 +49,10 @@ const COMPONENT_LABELS = {
   services:     'Services',
   gallery:      'Gallery',
   testimonial:  'Testimonial',
-  contact:      'Contact', 
+  contact:      'Contact',
   cta:          'CTA',
   footer:       'Footer',
+  form:         'Form',
 }
 
 /* Per-type accent colors for the library badge */
@@ -65,11 +68,10 @@ const TYPE_COLORS = {
   cta:          '#ef4444',  
   contact:      '#06b6d4',
   footer:       '#6b7280',
-
-
+  form:         '#a855f7',
 }
 
-const ALL_TYPES = ['announcement', 'navbar', 'about', 'services', 'carousel', 'testimonial', 'gallery', 'cta', 'footer', 'hero', 'contact']
+const ALL_TYPES = ['announcement', 'navbar', 'about', 'services', 'carousel', 'testimonial', 'gallery', 'cta', 'footer', 'hero', 'contact', 'form']
 
 const GLOBAL_TYPES = new Set(['announcement', 'navbar', 'footer'])
 
@@ -85,6 +87,7 @@ const BUILDERS = {
   footer:       <FooterBuilder />,
   hero:         <HeroBuilder />,
   contact:      <ContactBuilder />,
+  form:         <FormBuilder />,
 }
 
 const PREVIEWS = {
@@ -99,6 +102,7 @@ const PREVIEWS = {
   footer:       <FooterPreview />,
   hero:         <HeroPreview />,
   contact:      <ContactPreview />,
+  form:         <FormPreview />,
 }
 
 const INITIAL_VISIBILITY = { announcement: true, navbar: true,  carousel: true, about: true, services: true, testimonial: true, gallery: true, cta: true, footer: true }
