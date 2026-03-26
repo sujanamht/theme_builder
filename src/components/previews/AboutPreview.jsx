@@ -1,0 +1,133 @@
+import { useTheme } from '../../store/themeStore.jsx'
+import { useSelection } from '../../store/selectionContext.jsx'
+import CanvasUpload from '../ui/CanvasUpload.jsx'
+
+export default function AboutPreview() {
+  const { theme, updateSection } = useTheme()
+  const { data, template } = theme.about
+  const selectedId = useSelection()
+  const isActive = selectedId === 'about' || selectedId?.startsWith('about-')
+
+  const fontSize      = template.fontSize      || '16px'
+  const textColor     = template.textColor     || '#111827'
+  const imagePosition = template.imagePosition || 'left'
+  const hasImage      = Boolean(data.image)
+  const isEmpty       = !data.heading && !data.body
+
+  const sectionStyle = {
+    backgroundColor: template.bgColor || '#ffffff',
+    padding:         template.padding || '64px 32px',
+    width:           '100%',
+    boxSizing:       'border-box',
+  }
+
+  const rowStyle = {
+    display:       'flex',
+    flexDirection: imagePosition === 'right' ? 'row-reverse' : 'row',
+    gap:           '48px',
+    alignItems:    'stretch',
+    maxWidth:      '1100px',
+    margin:        '0 auto',
+  }
+
+  const colStyle = {
+    flex:     '1 1 0',
+    minWidth: 0,
+  }
+
+  const headingStyle = {
+    color:         textColor,
+    fontSize:      `calc(${fontSize} * 1.8)`,
+    fontWeight:    '700',
+    margin:        '0 0 16px',
+    lineHeight:    '1.2',
+    letterSpacing: '-0.01em',
+  }
+
+  const bodyStyle = {
+    color:      textColor,
+    fontSize,
+    lineHeight: '1.7',
+    opacity:    0.8,
+    margin:     '0 0 28px',
+  }
+
+  const btnStyle = {
+    display:         'inline-block',
+    backgroundColor: template.buttonBg   || '#0a0f2c',
+    color:           template.buttonText || '#ffffff',
+    fontSize,
+    fontWeight:      '600',
+    padding:         '12px 28px',
+    borderRadius:    '8px',
+    border:          'none',
+    cursor:          'pointer',
+    textDecoration:  'none',
+    lineHeight:      '1',
+  }
+
+  const imgStyle = {
+    width:      '100%',
+    height:     '100%',
+    objectFit:  'cover',
+    display:    'block',
+  }
+
+  // ── skeleton ────────────────────────────────────────────────────────────────
+
+  const skeletonBox = (w, h, mb = 0) => ({
+    width:           w,
+    height:          h,
+    borderRadius:    '6px',
+    backgroundColor: '#d1d5db',
+    marginBottom:    mb,
+  })
+
+  return (
+    <section style={sectionStyle}>
+      <div style={rowStyle}>
+        {/* Image column */}
+        <div style={colStyle}>
+          <CanvasUpload
+            hasImage={hasImage}
+            isActive={isActive}
+            onUpload={v => updateSection('about', 'data', { ...data, image: v })}
+            aspectRatio="4/3"
+            onCrop={v => updateSection('about', 'data', { ...data, image: v })}
+            style={{ width: '100%', minHeight: '320px', borderRadius: '8px', overflow: 'hidden' }}
+          >
+            <img src={data.image} alt="" style={imgStyle} />
+          </CanvasUpload>
+        </div>
+
+        {/* Text column */}
+        <div style={{ ...colStyle, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+          {isEmpty ? (
+            <>
+              <div style={skeletonBox('60%', '28px', 16)} />
+              <div style={skeletonBox('100%', '14px', 8)} />
+              <div style={skeletonBox('95%',  '14px', 8)} />
+              <div style={skeletonBox('98%',  '14px', 8)} />
+              <div style={skeletonBox('75%',  '14px', 28)} />
+              <div style={skeletonBox('120px', '40px', 0)} />
+            </>
+          ) : (
+            <>
+              {data.heading && <h2 style={headingStyle}>{data.heading}</h2>}
+              {data.body    && <p  style={bodyStyle}>{data.body}</p>}
+              {data.buttonText && (
+                <a
+                  href={data.buttonUrl || '#'}
+                  style={btnStyle}
+                  onClick={e => e.preventDefault()}
+                >
+                  {data.buttonText}
+                </a>
+              )}
+            </>
+          )}
+        </div>
+      </div>
+    </section>
+  )
+}

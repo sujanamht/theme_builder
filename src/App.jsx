@@ -19,6 +19,7 @@ import TestimonialBuilder   from './components/builders/TestimonialBuilder.jsx'
 import CarouselBuilder      from './components/builders/CarouselBuilder.jsx'
 import ServicesBuilder      from './components/builders/ServicesBuilder.jsx'
 import GalleryBuilder       from './components/builders/GalleryBuilder.jsx'
+import AboutBuilder         from './components/builders/AboutBuilder.jsx'
 import CTABuilder           from './components/builders/CTABuilder.jsx'
 import FooterBuilder        from './components/builders/FooterBuilder.jsx'
 import HeroBuilder          from './components/builders/HeroBuilder.jsx'
@@ -30,6 +31,7 @@ import TestimonialPreview   from './components/previews/TestimonialPreview.jsx'
 import CarouselPreview      from './components/previews/CarouselPreview.jsx'
 import ServicesPreview      from './components/previews/ServicesPreview.jsx'
 import GalleryPreview       from './components/previews/GalleryPreview.jsx'
+import AboutPreview         from './components/previews/AboutPreview.jsx'
 import CTAPreview           from './components/previews/CTAPreview.jsx'
 import FooterPreview        from './components/previews/FooterPreview.jsx'
 import HeroPreview          from './components/previews/HeroPreview.jsx'
@@ -39,35 +41,40 @@ import ContactPreview       from './components/previews/ContactPreview.jsx'
 const COMPONENT_LABELS = {
   announcement: 'Announcement',
   navbar:       'Navbar',
-  services:     'Services',
-  testimonial:  'Testimonial',
   carousel:     'Carousel',
+  hero:         'Hero', 
+  about:        'About',
+  services:     'Services',
   gallery:      'Gallery',
+  testimonial:  'Testimonial',
+  contact:      'Contact', 
   cta:          'CTA',
   footer:       'Footer',
-  hero:         'Hero',
-  contact:      'Contact',
 }
 
 /* Per-type accent colors for the library badge */
 const TYPE_COLORS = {
   announcement: '#f59e0b',
   navbar:       '#6366f1',
+  carousel:     '#3b82f6',  
+  hero:         '#f97316',
+  about:        '#6b7280',
+  gallery:      '#8b5cf6',  
   services:     '#10b981',
   testimonial:  '#ec4899',
-  carousel:     '#3b82f6',
-  gallery:      '#8b5cf6',
-  cta:          '#ef4444',
-  footer:       '#6b7280',
-  hero:         '#f97316',
+  cta:          '#ef4444',  
   contact:      '#06b6d4',
+  footer:       '#6b7280',
+
+
 }
 
-const ALL_TYPES = ['announcement', 'navbar', 'services', 'carousel', 'testimonial', 'gallery', 'cta', 'footer', 'hero', 'contact']
+const ALL_TYPES = ['announcement', 'navbar', 'about', 'services', 'carousel', 'testimonial', 'gallery', 'cta', 'footer', 'hero', 'contact']
 
 const BUILDERS = {
   announcement: <AnnouncementBuilder />,
   navbar:       <NavbarBuilder />,
+  about:        <AboutBuilder />,
   services:     <ServicesBuilder />,
   testimonial:  <TestimonialBuilder />,
   carousel:     <CarouselBuilder />,
@@ -81,6 +88,7 @@ const BUILDERS = {
 const PREVIEWS = {
   announcement: <AnnouncementPreview />,
   navbar:       <NavbarPreview />,
+  about:        <AboutPreview />,
   services:     <ServicesPreview />,
   testimonial:  <TestimonialPreview />,
   carousel:     <CarouselPreview />,
@@ -91,7 +99,7 @@ const PREVIEWS = {
   contact:      <ContactPreview />,
 }
 
-const INITIAL_VISIBILITY = { announcement: true, navbar: true, services: true, carousel: true, testimonial: true, gallery: true, cta: true, footer: true }
+const INITIAL_VISIBILITY = { announcement: true, navbar: true,  carousel: true, about: true, services: true, testimonial: true, gallery: true, cta: true, footer: true }
 
 /* ─── id helpers ─── */
 function getType(id)  { return id.replace(/-\d+$/, '') }

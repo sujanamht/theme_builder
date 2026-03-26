@@ -1,6 +1,6 @@
 import { createContext, useContext, useState } from 'react'
 
-const HOME_ORDER = ['announcement', 'navbar', 'services', 'carousel', 'testimonial', 'gallery', 'cta', 'footer']
+const HOME_ORDER = ['announcement', 'navbar',  'carousel','about','services', 'testimonial', 'footer']
 
 const initialState = {
   globalTheme: {
@@ -92,6 +92,7 @@ const initialState = {
     },
   },
 
+  about:   { data: {}, template: {} },
   cta:     { data: {}, template: {} },
   footer:  { data: {}, template: {} },
   hero:    { data: {}, template: {} },
