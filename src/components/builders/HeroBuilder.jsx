@@ -1,36 +1,34 @@
 import { useTheme } from '../../store/themeStore.jsx'
 import ColorInput from '../ui/ColorInput.jsx'
 import RangeField from '../ui/RangeField.jsx'
+import ImageUploader from '../ui/ImageUploader.jsx'
 
 const dataFields = [
-  { key: 'heading',             label: 'Heading',               placeholder: 'e.g. Ready to get started?' },
-  { key: 'subheading',          label: 'Subheading',            placeholder: 'e.g. Join thousands of happy customers.' },
-  { key: 'primaryButtonText',   label: 'Primary Button Text',   placeholder: 'e.g. Get Started' },
-  { key: 'primaryButtonUrl',    label: 'Primary Button URL',    placeholder: 'https://...' },
-  { key: 'secondaryButtonText', label: 'Secondary Button Text', placeholder: 'e.g. Learn More' },
-  { key: 'secondaryButtonUrl',  label: 'Secondary Button URL',  placeholder: 'https://...' },
+  { key: 'headline',      label: 'Headline',        placeholder: 'e.g. Build something great' },
+  { key: 'subheadline',   label: 'Subheadline',     placeholder: 'e.g. The fastest way to ship your idea.' },
+  { key: 'ctaText',       label: 'CTA Button Text', placeholder: 'e.g. Get Started' },
+  { key: 'ctaUrl',        label: 'CTA Button URL',  placeholder: 'https://...' },
 ]
 
 const textTemplateFields = [
-  { key: 'fontSize', label: 'Font Size', min: 10, max: 32,  step: 1 },
-  { key: 'padding',  label: 'Padding',   min: 0,  max: 120, step: 8 },
+  { key: 'minHeight', label: 'Min Height', min: 200, max: 800, step: 20 },
 ]
 
-export default function CTABuilder() {
+export default function HeroBuilder() {
   const { theme, updateSection } = useTheme()
-  const { data, template } = theme.cta
+  const { data, template } = theme.hero
 
   function handleData(key, value) {
-    updateSection('cta', 'data', { ...data, [key]: value })
+    updateSection('hero', 'data', { ...data, [key]: value })
   }
 
   function handleTemplate(key, value) {
-    updateSection('cta', 'template', { ...template, [key]: value })
+    updateSection('hero', 'template', { ...template, [key]: value })
   }
 
   return (
     <div className="p-4 space-y-6">
-      <h2 className="text-lg font-semibold">CTA</h2>
+      <h2 className="text-lg font-semibold">Hero</h2>
 
       <section>
         <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wide mb-3">Content</h3>
@@ -46,18 +44,21 @@ export default function CTABuilder() {
               />
             </label>
           ))}
+          <ImageUploader
+            label="Background Image"
+            value={data.bgImage ?? ''}
+            onChange={v => handleData('bgImage', v)}
+          />
         </div>
       </section>
 
       <section>
         <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wide mb-3">Style</h3>
         <div className="space-y-3">
-          <ColorInput label="Background Color"      value={template.bgColor          ?? '#000000'} onChange={v => handleTemplate('bgColor', v)} />
-          <ColorInput label="Text Color"            value={template.textColor        ?? '#000000'} onChange={v => handleTemplate('textColor', v)} />
-          <ColorInput label="Primary Button Bg"     value={template.primaryBtnBg     ?? '#000000'} onChange={v => handleTemplate('primaryBtnBg', v)} />
-          <ColorInput label="Primary Button Text"   value={template.primaryBtnText   ?? '#000000'} onChange={v => handleTemplate('primaryBtnText', v)} />
-          <ColorInput label="Secondary Button Bg"   value={template.secondaryBtnBg   ?? '#000000'} onChange={v => handleTemplate('secondaryBtnBg', v)} />
-          <ColorInput label="Secondary Button Text" value={template.secondaryBtnText ?? '#000000'} onChange={v => handleTemplate('secondaryBtnText', v)} />
+          <ColorInput label="Background Color" value={template.bgColor     ?? '#000000'} onChange={v => handleTemplate('bgColor', v)} />
+          <ColorInput label="Text Color"        value={template.textColor   ?? '#000000'} onChange={v => handleTemplate('textColor', v)} />
+          <ColorInput label="Button Color"      value={template.btnBg       ?? '#000000'} onChange={v => handleTemplate('btnBg', v)} />
+          <ColorInput label="Button Text Color" value={template.btnText     ?? '#000000'} onChange={v => handleTemplate('btnText', v)} />
 
           {textTemplateFields.map(({ key, label, min, max, step }) => (
             <RangeField
@@ -68,6 +69,16 @@ export default function CTABuilder() {
               min={min} max={max} step={step}
             />
           ))}
+
+          <label className="flex flex-col gap-1">
+            Button Border Radius
+            <RangeField
+              label="Button Radius"
+              value={template.btnRadius ?? ''}
+              onChange={v => handleTemplate('btnRadius', v)}
+              min={0} max={32} step={2}
+            />
+          </label>
 
           <label className="flex flex-col gap-1">
             Text Align

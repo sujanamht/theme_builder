@@ -1,9 +1,10 @@
 import { useTheme } from '../../store/themeStore.jsx'
 import ColorInput from '../ui/ColorInput.jsx'
+import RangeField from '../ui/RangeField.jsx'
 
 const textTemplateFields = [
-  { key: 'fontSize', label: 'Font Size', placeholder: 'e.g. 14px' },
-  { key: 'padding',  label: 'Padding',   placeholder: 'e.g. 40px 32px 24px' },
+  { key: 'fontSize', label: 'Font Size', min: 10, max: 32, step: 1 },
+  { key: 'padding',  label: 'Padding',   min: 0,  max: 96, step: 8 },
 ]
 
 export default function FooterBuilder() {
@@ -49,7 +50,7 @@ export default function FooterBuilder() {
       <h2 className="text-lg font-semibold">Footer</h2>
 
       <section>
-        <h3 className="mb-3">Content</h3>
+        <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wide mb-3">Content</h3>
         <div className="space-y-3">
           <label className="flex flex-col gap-1">
             Brand Name
@@ -70,7 +71,7 @@ export default function FooterBuilder() {
       </section>
 
       <section>
-        <h3 className="mb-3">Links</h3>
+        <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wide mb-3">Links</h3>
         <div className="space-y-3">
           {links.map((link, i) => (
             <div key={i} className="flex gap-2 items-start">
@@ -90,7 +91,7 @@ export default function FooterBuilder() {
       </section>
 
       <section>
-        <h3 className="mb-3">Style</h3>
+        <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wide mb-3">Style</h3>
         <div className="space-y-3">
           <ColorInput
             label="Background Color"
@@ -107,16 +108,14 @@ export default function FooterBuilder() {
             value={template.linkColor ?? '#000000'}
             onChange={v => handleTemplate('linkColor', v)}
           />
-          {textTemplateFields.map(({ key, label, placeholder }) => (
-            <label key={key} className="flex flex-col gap-1">
-              {label}
-              <input
-                type="text"
-                value={template[key] ?? ''}
-                placeholder={placeholder}
-                onChange={e => handleTemplate(key, e.target.value)}
-              />
-            </label>
+          {textTemplateFields.map(({ key, label, min, max, step }) => (
+            <RangeField
+              key={key}
+              label={label}
+              value={template[key] ?? ''}
+              onChange={v => handleTemplate(key, v)}
+              min={min} max={max} step={step}
+            />
           ))}
         </div>
       </section>

@@ -1,11 +1,12 @@
 import { useTheme } from '../../store/themeStore.jsx'
 import ColorInput from '../ui/ColorInput.jsx'
 import ImageUploader from '../ui/ImageUploader.jsx'
+import RangeField from '../ui/RangeField.jsx'
 
 const textTemplateFields = [
-  { key: 'fontSize',     label: 'Font Size',      placeholder: 'e.g. 14px' },
-  { key: 'borderRadius', label: 'Item Radius',     placeholder: 'e.g. 8px' },
-  { key: 'gap',          label: 'Grid Gap',        placeholder: 'e.g. 12px' },
+  { key: 'fontSize',     label: 'Font Size',   min: 10, max: 32, step: 1 },
+  { key: 'borderRadius', label: 'Item Radius',  min: 0,  max: 32, step: 2 },
+  { key: 'gap',          label: 'Grid Gap',     min: 4,  max: 48, step: 4 },
 ]
 
 export default function GalleryBuilder() {
@@ -50,7 +51,7 @@ export default function GalleryBuilder() {
       <h2 className="text-lg font-semibold">Gallery</h2>
 
       <section>
-        <h3 className="mb-3">Content</h3>
+        <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wide mb-3">Content</h3>
         <div className="space-y-3">
           <label className="flex flex-col gap-1">
             Heading
@@ -66,7 +67,7 @@ export default function GalleryBuilder() {
       </section>
 
       <section>
-        <h3 className="mb-3">Gallery Items</h3>
+        <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wide mb-3">Gallery Items</h3>
         <div className="space-y-4">
           {items.map((item, i) => (
             <div key={i} style={{ borderRadius: '8px', border: '1px solid #3a3a3a', padding: '12px', position: 'relative' }}>
@@ -91,18 +92,20 @@ export default function GalleryBuilder() {
       </section>
 
       <section>
-        <h3 className="mb-3">Style</h3>
+        <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wide mb-3">Style</h3>
         <div className="space-y-3">
           <ColorInput label="Background Color" value={template.bgColor    ?? '#000000'} onChange={v => handleTemplate('bgColor', v)} />
           <ColorInput label="Text Color"        value={template.textColor  ?? '#000000'} onChange={v => handleTemplate('textColor', v)} />
           <ColorInput label="Caption Background" value={template.captionBg ?? '#000000'} onChange={v => handleTemplate('captionBg', v)} />
 
-          {textTemplateFields.map(({ key, label, placeholder }) => (
-            <label key={key} className="flex flex-col gap-1">
-              {label}
-              <input type="text" value={template[key] ?? ''} placeholder={placeholder}
-                onChange={e => handleTemplate(key, e.target.value)} />
-            </label>
+          {textTemplateFields.map(({ key, label, min, max, step }) => (
+            <RangeField
+              key={key}
+              label={label}
+              value={template[key] ?? ''}
+              onChange={v => handleTemplate(key, v)}
+              min={min} max={max} step={step}
+            />
           ))}
 
           <label className="flex flex-col gap-1">

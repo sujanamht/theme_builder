@@ -1,5 +1,7 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { useTheme } from '../../store/themeStore.jsx'
+import { useSelection } from '../../store/selectionContext.jsx'
+import CanvasUpload from '../ui/CanvasUpload.jsx'
 
 function DropdownLink({ link, linkStyle, textColor, fontSize }) {
   const [open, setOpen] = useState(false)
@@ -67,13 +69,27 @@ function DropdownLink({ link, linkStyle, textColor, fontSize }) {
 }
 
 export default function NavbarPreview() {
-  const { theme } = useTheme()
+  const { theme, updateSection } = useTheme()
   const { data, template } = theme.navbar
+  const selectedId = useSelection()
+  const isActive = selectedId === 'navbar' || selectedId?.startsWith('navbar-')
 
   const logo     = data.logo     || ''
   const logoText = data.logoText || ''
   const links    = data.links    || []
   const isImage  = logo.startsWith('http') || logo.startsWith('data:')
+
+  const logoInputRef = useRef()
+  const [logoBadgeHovered, setLogoBadgeHovered] = useState(false)
+
+  function handleLogoFile(e) {
+    const file = e.target.files?.[0]
+    if (!file) return
+    const reader = new FileReader()
+    reader.onload = ev => updateSection('navbar', 'data', { ...data, logo: ev.target.result })
+    reader.readAsDataURL(file)
+    e.target.value = ''
+  }
 
   const navStyle = {
     backgroundColor: template.bgColor  || '#ffffff',
@@ -111,11 +127,58 @@ export default function NavbarPreview() {
 
   return (
     <nav style={navStyle}>
-      <a href="#" style={logoStyle}>
-        {isImage
-          ? <img src={logo} alt={logoText || 'logo'} style={{ height: '40px', width: 'auto', objectFit: 'contain', display: 'block' }} />
-          : <span style={logoStyle}>{logoText || 'Brand'}</span>}
-      </a>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+        {isImage ? (
+          <CanvasUpload
+            hasImage
+            isActive={isActive}
+            onUpload={v => updateSection('navbar', 'data', { ...data, logo: v })}
+            style={{ borderRadius: '6px', flexShrink: 0, height: '36px', width: 'auto', display: 'inline-block' }}
+          >
+            <img src={logo} alt={logoText || 'logo'} style={{ height: '36px', width: 'auto', objectFit: 'contain', display: 'block' }} />
+          </CanvasUpload>
+        ) : (
+          <>
+            <button
+              onClick={() => isActive && logoInputRef.current?.click()}
+              onMouseEnter={() => setLogoBadgeHovered(true)}
+              onMouseLeave={() => setLogoBadgeHovered(false)}
+              style={{
+                display:      'inline-flex',
+                alignItems:   'center',
+                padding:      '4px 10px',
+                borderRadius: '6px',
+                background:   logoBadgeHovered && isActive
+                  ? 'rgba(99,102,241,0.12)'
+                  : 'rgba(148,163,184,0.15)',
+                color:        logoBadgeHovered && isActive
+                  ? 'rgba(99,102,241,0.85)'
+                  : '#94a3b8',
+                fontSize:     '11px',
+                fontWeight:   '600',
+                letterSpacing:'0.06em',
+                cursor:       isActive ? 'pointer' : 'default',
+                userSelect:   'none',
+                border:       'none',
+                fontFamily:   'Inter, sans-serif',
+                transition:   'background 0.15s, color 0.15s',
+                flexShrink:   0,
+                whiteSpace:   'nowrap',
+              }}
+            >
+              LOGO +
+            </button>
+            <input
+              ref={logoInputRef}
+              type="file"
+              accept="image/*"
+              style={{ display: 'none' }}
+              onChange={handleLogoFile}
+            />
+            <a href="#" style={logoStyle}>{logoText || 'Brand'}</a>
+          </>
+        )}
+      </div>
 
       {links.length > 0 && (
         <ul style={linkListStyle}>

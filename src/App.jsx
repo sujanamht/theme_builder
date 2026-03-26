@@ -1,15 +1,17 @@
 import { useState, useEffect, useRef } from 'react'
 import { ThemeProvider } from './store/themeStore.jsx'
+import { SelectionContext } from './store/selectionContext.jsx'
 import { exportJSON } from './exports/exportJSON.js'
 import { useTheme } from './store/themeStore.jsx'
 import {
   DndContext, DragOverlay,
   PointerSensor, useSensor, useSensors,
-  useDraggable,
 } from '@dnd-kit/core'
 import { SortableContext, arrayMove, verticalListSortingStrategy } from '@dnd-kit/sortable'
-import SortableCanvasItem from './components/ui/SortableCanvasItem.jsx'
-import SortablePanelItem  from './components/ui/SortablePanelItem.jsx'
+import SortableCanvasItem  from './components/ui/SortableCanvasItem.jsx'
+import SortablePanelItem   from './components/ui/SortablePanelItem.jsx'
+import GlobalThemePanel    from './components/ui/GlobalThemePanel.jsx'
+import PagesPanel          from './components/ui/PagesPanel.jsx'
 
 import AnnouncementBuilder  from './components/builders/AnnouncementBuilder.jsx'
 import NavbarBuilder        from './components/builders/NavbarBuilder.jsx'
@@ -19,6 +21,8 @@ import ServicesBuilder      from './components/builders/ServicesBuilder.jsx'
 import GalleryBuilder       from './components/builders/GalleryBuilder.jsx'
 import CTABuilder           from './components/builders/CTABuilder.jsx'
 import FooterBuilder        from './components/builders/FooterBuilder.jsx'
+import HeroBuilder          from './components/builders/HeroBuilder.jsx'
+import ContactBuilder       from './components/builders/ContactBuilder.jsx'
 
 import AnnouncementPreview  from './components/previews/AnnouncementPreview.jsx'
 import NavbarPreview        from './components/previews/NavbarPreview.jsx'
@@ -28,6 +32,8 @@ import ServicesPreview      from './components/previews/ServicesPreview.jsx'
 import GalleryPreview       from './components/previews/GalleryPreview.jsx'
 import CTAPreview           from './components/previews/CTAPreview.jsx'
 import FooterPreview        from './components/previews/FooterPreview.jsx'
+import HeroPreview          from './components/previews/HeroPreview.jsx'
+import ContactPreview       from './components/previews/ContactPreview.jsx'
 
 /* ─── registries (keyed by type, not instance id) ─── */
 const COMPONENT_LABELS = {
@@ -39,6 +45,8 @@ const COMPONENT_LABELS = {
   gallery:      'Gallery',
   cta:          'CTA',
   footer:       'Footer',
+  hero:         'Hero',
+  contact:      'Contact',
 }
 
 /* Per-type accent colors for the library badge */
@@ -51,9 +59,11 @@ const TYPE_COLORS = {
   gallery:      '#8b5cf6',
   cta:          '#ef4444',
   footer:       '#6b7280',
+  hero:         '#f97316',
+  contact:      '#06b6d4',
 }
 
-const ALL_TYPES = ['announcement', 'navbar', 'services', 'carousel', 'testimonial', 'gallery', 'cta', 'footer']
+const ALL_TYPES = ['announcement', 'navbar', 'services', 'carousel', 'testimonial', 'gallery', 'cta', 'footer', 'hero', 'contact']
 
 const BUILDERS = {
   announcement: <AnnouncementBuilder />,
@@ -64,6 +74,8 @@ const BUILDERS = {
   gallery:      <GalleryBuilder />,
   cta:          <CTABuilder />,
   footer:       <FooterBuilder />,
+  hero:         <HeroBuilder />,
+  contact:      <ContactBuilder />,
 }
 
 const PREVIEWS = {
@@ -75,9 +87,10 @@ const PREVIEWS = {
   gallery:      <GalleryPreview />,
   cta:          <CTAPreview />,
   footer:       <FooterPreview />,
+  hero:         <HeroPreview />,
+  contact:      <ContactPreview />,
 }
 
-const INITIAL_ORDER      = ['announcement', 'navbar', 'services', 'carousel', 'testimonial', 'gallery', 'cta', 'footer']
 const INITIAL_VISIBILITY = { announcement: true, navbar: true, services: true, carousel: true, testimonial: true, gallery: true, cta: true, footer: true }
 
 /* ─── id helpers ─── */
@@ -266,69 +279,30 @@ function DragHandle({ side, onMouseDown, t, active }) {
   )
 }
 
-/* ─── library item (draggable from library panel) ─── */
-function LibraryItem({ type, instanceCount, t }) {
-  const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
-    id: `lib__${type}`,
-    data: { source: 'library', type },
-  })
-  const alreadyOnCanvas = instanceCount > 0
-
-  return (
-    <div
-      ref={setNodeRef}
-      {...listeners}
-      {...attributes}
-      title={alreadyOnCanvas ? `${COMPONENT_LABELS[type]} (${instanceCount} on canvas — drag to add another)` : `Drag to add ${COMPONENT_LABELS[type]}`}
-      style={{
-        display: 'flex', alignItems: 'center', gap: '8px',
-        padding: '5px 6px', borderRadius: '6px',
-        opacity: isDragging ? 0.3 : alreadyOnCanvas ? 0.5 : 1,
-        cursor: 'grab',
-        userSelect: 'none',
-        transition: 'background 0.1s, opacity 0.15s',
-      }}
-      onMouseEnter={e => { e.currentTarget.style.background = t.hoverBg }}
-      onMouseLeave={e => { e.currentTarget.style.background = 'transparent' }}
-    >
-      {/* Colored type badge */}
-      <div style={{
-        width: 18, height: 18, borderRadius: 4, flexShrink: 0,
-        background: TYPE_COLORS[type] ?? '#6366f1',
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-        fontSize: 9, fontWeight: 700, color: '#fff', fontFamily: 'Inter, sans-serif',
-      }}>
-        {COMPONENT_LABELS[type][0]}
-      </div>
-      <span style={{ flex: 1, color: t.textMuted, fontSize: '12px', fontFamily: 'Inter, sans-serif', whiteSpace: 'nowrap' }}>
-        {COMPONENT_LABELS[type]}
-      </span>
-      {instanceCount > 0 && (
-        <span style={{
-          fontSize: '9px', color: t.textLabel,
-          background: t.border, borderRadius: '3px',
-          padding: '1px 4px', flexShrink: 0,
-          fontFamily: 'Inter, sans-serif',
-        }}>
-          ×{instanceCount}
-        </span>
-      )}
-      <span style={{ color: t.textLabel, fontSize: '12px', userSelect: 'none', flexShrink: 0 }}>⠿</span>
-    </div>
-  )
-}
-
 /* ─── shell ─── */
 function Shell({
   selectedComponent, setSelectedComponent,
   isDark, setIsDark,
   leftOpen, setLeftOpen,
   rightOpen, setRightOpen,
-  order, setOrder,
   visibility, setVisibility,
 }) {
-  const { theme, addSection, removeSection } = useTheme()
+  const { theme, addSection, removeSection, updatePageOrder, removeSectionFromAllPages } = useTheme()
+
+  /* Derive active page order from store */
+  const activePage = theme.pages?.find(p => p.id === theme.activePage)
+  const order = activePage?.order ?? []
+  function setOrder(v) {
+    const next = typeof v === 'function' ? v(order) : v
+    updatePageOrder(theme.activePage, next)
+  }
   const t = tokens(isDark)
+
+  const [confirmingRemove, setConfirmingRemove] = useState(false)
+  const [addSectionOpen,   setAddSectionOpen]   = useState(false)
+  const [leftTab,          setLeftTab]          = useState('components')
+
+  useEffect(() => { setConfirmingRemove(false) }, [selectedComponent])
 
   /* canvas width resizing (renamed from isDragging to avoid conflict with dnd-kit) */
   const [previewMode, setPreviewMode] = useState('desktop')
@@ -400,7 +374,7 @@ function Shell({
   function removeItem(id) {
     removeSection(id)
     setVisibility(v => { const n = { ...v }; delete n[id]; return n })
-    setOrder(prev => prev.filter(k => k !== id))
+    removeSectionFromAllPages(id)
     if (selectedComponent === id) setSelectedComponent(null)
   }
 
@@ -422,19 +396,7 @@ function Shell({
     const aid = String(active.id)
     const oid = String(over.id)
 
-    if (aid.startsWith('lib__')) {
-      /* ── Library → Canvas: insert new instance ── */
-      const type  = aid.replace('lib__', '')
-      const newId = generateId(type, order)
-      addSection(newId)
-      setVisibility(v => ({ ...v, [newId]: true }))
-      if (order.includes(oid)) {
-        const idx = order.indexOf(oid)
-        setOrder(prev => [...prev.slice(0, idx), newId, ...prev.slice(idx)])
-      } else {
-        setOrder(prev => [...prev, newId])
-      }
-    } else if (aid.startsWith('panel__')) {
+    if (aid.startsWith('panel__')) {
       /* ── Panel list reorder ── */
       const realActive = aid.replace('panel__', '')
       const realOver   = oid.replace('panel__', '')
@@ -452,10 +414,6 @@ function Shell({
   const dotPattern  = `radial-gradient(circle, ${t.dotColor} 1px, transparent 1px)`
   const visibleKeys = order.filter(key => visibility[key])
 
-  /* count instances per type (for library badges) */
-  const typeCountMap = {}
-  order.forEach(id => { const tp = getType(id); typeCountMap[tp] = (typeCountMap[tp] ?? 0) + 1 })
-
   /* canvas card contents — no own DndContext, uses parent */
   const cardContents = (
     <SortableContext items={visibleKeys} strategy={verticalListSortingStrategy}>
@@ -464,7 +422,6 @@ function Shell({
           key={key}
           id={key}
           onSelect={setSelectedComponent}
-          onDelete={() => removeItem(key)}
           onDuplicate={() => duplicateItem(key)}
         >
           {PREVIEWS[getType(key)]}
@@ -531,59 +488,98 @@ function Shell({
             </ul>
           )}
 
-          {/* ── Expanded state: LIBRARY + ON CANVAS ── */}
+          {/* ── Expanded state: TABS + TAB CONTENT ── */}
           {leftOpen && (
             <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
 
-              {/* LIBRARY section */}
-              <div style={{ flexShrink: 0, borderBottom: `1px solid ${t.border}` }}>
-                <div style={{ padding: '10px 16px 4px' }}>
-                  <span style={{ color: t.textLabel, fontSize: '10px', fontWeight: '600', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
-                    Library
-                  </span>
-                </div>
-                <div style={{ padding: '2px 8px 6px' }}>
-                  {ALL_TYPES.map(type => (
-                    <LibraryItem
-                      key={type}
-                      type={type}
-                      instanceCount={typeCountMap[type] ?? 0}
-                      t={t}
-                    />
-                  ))}
-                </div>
+              {/* Tab bar */}
+              <div style={{ display: 'flex', borderBottom: `1px solid ${t.border}`, flexShrink: 0 }}>
+                {[['components', 'Components'], ['theme', 'Theme'], ['pages', 'Pages']].map(([key, label]) => {
+                  const isActive = leftTab === key
+                  return (
+                    <button
+                      key={key}
+                      onClick={() => setLeftTab(key)}
+                      style={{
+                        flex: 1, padding: '9px 0',
+                        border: 'none', borderBottom: isActive ? '2px solid #6366f1' : '2px solid transparent',
+                        background: isActive ? `${t.activeItemBg}` : 'transparent',
+                        color: isActive ? '#6366f1' : t.textMuted,
+                        fontSize: '11px', fontWeight: isActive ? '600' : '400',
+                        cursor: 'pointer', transition: 'color 0.15s, border-color 0.15s',
+                        fontFamily: 'Inter, sans-serif',
+                        marginBottom: '-1px',
+                      }}
+                    >
+                      {label}
+                    </button>
+                  )
+                })}
               </div>
 
-              {/* ON CANVAS section */}
-              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-                <div style={{ padding: '10px 16px 4px', flexShrink: 0 }}>
-                  <span style={{ color: t.textLabel, fontSize: '10px', fontWeight: '600', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
-                    On Canvas
-                  </span>
+              {/* Components tab */}
+              {leftTab === 'components' && (
+                <>
+                  {/* Add Section button */}
+                  <div style={{ padding: '10px 12px', flexShrink: 0, borderBottom: `1px solid ${t.border}` }}>
+                    <button
+                      onClick={() => setAddSectionOpen(true)}
+                      style={{
+                        width: '100%', padding: '7px 0',
+                        background: '#6366f1', border: 'none',
+                        borderRadius: '6px', color: '#fff',
+                        fontSize: '12px', fontWeight: '500',
+                        cursor: 'pointer', fontFamily: 'Inter, sans-serif',
+                        transition: 'background 0.15s',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '5px',
+                      }}
+                      onMouseEnter={e => { e.currentTarget.style.background = '#4f46e5' }}
+                      onMouseLeave={e => { e.currentTarget.style.background = '#6366f1' }}
+                    >
+                      <span style={{ fontSize: '14px', lineHeight: 1 }}>+</span> Add Section
+                    </button>
+                  </div>
+
+                  {/* ON CANVAS section */}
+                  <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+                    <div style={{ padding: '10px 16px 4px', flexShrink: 0 }}>
+                      <span style={{ color: t.textLabel, fontSize: '10px', fontWeight: '600', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
+                        On Canvas
+                      </span>
+                    </div>
+                    <ul style={{ flex: 1, margin: 0, padding: '0 8px', listStyle: 'none', overflowY: 'auto', overflowX: 'hidden' }}>
+                      <SortableContext items={order.map(k => `panel__${k}`)} strategy={verticalListSortingStrategy}>
+                        {order.map((key) => (
+                          <SortablePanelItem
+                            key={key}
+                            id={key}
+                            label={getLabel(key)}
+                            typeColor={TYPE_COLORS[getType(key)] ?? '#6366f1'}
+                            isActive={selectedComponent === key}
+                            isVis={visibility[key]}
+                            t={t}
+                            onSelect={() => setSelectedComponent(key)}
+                            onToggleVisibility={() => toggleVisibility(key)}
+                          />
+                        ))}
+                      </SortableContext>
+                    </ul>
+                  </div>
+                </>
+              )}
+
+              {/* Theme tab */}
+              {leftTab === 'theme' && (
+                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+                  <GlobalThemePanel isDark={isDark} setIsDark={setIsDark} />
                 </div>
-                <ul style={{ flex: 1, margin: 0, padding: '0 8px', listStyle: 'none', overflowY: 'auto', overflowX: 'hidden' }}>
-                  <SortableContext items={order.map(k => `panel__${k}`)} strategy={verticalListSortingStrategy}>
-                    {order.map((key, index) => (
-                      <SortablePanelItem
-                        key={key}
-                        id={key}
-                        label={getLabel(key)}
-                        typeColor={TYPE_COLORS[getType(key)] ?? '#6366f1'}
-                        isActive={selectedComponent === key}
-                        isVis={visibility[key]}
-                        index={index}
-                        orderLength={order.length}
-                        t={t}
-                        onSelect={() => setSelectedComponent(key)}
-                        onMoveUp={() => moveUp(index)}
-                        onMoveDown={() => moveDown(index)}
-                        onToggleVisibility={() => toggleVisibility(key)}
-                        onDelete={() => removeItem(key)}
-                      />
-                    ))}
-                  </SortableContext>
-                </ul>
-              </div>
+              )}
+
+              {/* Pages tab */}
+              {leftTab === 'pages' && (
+                <PagesPanel t={t} />
+              )}
+
             </div>
           )}
 
@@ -801,31 +797,175 @@ function Shell({
               )
             }
           </div>
+
+          {/* Remove Section footer */}
+          {selectedComponent && (
+            <div style={{ flexShrink: 0, borderTop: `1px solid ${t.border}`, padding: '12px 16px' }}>
+              {!confirmingRemove ? (
+                <button
+                  onClick={() => setConfirmingRemove(true)}
+                  style={{
+                    width: '100%', padding: '7px 0',
+                    background: 'transparent',
+                    border: `1px solid ${isDark ? '#3f1f1f' : '#fecaca'}`,
+                    borderRadius: '6px',
+                    color: isDark ? '#f87171' : '#dc2626',
+                    fontSize: '12px', fontWeight: '500',
+                    cursor: 'pointer', fontFamily: 'Inter, sans-serif',
+                    transition: 'background 0.15s, border-color 0.15s',
+                  }}
+                  onMouseEnter={e => { e.currentTarget.style.background = isDark ? 'rgba(239,68,68,0.08)' : 'rgba(239,68,68,0.06)' }}
+                  onMouseLeave={e => { e.currentTarget.style.background = 'transparent' }}
+                >
+                  Remove Section
+                </button>
+              ) : (
+                <div style={{
+                  background: isDark ? '#1f1212' : '#fff5f5',
+                  border: `1px solid ${isDark ? '#3f1f1f' : '#fecaca'}`,
+                  borderRadius: '8px', padding: '12px',
+                }}>
+                  <p style={{
+                    margin: '0 0 10px', fontSize: '12px', lineHeight: '1.5',
+                    color: isDark ? '#fca5a5' : '#991b1b',
+                    fontFamily: 'Inter, sans-serif',
+                  }}>
+                    Are you sure you want to remove this section? This action cannot be undone.
+                  </p>
+                  <div style={{ display: 'flex', gap: '8px' }}>
+                    <button
+                      onClick={() => {
+                        removeItem(selectedComponent)
+                        setConfirmingRemove(false)
+                      }}
+                      style={{
+                        flex: 1, padding: '6px 0',
+                        background: '#dc2626', border: 'none',
+                        borderRadius: '5px', color: '#fff',
+                        fontSize: '12px', fontWeight: '500',
+                        cursor: 'pointer', fontFamily: 'Inter, sans-serif',
+                        transition: 'background 0.15s',
+                      }}
+                      onMouseEnter={e => { e.currentTarget.style.background = '#b91c1c' }}
+                      onMouseLeave={e => { e.currentTarget.style.background = '#dc2626' }}
+                    >
+                      Confirm
+                    </button>
+                    <button
+                      onClick={() => setConfirmingRemove(false)}
+                      style={{
+                        flex: 1, padding: '6px 0',
+                        background: 'transparent',
+                        border: `1px solid ${t.border}`,
+                        borderRadius: '5px',
+                        color: t.textMuted,
+                        fontSize: '12px', fontWeight: '500',
+                        cursor: 'pointer', fontFamily: 'Inter, sans-serif',
+                        transition: 'background 0.15s',
+                      }}
+                      onMouseEnter={e => { e.currentTarget.style.background = t.hoverBg }}
+                      onMouseLeave={e => { e.currentTarget.style.background = 'transparent' }}
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
         </aside>
 
       </div>
 
-      {/* DragOverlay — shown only when dragging from library */}
-      <DragOverlay dropAnimation={null}>
-        {activeId?.startsWith('lib__') && (
-          <div style={{
-            padding: '6px 12px',
-            background: TYPE_COLORS[activeId.replace('lib__', '')] ?? '#6366f1',
-            color: '#fff',
-            borderRadius: '6px',
-            fontSize: '12px',
-            fontWeight: '600',
-            fontFamily: 'Inter, sans-serif',
-            boxShadow: '0 4px 20px rgba(0,0,0,0.35)',
-            cursor: 'grabbing',
-            userSelect: 'none',
-            whiteSpace: 'nowrap',
-            pointerEvents: 'none',
-          }}>
-            + {COMPONENT_LABELS[activeId.replace('lib__', '')]}
+      <DragOverlay dropAnimation={null} />
+
+      {/* ── Add Section modal ── */}
+      {addSectionOpen && (
+        <div
+          onClick={() => setAddSectionOpen(false)}
+          style={{
+            position: 'fixed', inset: 0,
+            background: 'rgba(0,0,0,0.55)',
+            backdropFilter: 'blur(2px)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            zIndex: 100,
+          }}
+        >
+          <div
+            onClick={e => e.stopPropagation()}
+            style={{
+              background: t.panel,
+              border: `1px solid ${t.border}`,
+              borderRadius: '12px',
+              padding: '20px',
+              width: '340px',
+              boxShadow: isDark
+                ? '0 24px 80px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.05)'
+                : '0 24px 80px rgba(0,0,0,0.18)',
+            }}
+          >
+            {/* Modal header */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
+              <span style={{ color: t.textActive, fontSize: '14px', fontWeight: '600', fontFamily: 'Inter, sans-serif' }}>
+                Add Section
+              </span>
+              <button
+                onClick={() => setAddSectionOpen(false)}
+                style={{
+                  background: 'none', border: 'none',
+                  color: t.textMuted, fontSize: '16px',
+                  cursor: 'pointer', lineHeight: 1, padding: '2px 4px',
+                  borderRadius: '4px',
+                }}
+                onMouseEnter={e => { e.currentTarget.style.color = t.textActive }}
+                onMouseLeave={e => { e.currentTarget.style.color = t.textMuted }}
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Component type grid */}
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+              {ALL_TYPES.map(type => (
+                <button
+                  key={type}
+                  onClick={() => { addItem(type); setAddSectionOpen(false) }}
+                  style={{
+                    display: 'flex', alignItems: 'center', gap: '10px',
+                    padding: '10px 12px',
+                    background: t.canvasBg,
+                    border: `1px solid ${t.border}`,
+                    borderRadius: '8px',
+                    cursor: 'pointer',
+                    textAlign: 'left',
+                    transition: 'border-color 0.15s, background 0.15s',
+                  }}
+                  onMouseEnter={e => {
+                    e.currentTarget.style.borderColor = TYPE_COLORS[type] ?? '#6366f1'
+                    e.currentTarget.style.background  = t.hoverBg
+                  }}
+                  onMouseLeave={e => {
+                    e.currentTarget.style.borderColor = t.border
+                    e.currentTarget.style.background  = t.canvasBg
+                  }}
+                >
+                  <div style={{
+                    width: 28, height: 28, borderRadius: 6, flexShrink: 0,
+                    background: TYPE_COLORS[type] ?? '#6366f1',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    fontSize: 11, fontWeight: 700, color: '#fff', fontFamily: 'Inter, sans-serif',
+                  }}>
+                    {COMPONENT_LABELS[type][0]}
+                  </div>
+                  <span style={{ color: t.textMuted, fontSize: '12px', fontFamily: 'Inter, sans-serif', fontWeight: '500' }}>
+                    {COMPONENT_LABELS[type]}
+                  </span>
+                </button>
+              ))}
+            </div>
           </div>
-        )}
-      </DragOverlay>
+        </div>
+      )}
     </DndContext>
   )
 }
@@ -836,19 +976,19 @@ export default function App() {
   const [isDark,      setIsDark]      = useState(true)
   const [leftOpen,    setLeftOpen]    = useState(true)
   const [rightOpen,   setRightOpen]   = useState(true)
-  const [order,       setOrder]       = useState(INITIAL_ORDER)
   const [visibility,  setVisibility]  = useState(INITIAL_VISIBILITY)
 
   return (
     <ThemeProvider>
-      <Shell
-        selectedComponent={selectedComponent} setSelectedComponent={setSelectedComponent}
-        isDark={isDark}         setIsDark={setIsDark}
-        leftOpen={leftOpen}     setLeftOpen={setLeftOpen}
-        rightOpen={rightOpen}   setRightOpen={setRightOpen}
-        order={order}           setOrder={setOrder}
-        visibility={visibility} setVisibility={setVisibility}
-      />
+      <SelectionContext.Provider value={selectedComponent}>
+        <Shell
+          selectedComponent={selectedComponent} setSelectedComponent={setSelectedComponent}
+          isDark={isDark}         setIsDark={setIsDark}
+          leftOpen={leftOpen}     setLeftOpen={setLeftOpen}
+          rightOpen={rightOpen}   setRightOpen={setRightOpen}
+          visibility={visibility} setVisibility={setVisibility}
+        />
+      </SelectionContext.Provider>
     </ThemeProvider>
   )
 }

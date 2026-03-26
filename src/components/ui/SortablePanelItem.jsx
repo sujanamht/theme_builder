@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 
@@ -17,55 +16,11 @@ function IconEye({ color, crossed }) {
   )
 }
 
-function IconChevronUp({ color }) {
-  return (
-    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-      <polyline points="18 15 12 9 6 15" />
-    </svg>
-  )
-}
-
-function IconChevronDown({ color }) {
-  return (
-    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-      <polyline points="6 9 12 15 18 9" />
-    </svg>
-  )
-}
-
-function IconBtn({ onClick, title, disabled, children, t }) {
-  return (
-    <button
-      onClick={onClick}
-      title={title}
-      disabled={disabled}
-      style={{
-        background: 'none',
-        border: `1px solid ${t.border}`,
-        borderRadius: '5px',
-        padding: '3px 5px',
-        cursor: disabled ? 'default' : 'pointer',
-        opacity: disabled ? 0.25 : 1,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        flexShrink: 0,
-        transition: 'all 0.2s ease',
-      }}
-    >
-      {children}
-    </button>
-  )
-}
-
 export default function SortablePanelItem({
   id, label, typeColor, isActive, isVis,
-  index, orderLength, t,
-  onSelect, onMoveUp, onMoveDown, onToggleVisibility, onDelete,
+  t,
+  onSelect, onToggleVisibility,
 }) {
-  const [hovered, setHovered] = useState(false)
-
-  /* Use panel__${id} as the sortable ID to avoid collisions with canvas IDs */
   const {
     attributes,
     listeners,
@@ -84,23 +39,39 @@ export default function SortablePanelItem({
         transition,
         opacity: isDragging ? 0.4 : 1,
       }}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
     >
       <div style={{
-        display: 'flex', alignItems: 'center', gap: '3px',
-        padding: '3px 3px 3px 0', borderRadius: '6px',
+        display: 'flex', alignItems: 'center', gap: '6px',
+        padding: '5px 6px 5px 4px', borderRadius: '6px',
         borderLeft: isActive ? `3px solid ${typeColor ?? '#6366f1'}` : '3px solid transparent',
         background: isActive ? t.activeItemBg : 'transparent',
         transition: 'all 0.2s ease',
       }}>
-        {/* Label button */}
+
+        {/* Drag handle */}
+        <div
+          {...listeners}
+          {...attributes}
+          title="Drag to reorder"
+          style={{
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            width: '20px', flexShrink: 0,
+            cursor: isDragging ? 'grabbing' : 'grab',
+            opacity: 0.4,
+          }}
+        >
+          <span style={{ color: t.textMuted, fontSize: '13px', lineHeight: 1, userSelect: 'none' }}>
+            ⠿
+          </span>
+        </div>
+
+        {/* Label */}
         <button
           onClick={onSelect}
           style={{
-            flex: 1, textAlign: 'left', padding: '4px 6px',
+            flex: 1, textAlign: 'left', padding: '2px 0',
             border: 'none', background: 'transparent',
-            color: isActive ? t.textActive : (isVis ? t.textMuted : t.textLabel),
+            color: isActive ? t.textActive : t.textMuted,
             fontSize: '12px', fontWeight: isActive ? '500' : '400',
             cursor: 'pointer', fontFamily: 'Inter, sans-serif',
             whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
@@ -110,25 +81,10 @@ export default function SortablePanelItem({
           {label}
         </button>
 
-        {/* Up / Down arrows */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1px' }}>
-          <IconBtn onClick={onMoveUp}   title="Move up"   disabled={index === 0}             t={t}>
-            <IconChevronUp   color={t.textMuted} />
-          </IconBtn>
-          <IconBtn onClick={onMoveDown} title="Move down" disabled={index === orderLength - 1} t={t}>
-            <IconChevronDown color={t.textMuted} />
-          </IconBtn>
-        </div>
-
         {/* Visibility toggle */}
-        <IconBtn onClick={onToggleVisibility} title={isVis ? 'Hide' : 'Show'} t={t}>
-          <IconEye color={isVis ? t.textMuted : t.textLabel} crossed={!isVis} />
-        </IconBtn>
-
-        {/* Delete button */}
         <button
-          onClick={onDelete}
-          title="Remove"
+          onClick={onToggleVisibility}
+          title={isVis ? 'Hide' : 'Show'}
           style={{
             background: 'none',
             border: `1px solid ${t.border}`,
@@ -139,35 +95,10 @@ export default function SortablePanelItem({
             alignItems: 'center',
             justifyContent: 'center',
             flexShrink: 0,
-            color: hovered ? '#f87171' : t.textLabel,
-            fontSize: '10px',
-            transition: 'color 0.15s, border-color 0.15s',
-            lineHeight: 1,
           }}
-          onMouseEnter={e => { e.currentTarget.style.borderColor = '#f87171'; e.currentTarget.style.color = '#f87171' }}
-          onMouseLeave={e => { e.currentTarget.style.borderColor = t.border;   e.currentTarget.style.color = t.textLabel }}
         >
-          ✕
+          <IconEye color={isVis ? t.textMuted : t.textLabel} crossed={!isVis} />
         </button>
-
-        {/* Drag handle — right side, hover-only */}
-        <div
-          {...listeners}
-          {...attributes}
-          title="Drag to reorder"
-          style={{
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            width: '18px', flexShrink: 0,
-            cursor: isDragging ? 'grabbing' : 'grab',
-            opacity: hovered ? 0.6 : 0,
-            transition: 'opacity 0.15s',
-            paddingRight: '4px',
-          }}
-        >
-          <span style={{ color: t.textMuted, fontSize: '13px', lineHeight: 1, userSelect: 'none' }}>
-            ⠿
-          </span>
-        </div>
       </div>
     </li>
   )

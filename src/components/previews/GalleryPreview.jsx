@@ -1,4 +1,6 @@
 import { useTheme } from '../../store/themeStore.jsx'
+import { useSelection } from '../../store/selectionContext.jsx'
+import CanvasUpload from '../ui/CanvasUpload.jsx'
 
 const GRID_COLS = { '2': '1fr 1fr', '3': '1fr 1fr 1fr', '4': '1fr 1fr 1fr 1fr' }
 
@@ -9,12 +11,19 @@ function hexToRgba(hex, alpha) {
 }
 
 export default function GalleryPreview() {
-  const { theme } = useTheme()
+  const { theme, updateSection } = useTheme()
   const { data, template } = theme.gallery
+  const selectedId = useSelection()
+  const isActive = selectedId === 'gallery' || selectedId?.startsWith('gallery-')
 
   const heading    = data.heading    || ''
   const subheading = data.subheading || ''
   const items      = data.items      || []
+
+  function handleImageUpload(index, imageUrl) {
+    const updated = items.map((item, i) => i === index ? { ...item, image: imageUrl } : item)
+    updateSection('gallery', 'data', { ...data, items: updated })
+  }
 
   const textColor  = template.textColor  || '#111827'
   const fontSize   = template.fontSize   || '14px'
@@ -71,16 +80,6 @@ export default function GalleryPreview() {
     objectFit:  'cover',
   }
 
-  const placeholderStyle = {
-    position:       'absolute',
-    inset:          0,
-    display:        'flex',
-    alignItems:     'center',
-    justifyContent: 'center',
-    fontSize:       '28px',
-    opacity:        0.25,
-  }
-
   const emptyStyle = {
     color:     textColor,
     opacity:   0.3,
@@ -99,11 +98,14 @@ export default function GalleryPreview() {
       ) : (
         <div style={gridStyle}>
           {items.map((item, i) => (
-            <div key={i} style={itemWrapStyle}>
-              {item.image
-                ? <img src={item.image} alt={item.caption || ''} style={imgStyle} />
-                : <div style={placeholderStyle}>🖼</div>
-              }
+            <CanvasUpload
+              key={i}
+              hasImage={!!item.image}
+              isActive={isActive}
+              onUpload={v => handleImageUpload(i, v)}
+              style={itemWrapStyle}
+            >
+              <img src={item.image} alt={item.caption || ''} style={imgStyle} />
               {item.caption && (
                 <div style={{
                   position:        'absolute',
@@ -119,7 +121,7 @@ export default function GalleryPreview() {
                   {item.caption}
                 </div>
               )}
-            </div>
+            </CanvasUpload>
           ))}
         </div>
       )}

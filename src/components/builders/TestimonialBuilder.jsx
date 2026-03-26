@@ -1,11 +1,12 @@
 import { useTheme } from '../../store/themeStore.jsx'
 import ColorInput from '../ui/ColorInput.jsx'
 import ImageUploader from '../ui/ImageUploader.jsx'
+import RangeField from '../ui/RangeField.jsx'
 
 const textTemplateFields = [
-  { key: 'fontSize',     label: 'Font Size',       placeholder: 'e.g. 14px' },
-  { key: 'borderRadius', label: 'Card Radius',      placeholder: 'e.g. 12px' },
-  { key: 'padding',      label: 'Section Padding',  placeholder: 'e.g. 48px 24px' },
+  { key: 'fontSize',     label: 'Font Size',       min: 10, max: 32,  step: 1 },
+  { key: 'borderRadius', label: 'Card Radius',      min: 0,  max: 32,  step: 2 },
+  { key: 'padding',      label: 'Section Padding',  min: 0,  max: 120, step: 8 },
 ]
 
 export default function TestimonialBuilder() {
@@ -49,7 +50,7 @@ export default function TestimonialBuilder() {
       <h2 className="text-lg font-semibold">Testimonial</h2>
 
       <section>
-        <h3 className="mb-3">Content</h3>
+        <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wide mb-3">Content</h3>
         <label className="flex flex-col gap-1">
           Section Heading
           <input
@@ -62,7 +63,7 @@ export default function TestimonialBuilder() {
       </section>
 
       <section>
-        <h3 className="mb-3">Testimonials</h3>
+        <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wide mb-3">Testimonials</h3>
         <div className="space-y-4">
           {items.map((item, i) => (
             <div key={i} style={{ borderRadius: '8px', border: '1px solid #3a3a3a', padding: '12px', position: 'relative' }}>
@@ -102,7 +103,7 @@ export default function TestimonialBuilder() {
       </section>
 
       <section>
-        <h3 className="mb-3">Style</h3>
+        <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wide mb-3">Style</h3>
         <div className="space-y-3">
           <ColorInput
             label="Background Color"
@@ -119,16 +120,14 @@ export default function TestimonialBuilder() {
             value={template.cardBg ?? '#000000'}
             onChange={v => handleTemplate('cardBg', v)}
           />
-          {textTemplateFields.map(({ key, label, placeholder }) => (
-            <label key={key} className="flex flex-col gap-1">
-              {label}
-              <input
-                type="text"
-                value={template[key] ?? ''}
-                placeholder={placeholder}
-                onChange={e => handleTemplate(key, e.target.value)}
-              />
-            </label>
+          {textTemplateFields.map(({ key, label, min, max, step }) => (
+            <RangeField
+              key={key}
+              label={label}
+              value={template[key] ?? ''}
+              onChange={v => handleTemplate(key, v)}
+              min={min} max={max} step={step}
+            />
           ))}
         </div>
       </section>

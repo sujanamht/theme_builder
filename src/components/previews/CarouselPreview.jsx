@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import { useTheme } from '../../store/themeStore.jsx'
+import { useSelection } from '../../store/selectionContext.jsx'
+import CanvasUpload from '../ui/CanvasUpload.jsx'
 
 function ArrowLeft({ color }) {
   return (
@@ -20,12 +22,20 @@ function ArrowRight({ color }) {
 }
 
 export default function CarouselPreview() {
-  const { theme } = useTheme()
+  const { theme, updateSection } = useTheme()
   const { data, template } = theme.carousel
+  const selectedId = useSelection()
+  const isActive = selectedId === 'carousel' || selectedId?.startsWith('carousel-')
+
   const [activeIndex, setActiveIndex] = useState(0)
 
   const slides = data.slides ?? []
   const count  = slides.length
+
+  function handleSlideUpload(index, imageUrl) {
+    const updated = slides.map((s, i) => i === index ? { ...s, image: imageUrl } : s)
+    updateSection('carousel', 'data', { ...data, slides: updated })
+  }
 
   const arrowColor = template.arrowColor || '#ffffff'
   const dotColor   = template.dotColor   || '#ffffff'
@@ -125,32 +135,16 @@ export default function CarouselPreview() {
     zIndex:         3,
   }
 
-  const placeholderStyle = {
-    ...slideBaseStyle,
-    background: template.bgColor || '#2a2a3e',
-    flexDirection: 'column',
-    gap: '8px',
-  }
-
-  const placeholderIconStyle = {
-    color:   template.textColor || '#ffffff',
-    opacity: 0.2,
-    fontSize: '40px',
-    lineHeight: 1,
-  }
-
-  const placeholderTextStyle = {
-    color:    template.textColor || '#ffffff',
-    opacity:  0.25,
-    fontSize: template.fontSize  || '16px',
-  }
-
   if (count === 0) {
     return (
-      <div style={{ ...wrapperStyle, display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: '8px' }}>
-        <span style={placeholderIconStyle}>▤</span>
-        <span style={placeholderTextStyle}>No slides yet — add some in the editor.</span>
-      </div>
+      <CanvasUpload
+        hasImage={false}
+        isActive={isActive}
+        onUpload={v => {
+          updateSection('carousel', 'data', { ...data, slides: [{ image: v, title: '', subtitle: '' }] })
+        }}
+        style={{ ...wrapperStyle }}
+      />
     )
   }
 
@@ -159,24 +153,18 @@ export default function CarouselPreview() {
       {/* Slide track */}
       <div style={trackStyle}>
         {slides.map((slide, i) => (
-          <div
+          <CanvasUpload
             key={i}
-            style={
-              slide.image
-                ? { ...slideBaseStyle, backgroundImage: `url(${slide.image})` }
-                : placeholderStyle
+            hasImage={!!slide.image}
+            isActive={isActive && i === safeIndex}
+            onUpload={v => handleSlideUpload(i, v)}
+            style={slide.image
+              ? { ...slideBaseStyle, backgroundImage: `url(${slide.image})` }
+              : slideBaseStyle
             }
           >
-            {/* Dim overlay when image present */}
-            {slide.image && <div style={overlayStyle} />}
-
-            {/* Placeholder icon when no image */}
-            {!slide.image && (
-              <>
-                <span style={placeholderIconStyle}>▤</span>
-                <span style={placeholderTextStyle}>No image</span>
-              </>
-            )}
+            {/* Dim gradient overlay */}
+            <div style={overlayStyle} />
 
             {/* Title / subtitle */}
             {(slide.title || slide.subtitle) && (
@@ -185,7 +173,7 @@ export default function CarouselPreview() {
                 {slide.subtitle && <p style={subtitleStyle}>{slide.subtitle}</p>}
               </div>
             )}
-          </div>
+          </CanvasUpload>
         ))}
       </div>
 

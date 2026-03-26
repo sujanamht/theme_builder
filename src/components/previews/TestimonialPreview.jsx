@@ -1,4 +1,6 @@
 import { useTheme } from '../../store/themeStore.jsx'
+import { useSelection } from '../../store/selectionContext.jsx'
+import CanvasUpload from '../ui/CanvasUpload.jsx'
 
 function getInitials(name) {
   if (!name) return '?'
@@ -19,11 +21,18 @@ function avatarColor(name) {
 }
 
 export default function TestimonialPreview() {
-  const { theme } = useTheme()
+  const { theme, updateSection } = useTheme()
   const { data, template } = theme.testimonial
+  const selectedId = useSelection()
+  const isActive = selectedId === 'testimonial' || selectedId?.startsWith('testimonial-')
 
   const heading = data.heading || 'What our customers say'
   const items   = data.items   || []
+
+  function handleAvatarUpload(index, imageUrl) {
+    const updated = items.map((item, i) => i === index ? { ...item, avatar: imageUrl } : item)
+    updateSection('testimonial', 'data', { ...data, items: updated })
+  }
 
   const sectionStyle = {
     backgroundColor: template.bgColor  || '#f9fafb',
@@ -115,27 +124,21 @@ export default function TestimonialPreview() {
 
               {/* Author row */}
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                {item.avatar ? (
+                <CanvasUpload
+                  hasImage={!!item.avatar}
+                  isActive={isActive}
+                  onUpload={v => handleAvatarUpload(i, v)}
+                  style={avatarBaseStyle}
+                  compact
+                  shape="circle"
+                >
                   <img
                     src={item.avatar}
                     alt={item.name}
-                    style={avatarBaseStyle}
+                    style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%', display: 'block' }}
                     onError={e => { e.currentTarget.style.display = 'none' }}
                   />
-                ) : (
-                  <div style={{
-                    ...avatarBaseStyle,
-                    background:     avatarColor(item.name),
-                    display:        'flex',
-                    alignItems:     'center',
-                    justifyContent: 'center',
-                    color:          '#fff',
-                    fontSize:       '12px',
-                    fontWeight:     '600',
-                  }}>
-                    {getInitials(item.name)}
-                  </div>
-                )}
+                </CanvasUpload>
                 <div>
                   <p style={nameStyle}>{item.name || 'Name'}</p>
                   <p style={roleStyle}>{item.role || 'Role'}</p>

@@ -1,10 +1,11 @@
 import { useTheme } from '../../store/themeStore.jsx'
 import ColorInput from '../ui/ColorInput.jsx'
 import ImageUploader from '../ui/ImageUploader.jsx'
+import RangeField from '../ui/RangeField.jsx'
 
 const textTemplateFields = [
-  { key: 'fontSize', label: 'Font Size',    placeholder: 'e.g. 16px' },
-  { key: 'height',   label: 'Slide Height', placeholder: 'e.g. 360px' },
+  { key: 'fontSize', label: 'Font Size',    min: 10,  max: 32,  step: 1  },
+  { key: 'height',   label: 'Slide Height', min: 200, max: 700, step: 20 },
 ]
 
 export default function CarouselBuilder() {
@@ -43,7 +44,7 @@ export default function CarouselBuilder() {
       <h2 className="text-lg font-semibold">Carousel</h2>
 
       <section>
-        <h3 className="mb-3">Slides</h3>
+        <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wide mb-3">Slides</h3>
         <div className="space-y-4">
           {slides.map((slide, i) => (
             <div key={i} style={{ borderRadius: '8px', border: '1px solid #3a3a3a', padding: '12px', position: 'relative' }}>
@@ -78,7 +79,7 @@ export default function CarouselBuilder() {
       </section>
 
       <section>
-        <h3 className="mb-3">Style</h3>
+        <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wide mb-3">Style</h3>
         <div className="space-y-3">
           <ColorInput
             label="Background Color"
@@ -100,16 +101,14 @@ export default function CarouselBuilder() {
             value={template.dotColor ?? '#000000'}
             onChange={v => handleTemplate('dotColor', v)}
           />
-          {textTemplateFields.map(({ key, label, placeholder }) => (
-            <label key={key} className="flex flex-col gap-1">
-              {label}
-              <input
-                type="text"
-                value={template[key] ?? ''}
-                placeholder={placeholder}
-                onChange={e => handleTemplate(key, e.target.value)}
-              />
-            </label>
+          {textTemplateFields.map(({ key, label, min, max, step }) => (
+            <RangeField
+              key={key}
+              label={label}
+              value={template[key] ?? ''}
+              onChange={v => handleTemplate(key, v)}
+              min={min} max={max} step={step}
+            />
           ))}
         </div>
       </section>

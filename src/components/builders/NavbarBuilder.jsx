@@ -1,11 +1,12 @@
 import { useTheme } from '../../store/themeStore.jsx'
 import ColorInput from '../ui/ColorInput.jsx'
 import ImageUploader from '../ui/ImageUploader.jsx'
+import RangeField from '../ui/RangeField.jsx'
 
 const textTemplateFields = [
-  { key: 'fontSize',    label: 'Font Size',    placeholder: 'e.g. 16px' },
-  { key: 'padding',     label: 'Padding',      placeholder: 'e.g. 12px 24px' },
-  { key: 'linkSpacing', label: 'Link Spacing', placeholder: 'e.g. 24px' },
+  { key: 'fontSize',    label: 'Font Size',    min: 10, max: 32, step: 1 },
+  { key: 'padding',     label: 'Padding',      min: 0,  max: 64, step: 4 },
+  { key: 'linkSpacing', label: 'Link Spacing', min: 8,  max: 48, step: 4 },
 ]
 
 export default function NavbarBuilder() {
@@ -170,16 +171,14 @@ export default function NavbarBuilder() {
             value={template.textColor ?? '#000000'}
             onChange={v => handleTemplate('textColor', v)}
           />
-          {textTemplateFields.map(({ key, label, placeholder }) => (
-            <label key={key} className="flex flex-col gap-1">
-              {label}
-              <input
-                type="text"
-                value={template[key] ?? ''}
-                placeholder={placeholder}
-                onChange={e => handleTemplate(key, e.target.value)}
-              />
-            </label>
+          {textTemplateFields.map(({ key, label, min, max, step }) => (
+            <RangeField
+              key={key}
+              label={label}
+              value={template[key] ?? ''}
+              onChange={v => handleTemplate(key, v)}
+              min={min} max={max} step={step}
+            />
           ))}
         </div>
       </section>

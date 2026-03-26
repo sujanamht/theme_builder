@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 
-export default function SortableCanvasItem({ id, children, onSelect, onDelete, onDuplicate }) {
+export default function SortableCanvasItem({ id, children, onSelect, onDuplicate }) {
   const [hovered, setHovered] = useState(false)
 
   const {
@@ -92,30 +92,6 @@ export default function SortableCanvasItem({ id, children, onSelect, onDelete, o
             onMouseLeave={e => e.currentTarget.style.background = 'rgba(20,20,20,0.85)'}
           >
             ⧉
-          </button>
-
-          {/* Delete button */}
-          <button
-            onClick={e => { e.stopPropagation(); onDelete() }}
-            title="Remove from canvas"
-            style={{
-              background: 'rgba(20,20,20,0.85)',
-              border: '1px solid rgba(255,255,255,0.12)',
-              borderRadius: '5px',
-              color: '#f87171',
-              fontSize: '11px',
-              padding: '3px 7px',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              fontFamily: 'Inter, sans-serif',
-              backdropFilter: 'blur(4px)',
-              transition: 'background 0.12s',
-            }}
-            onMouseEnter={e => e.currentTarget.style.background = 'rgba(239,68,68,0.6)'}
-            onMouseLeave={e => e.currentTarget.style.background = 'rgba(20,20,20,0.85)'}
-          >
-            ✕
           </button>
         </div>
       )}

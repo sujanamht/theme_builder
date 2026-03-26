@@ -1,5 +1,6 @@
 import { useTheme } from '../../store/themeStore.jsx'
 import ColorInput from '../ui/ColorInput.jsx'
+import RangeField from '../ui/RangeField.jsx'
 
 const dataFields = [
   { key: 'message',  label: 'Message',   placeholder: '' },
@@ -8,8 +9,8 @@ const dataFields = [
 ]
 
 const textTemplateFields = [
-  { key: 'fontSize', label: 'Font Size', placeholder: 'e.g. 14px' },
-  { key: 'padding',  label: 'Padding',   placeholder: 'e.g. 8px 16px' },
+  { key: 'fontSize', label: 'Font Size', min: 10, max: 32,  step: 1 },
+  { key: 'padding',  label: 'Padding',   min: 0,  max: 64,  step: 4 },
 ]
 
 export default function AnnouncementBuilder() {
@@ -59,16 +60,14 @@ export default function AnnouncementBuilder() {
             value={template.textColor ?? '#000000'}
             onChange={v => handleTemplate('textColor', v)}
           />
-          {textTemplateFields.map(({ key, label, placeholder }) => (
-            <label key={key} className="flex flex-col gap-1">
-              {label}
-              <input
-                type="text"
-                value={template[key] ?? ''}
-                placeholder={placeholder}
-                onChange={e => handleTemplate(key, e.target.value)}
-              />
-            </label>
+          {textTemplateFields.map(({ key, label, min, max, step }) => (
+            <RangeField
+              key={key}
+              label={label}
+              value={template[key] ?? ''}
+              onChange={v => handleTemplate(key, v)}
+              min={min} max={max} step={step}
+            />
           ))}
         </div>
       </section>
