@@ -8,7 +8,7 @@ const textTemplateFields = [
   { key: 'height',   label: 'Slide Height', min: 200, max: 700, step: 20 },
 ]
 
-export default function CarouselBuilder() {
+export default function CarouselBuilder({ activeTab = 'content' }) {
   const { theme, updateSection } = useTheme()
   const { data, template } = theme.carousel
 
@@ -43,75 +43,78 @@ export default function CarouselBuilder() {
     <div className="p-4 space-y-6">
       <h2 className="text-lg font-semibold">Carousel</h2>
 
-      <section>
-        <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wide mb-3">Slides</h3>
-        <div className="space-y-4">
-          {slides.map((slide, i) => (
-            <div key={i} style={{ borderRadius: '8px', border: '1px solid #3a3a3a', padding: '12px', position: 'relative' }}>
-              <button
-                onClick={() => removeSlide(i)}
-                title="Remove link"
-                style={{ position: 'absolute', top: '8px', right: '8px' }}
-              >
-                ×
-              </button>
-              <div className="space-y-2 pr-6">
-                <ImageUploader
-                  label={`Slide ${i + 1} — Image`}
-                  value={slide.image}
-                  onChange={v => handleSlideChange(i, 'image', v)}
-                />
-                <label className="flex flex-col gap-1">
-                  Title
-                  <input type="text" value={slide.title} placeholder="e.g. Bold headline"
-                    onChange={e => handleSlideChange(i, 'title', e.target.value)} />
-                </label>
-                <label className="flex flex-col gap-1">
-                  Subtitle
-                  <input type="text" value={slide.subtitle} placeholder="e.g. Supporting copy"
-                    onChange={e => handleSlideChange(i, 'subtitle', e.target.value)} />
-                </label>
+      {activeTab === 'content' && (
+        <section>
+          <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wide mb-3">Slides</h3>
+          <div className="space-y-4">
+            {slides.map((slide, i) => (
+              <div key={i} style={{ borderRadius: '8px', border: '1px solid #3a3a3a', padding: '12px', position: 'relative' }}>
+                <button
+                  onClick={() => removeSlide(i)}
+                  title="Remove link"
+                  style={{ position: 'absolute', top: '8px', right: '8px' }}
+                >
+                  ×
+                </button>
+                <div className="space-y-2 pr-6">
+                  <ImageUploader
+                    label={`Slide ${i + 1} — Image`}
+                    value={slide.image}
+                    onChange={v => handleSlideChange(i, 'image', v)}
+                  />
+                  <label className="flex flex-col gap-1">
+                    Title
+                    <input type="text" value={slide.title} placeholder="e.g. Bold headline"
+                      onChange={e => handleSlideChange(i, 'title', e.target.value)} />
+                  </label>
+                  <label className="flex flex-col gap-1">
+                    Subtitle
+                    <input type="text" value={slide.subtitle} placeholder="e.g. Supporting copy"
+                      onChange={e => handleSlideChange(i, 'subtitle', e.target.value)} />
+                  </label>
+                </div>
               </div>
-            </div>
-          ))}
-          <button onClick={addSlide}>+ Add Slide</button>
-        </div>
-      </section>
+            ))}
+            <button onClick={addSlide}>+ Add Slide</button>
+          </div>
+        </section>
+      )}
 
-      <section>
-        <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wide mb-3">Style</h3>
-        <div className="space-y-3">
-          <ColorInput
-            label="Background Color"
-            value={template.bgColor ?? '#000000'}
-            onChange={v => handleTemplate('bgColor', v)}
-          />
-          <ColorInput
-            label="Text Color"
-            value={template.textColor ?? '#000000'}
-            onChange={v => handleTemplate('textColor', v)}
-          />
-          <ColorInput
-            label="Arrow Color"
-            value={template.arrowColor ?? '#000000'}
-            onChange={v => handleTemplate('arrowColor', v)}
-          />
-          <ColorInput
-            label="Dot Color"
-            value={template.dotColor ?? '#000000'}
-            onChange={v => handleTemplate('dotColor', v)}
-          />
-          {textTemplateFields.map(({ key, label, min, max, step }) => (
-            <RangeField
-              key={key}
-              label={label}
-              value={template[key] ?? ''}
-              onChange={v => handleTemplate(key, v)}
-              min={min} max={max} step={step}
+      {activeTab === 'style' && (
+        <section>
+          <div className="space-y-3">
+            <ColorInput
+              label="Background Color"
+              value={template.bgColor ?? '#000000'}
+              onChange={v => handleTemplate('bgColor', v)}
             />
-          ))}
-        </div>
-      </section>
+            <ColorInput
+              label="Text Color"
+              value={template.textColor ?? '#000000'}
+              onChange={v => handleTemplate('textColor', v)}
+            />
+            <ColorInput
+              label="Arrow Color"
+              value={template.arrowColor ?? '#000000'}
+              onChange={v => handleTemplate('arrowColor', v)}
+            />
+            <ColorInput
+              label="Dot Color"
+              value={template.dotColor ?? '#000000'}
+              onChange={v => handleTemplate('dotColor', v)}
+            />
+            {textTemplateFields.map(({ key, label, min, max, step }) => (
+              <RangeField
+                key={key}
+                label={label}
+                value={template[key] ?? ''}
+                onChange={v => handleTemplate(key, v)}
+                min={min} max={max} step={step}
+              />
+            ))}
+          </div>
+        </section>
+      )}
     </div>
   )
 }

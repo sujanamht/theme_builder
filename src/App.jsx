@@ -1,6 +1,6 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, cloneElement } from 'react'
 import { ThemeProvider } from './store/themeStore.jsx'
-import { SelectionContext } from './store/selectionContext.jsx'
+import { SelectionContext, useSelection } from './store/selectionContext.jsx'
 import { exportJSON } from './exports/exportJSON.js'
 import { useTheme } from './store/themeStore.jsx'
 import {
@@ -309,6 +309,7 @@ function Shell({
   const [confirmingRemove, setConfirmingRemove] = useState(false)
   const [addSectionOpen,   setAddSectionOpen]   = useState(false)
   const [leftTab,          setLeftTab]          = useState('components')
+  const [editorTab,        setEditorTab]        = useState('content')
 
   useEffect(() => { setConfirmingRemove(false) }, [selectedComponent])
 
@@ -432,7 +433,17 @@ function Shell({
           onSelect={setSelectedComponent}
           onDuplicate={() => duplicateItem(key)}
         >
-          {PREVIEWS[getType(key)]}
+          <div style={{
+            outline: selectedComponent === key ? '2px solid #6366f1' : '2px solid transparent',
+            boxShadow: selectedComponent === key ? '0 0 0 4px #6366f133, 0 4px 24px #6366f166' : 'none',
+            borderRadius: '3px',
+            transition: 'outline 0.15s ease, box-shadow 0.15s ease',
+            overflow: 'visible',
+            position: 'relative',
+            zIndex: selectedComponent === key ? 1 : 0,
+          }}>
+            {PREVIEWS[getType(key)]}
+          </div>
         </SortableCanvasItem>
       ))}
     </SortableContext>
@@ -788,16 +799,41 @@ function Shell({
             flexShrink: 0, display: 'flex', alignItems: 'center',
           }}>
             <span style={{ color: t.textActive, fontSize: '13px', fontWeight: '600', whiteSpace: 'nowrap' }}>
-              {selectedComponent ? getLabel(selectedComponent) : 'Editor'}
+              Editor
             </span>
           </div>
+          {/* Editor tab bar */}
+          <div style={{ display: 'flex', borderBottom: `1px solid ${t.border}`, flexShrink: 0 }}>
+            {[['content', 'Content'], ['style', 'Style']].map(([key, label]) => {
+              const isActive = editorTab === key
+              return (
+                <button
+                  key={key}
+                  onClick={() => setEditorTab(key)}
+                  style={{
+                    flex: 1, padding: '9px 0',
+                    border: 'none', borderBottom: isActive ? '2px solid #6366f1' : '2px solid transparent',
+                    background: isActive ? `${t.activeItemBg}` : 'transparent',
+                    color: isActive ? '#6366f1' : t.textMuted,
+                    fontSize: '11px', fontWeight: isActive ? '600' : '400',
+                    cursor: 'pointer', transition: 'color 0.15s, border-color 0.15s',
+                    fontFamily: 'Inter, sans-serif',
+                    marginBottom: '-1px',
+                  }}
+                >
+                  {label}
+                </button>
+              )
+            })}
+          </div>
+
           <div
             className="builder-panel"
             data-theme={isDark ? 'dark' : 'light'}
             style={{ flex: 1, overflowY: 'auto' }}
           >
             {selectedComponent && BUILDERS[getType(selectedComponent)]
-              ? BUILDERS[getType(selectedComponent)]
+              ? cloneElement(BUILDERS[getType(selectedComponent)], { activeTab: editorTab })
               : (
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
                   <span style={{ color: t.textMuted, fontSize: '13px', whiteSpace: 'nowrap' }}>← Select a component to edit</span>
