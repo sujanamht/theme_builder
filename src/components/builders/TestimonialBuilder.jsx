@@ -9,7 +9,7 @@ const textTemplateFields = [
   { key: 'padding',      label: 'Section Padding',  min: 0,  max: 120, step: 8 },
 ]
 
-export default function TestimonialBuilder() {
+export default function TestimonialBuilder({ activeTab = 'content' }) {
   const { theme, updateSection } = useTheme()
   const { data, template } = theme.testimonial
 
@@ -49,21 +49,24 @@ export default function TestimonialBuilder() {
     <div className="p-4 space-y-6">
       <h2 className="text-lg font-semibold">Testimonial</h2>
 
-      <section>
-        <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wide mb-3">Content</h3>
-        <label className="flex flex-col gap-1">
-          Section Heading
-          <input
-            type="text"
-            value={heading}
-            placeholder="e.g. What our customers say"
-            onChange={e => handleHeading(e.target.value)}
-          />
-        </label>
-      </section>
+      {activeTab === 'content' && (
+        <section>
+          <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wide mb-3">Content</h3>
+          <label className="flex flex-col gap-1">
+            Section Heading
+            <input
+              type="text"
+              value={heading}
+              placeholder="e.g. What our customers say"
+              onChange={e => handleHeading(e.target.value)}
+            />
+          </label>
+        </section>
+      )}
 
-      <section>
-        <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wide mb-3">Testimonials</h3>
+      {activeTab === 'content' && (
+        <section>
+          <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wide mb-3">Testimonials</h3>
         <div className="space-y-4">
           {items.map((item, i) => (
             <div key={i} style={{ borderRadius: '8px', border: '1px solid #3a3a3a', padding: '12px', position: 'relative' }}>
@@ -100,37 +103,39 @@ export default function TestimonialBuilder() {
           ))}
           <button onClick={addItem}>+ Add Testimonial</button>
         </div>
-      </section>
+        </section>
+      )}
 
-      <section>
-        <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wide mb-3">Style</h3>
-        <div className="space-y-3">
-          <ColorInput
-            label="Background Color"
-            value={template.bgColor ?? '#000000'}
-            onChange={v => handleTemplate('bgColor', v)}
-          />
-          <ColorInput
-            label="Text Color"
-            value={template.textColor ?? '#000000'}
-            onChange={v => handleTemplate('textColor', v)}
-          />
-          <ColorInput
-            label="Card Background"
-            value={template.cardBg ?? '#000000'}
-            onChange={v => handleTemplate('cardBg', v)}
-          />
-          {textTemplateFields.map(({ key, label, min, max, step }) => (
-            <RangeField
-              key={key}
-              label={label}
-              value={template[key] ?? ''}
-              onChange={v => handleTemplate(key, v)}
-              min={min} max={max} step={step}
+      {activeTab === 'style' && (
+        <section>
+          <div className="space-y-3">
+            <ColorInput
+              label="Background Color"
+              value={template.bgColor ?? '#000000'}
+              onChange={v => handleTemplate('bgColor', v)}
             />
-          ))}
-        </div>
-      </section>
+            <ColorInput
+              label="Text Color"
+              value={template.textColor ?? '#000000'}
+              onChange={v => handleTemplate('textColor', v)}
+            />
+            <ColorInput
+              label="Card Background"
+              value={template.cardBg ?? '#000000'}
+              onChange={v => handleTemplate('cardBg', v)}
+            />
+            {textTemplateFields.map(({ key, label, min, max, step }) => (
+              <RangeField
+                key={key}
+                label={label}
+                value={template[key] ?? ''}
+                onChange={v => handleTemplate(key, v)}
+                min={min} max={max} step={step}
+              />
+            ))}
+          </div>
+        </section>
+      )}
     </div>
   )
 }

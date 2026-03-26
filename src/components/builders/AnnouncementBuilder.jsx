@@ -13,7 +13,7 @@ const textTemplateFields = [
   { key: 'padding',  label: 'Padding',   min: 0,  max: 64,  step: 4 },
 ]
 
-export default function AnnouncementBuilder() {
+export default function AnnouncementBuilder({ activeTab = 'content' }) {
   const { theme, updateSection } = useTheme()
   const { data, template } = theme.announcement
 
@@ -29,48 +29,51 @@ export default function AnnouncementBuilder() {
     <div className="p-4 space-y-6">
       <h2 className="text-lg font-semibold text-gray-800">Announcement Bar</h2>
 
-      <section>
-        <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wide mb-3">Content</h3>
-        <div className="space-y-3">
-          {dataFields.map(({ key, label, placeholder }) => (
-            <label key={key} className="flex flex-col gap-1 text-sm text-gray-700">
-              {label}
-              <input
-                type="text"
-                value={data[key] ?? ''}
-                placeholder={placeholder}
-                onChange={e => handleData(key, e.target.value)}
-                className="border border-gray-300 rounded px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
-              />
-            </label>
-          ))}
-        </div>
-      </section>
+      {activeTab === 'content' && (
+        <section>
+          <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wide mb-3">Content</h3>
+          <div className="space-y-3">
+            {dataFields.map(({ key, label, placeholder }) => (
+              <label key={key} className="flex flex-col gap-1 text-sm text-gray-700">
+                {label}
+                <input
+                  type="text"
+                  value={data[key] ?? ''}
+                  placeholder={placeholder}
+                  onChange={e => handleData(key, e.target.value)}
+                  className="border border-gray-300 rounded px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                />
+              </label>
+            ))}
+          </div>
+        </section>
+      )}
 
-      <section>
-        <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wide mb-3">Style</h3>
-        <div className="space-y-3">
-          <ColorInput
-            label="Background Color"
-            value={template.bgColor ?? '#000000'}
-            onChange={v => handleTemplate('bgColor', v)}
-          />
-          <ColorInput
-            label="Text Color"
-            value={template.textColor ?? '#000000'}
-            onChange={v => handleTemplate('textColor', v)}
-          />
-          {textTemplateFields.map(({ key, label, min, max, step }) => (
-            <RangeField
-              key={key}
-              label={label}
-              value={template[key] ?? ''}
-              onChange={v => handleTemplate(key, v)}
-              min={min} max={max} step={step}
+      {activeTab === 'style' && (
+        <section>
+          <div className="space-y-3">
+            <ColorInput
+              label="Background Color"
+              value={template.bgColor ?? '#000000'}
+              onChange={v => handleTemplate('bgColor', v)}
             />
-          ))}
-        </div>
-      </section>
+            <ColorInput
+              label="Text Color"
+              value={template.textColor ?? '#000000'}
+              onChange={v => handleTemplate('textColor', v)}
+            />
+            {textTemplateFields.map(({ key, label, min, max, step }) => (
+              <RangeField
+                key={key}
+                label={label}
+                value={template[key] ?? ''}
+                onChange={v => handleTemplate(key, v)}
+                min={min} max={max} step={step}
+              />
+            ))}
+          </div>
+        </section>
+      )}
     </div>
   )
 }

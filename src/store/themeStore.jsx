@@ -1,6 +1,6 @@
 import { createContext, useContext, useState } from 'react'
 
-const HOME_ORDER = ['announcement', 'navbar',  'carousel','about','services', 'testimonial', 'footer']
+const HOME_SECTIONS = ['announcement', 'navbar', 'carousel', 'about', 'services', 'testimonial', 'footer']
 
 const initialState = {
   globalTheme: {
@@ -12,8 +12,16 @@ const initialState = {
     darkMode:        false,
   },
 
-  pages: [{ id: 'home', name: 'Home', order: HOME_ORDER }],
-  activePage: 'home',
+  pages: {
+    activePage: 'home',
+    list: [
+      { id: 'home',    label: 'Home',    sections: HOME_SECTIONS },
+      { id: 'about',   label: 'About',   sections: [] },
+      { id: 'contact', label: 'Contact', sections: [] },
+      { id: 'blog',    label: 'Blog',    sections: [] },
+      { id: 'custom',  label: 'Custom',  sections: [] },
+    ],
+  },
 
   announcement: { data: {}, template: {} },
   navbar:        { data: {}, template: {} },
@@ -114,49 +122,96 @@ export function ThemeProvider({ children }) {
     }))
   }
 
-  function updatePageOrder(pageId, newOrder) {
+  function updatePageOrder(pageId, newSections) {
     setTheme(prev => ({
       ...prev,
-      pages: prev.pages.map(p => p.id === pageId ? { ...p, order: newOrder } : p),
+      pages: {
+        ...prev.pages,
+        list: prev.pages.list.map(p =>
+          p.id === pageId ? { ...p, sections: newSections } : p
+        ),
+      },
+    }))
+  }
+
+  function setPageSections(pageId, sections) {
+    setTheme(prev => ({
+      ...prev,
+      pages: {
+        ...prev.pages,
+        list: prev.pages.list.map(p =>
+          p.id === pageId ? { ...p, sections } : p
+        ),
+      },
     }))
   }
 
   function addPage() {
     setTheme(prev => {
-      const num = prev.pages.length + 1
+      const num = prev.pages.list.length + 1
       const id  = `page-${Date.now()}`
       return {
         ...prev,
-        pages:      [...prev.pages, { id, name: `Page ${num}`, order: [] }],
-        activePage: id,
+        pages: {
+          activePage: id,
+          list: [...prev.pages.list, { id, label: `Page ${num}`, sections: [] }],
+        },
+      }
+    })
+  }
+
+  function addCustomPage(label) {
+    setTheme(prev => {
+      const id = `page-${Date.now()}`
+      return {
+        ...prev,
+        pages: {
+          ...prev.pages,
+          list: [...prev.pages.list, { id, label, sections: [] }],
+        },
       }
     })
   }
 
   function deletePage(id) {
     setTheme(prev => {
-      if (prev.pages.length <= 1) return prev
-      const next      = prev.pages.filter(p => p.id !== id)
-      const newActive = prev.activePage === id ? next[0].id : prev.activePage
-      return { ...prev, pages: next, activePage: newActive }
+      if (prev.pages.list.length <= 1) return prev
+      const nextList  = prev.pages.list.filter(p => p.id !== id)
+      const newActive = prev.pages.activePage === id ? nextList[0].id : prev.pages.activePage
+      return {
+        ...prev,
+        pages: { activePage: newActive, list: nextList },
+      }
     })
   }
 
   function setActivePage(id) {
-    setTheme(prev => ({ ...prev, activePage: id }))
-  }
-
-  function renamePage(id, name) {
     setTheme(prev => ({
       ...prev,
-      pages: prev.pages.map(p => p.id === id ? { ...p, name } : p),
+      pages: { ...prev.pages, activePage: id },
+    }))
+  }
+
+  function renamePage(id, label) {
+    setTheme(prev => ({
+      ...prev,
+      pages: {
+        ...prev.pages,
+        list: prev.pages.list.map(p => p.id === id ? { ...p, label } : p),
+      },
     }))
   }
 
   function removeSectionFromAllPages(sectionId) {
     setTheme(prev => ({
       ...prev,
-      pages: prev.pages.map(p => ({ ...p, order: p.order.filter(k => k !== sectionId) })),
+      pages: {
+        ...prev.pages,
+        list: prev.pages.list.map(p => ({
+          ...p,
+          sections: p.sections.filter(k => k !== sectionId),
+        })),
+      },
     }))
   }
 
@@ -186,7 +241,8 @@ export function ThemeProvider({ children }) {
     <ThemeContext.Provider value={{
       theme, setTheme,
       updateSection, updateGlobalTheme,
-      updatePageOrder, addPage, deletePage, setActivePage, renamePage, removeSectionFromAllPages,
+      updatePageOrder, setPageSections,
+      addPage, addCustomPage, deletePage, setActivePage, renamePage, removeSectionFromAllPages,
       addSection, removeSection,
     }}>
       {children}

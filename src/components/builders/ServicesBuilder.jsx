@@ -8,7 +8,7 @@ const textTemplateFields = [
   { key: 'padding',      label: 'Section Padding',  min: 0,  max: 120, step: 8 },
 ]
 
-export default function ServicesBuilder() {
+export default function ServicesBuilder({ activeTab = 'content' }) {
   const { theme, updateSection } = useTheme()
   const { data, template } = theme.services
 
@@ -49,24 +49,27 @@ export default function ServicesBuilder() {
     <div className="p-4 space-y-6">
       <h2 className="text-lg font-semibold">Services</h2>
 
-      <section>
-        <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wide mb-3">Content</h3>
-        <div className="space-y-3">
-          <label className="flex flex-col gap-1">
-            Heading
-            <input type="text" value={heading} placeholder="e.g. What we offer"
-              onChange={e => handleData('heading', e.target.value)} />
-          </label>
-          <label className="flex flex-col gap-1">
-            Subheading
-            <input type="text" value={subheading} placeholder="e.g. Everything you need to grow."
-              onChange={e => handleData('subheading', e.target.value)} />
-          </label>
-        </div>
-      </section>
+      {activeTab === 'content' && (
+        <section>
+          <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wide mb-3">Content</h3>
+          <div className="space-y-3">
+            <label className="flex flex-col gap-1">
+              Heading
+              <input type="text" value={heading} placeholder="e.g. What we offer"
+                onChange={e => handleData('heading', e.target.value)} />
+            </label>
+            <label className="flex flex-col gap-1">
+              Subheading
+              <input type="text" value={subheading} placeholder="e.g. Everything you need to grow."
+                onChange={e => handleData('subheading', e.target.value)} />
+            </label>
+          </div>
+        </section>
+      )}
 
-      <section>
-        <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wide mb-3">Service Items</h3>
+      {activeTab === 'content' && (
+        <section>
+          <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wide mb-3">Service Items</h3>
         <div className="space-y-4">
           {items.map((item, i) => (
             <div key={i} style={{ borderRadius: '8px', border: '1px solid #3a3a3a', padding: '12px', position: 'relative' }}>
@@ -103,37 +106,39 @@ export default function ServicesBuilder() {
           ))}
           <button onClick={addItem}>+ Add Service</button>
         </div>
-      </section>
+        </section>
+      )}
 
-      <section>
-        <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wide mb-3">Style</h3>
-        <div className="space-y-3">
-          <ColorInput label="Background Color" value={template.bgColor      ?? '#000000'} onChange={v => handleTemplate('bgColor', v)} />
-          <ColorInput label="Text Color"        value={template.textColor    ?? '#000000'} onChange={v => handleTemplate('textColor', v)} />
-          <ColorInput label="Card Background"   value={template.cardBg       ?? '#000000'} onChange={v => handleTemplate('cardBg', v)} />
-          <ColorInput label="Accent Color"      value={template.accentColor  ?? '#000000'} onChange={v => handleTemplate('accentColor', v)} />
+      {activeTab === 'style' && (
+        <section>
+          <div className="space-y-3">
+            <ColorInput label="Background Color" value={template.bgColor      ?? '#000000'} onChange={v => handleTemplate('bgColor', v)} />
+            <ColorInput label="Text Color"        value={template.textColor    ?? '#000000'} onChange={v => handleTemplate('textColor', v)} />
+            <ColorInput label="Card Background"   value={template.cardBg       ?? '#000000'} onChange={v => handleTemplate('cardBg', v)} />
+            <ColorInput label="Accent Color"      value={template.accentColor  ?? '#000000'} onChange={v => handleTemplate('accentColor', v)} />
 
-          {textTemplateFields.map(({ key, label, min, max, step }) => (
-            <RangeField
-              key={key}
-              label={label}
-              value={template[key] ?? ''}
-              onChange={v => handleTemplate(key, v)}
-              min={min} max={max} step={step}
-            />
-          ))}
+            {textTemplateFields.map(({ key, label, min, max, step }) => (
+              <RangeField
+                key={key}
+                label={label}
+                value={template[key] ?? ''}
+                onChange={v => handleTemplate(key, v)}
+                min={min} max={max} step={step}
+              />
+            ))}
 
-          <label className="flex flex-col gap-1">
-            Columns
-            <select value={template.columns ?? '3'} onChange={e => handleTemplate('columns', e.target.value)}
-              style={{ width: '100%' }}>
-              <option value="1">1 Column</option>
-              <option value="2">2 Columns</option>
-              <option value="3">3 Columns</option>
-            </select>
-          </label>
-        </div>
-      </section>
+            <label className="flex flex-col gap-1">
+              Columns
+              <select value={template.columns ?? '3'} onChange={e => handleTemplate('columns', e.target.value)}
+                style={{ width: '100%' }}>
+                <option value="1">1 Column</option>
+                <option value="2">2 Columns</option>
+                <option value="3">3 Columns</option>
+              </select>
+            </label>
+          </div>
+        </section>
+      )}
     </div>
   )
 }

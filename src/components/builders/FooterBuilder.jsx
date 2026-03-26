@@ -7,7 +7,7 @@ const textTemplateFields = [
   { key: 'padding',  label: 'Padding',   min: 0,  max: 96, step: 8 },
 ]
 
-export default function FooterBuilder() {
+export default function FooterBuilder({ activeTab = 'content' }) {
   const { theme, updateSection } = useTheme()
   const { data, template } = theme.footer
 
@@ -64,8 +64,9 @@ export default function FooterBuilder() {
     <div className="p-4 space-y-6">
       <h2 className="text-lg font-semibold">Footer</h2>
 
-      <section>
-        <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wide mb-3">Content</h3>
+      {activeTab === 'content' && (
+        <section>
+          <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wide mb-3">Content</h3>
         <div className="space-y-3">
           <label className="flex flex-col gap-1">
             Brand Name
@@ -116,61 +117,67 @@ export default function FooterBuilder() {
             Show Embed / Social Feed column
           </label>
         </div>
-      </section>
+        </section>
+      )}
 
-      <section>
-        <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wide mb-3">Useful Links</h3>
-        <div className="space-y-3">
-          {links.map((link, i) => (
-            <div key={i} className="flex gap-2 items-start">
-              <div className="flex flex-col gap-1 flex-1">
-                <input type="text" value={link.label} placeholder="Label"
-                  onChange={e => handleLinkChange(i, 'label', e.target.value)} />
-                <input type="text" value={link.url} placeholder="URL"
-                  onChange={e => handleLinkChange(i, 'url', e.target.value)} />
+      {activeTab === 'content' && (
+        <section>
+          <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wide mb-3">Useful Links</h3>
+          <div className="space-y-3">
+            {links.map((link, i) => (
+              <div key={i} className="flex gap-2 items-start">
+                <div className="flex flex-col gap-1 flex-1">
+                  <input type="text" value={link.label} placeholder="Label"
+                    onChange={e => handleLinkChange(i, 'label', e.target.value)} />
+                  <input type="text" value={link.url} placeholder="URL"
+                    onChange={e => handleLinkChange(i, 'url', e.target.value)} />
+                </div>
+                <button onClick={() => removeLink(i)} title="Remove link" style={{ marginTop: '4px' }}>×</button>
               </div>
-              <button onClick={() => removeLink(i)} title="Remove link" style={{ marginTop: '4px' }}>×</button>
-            </div>
-          ))}
-          <button onClick={addLink}>+ Add Link</button>
-        </div>
-      </section>
+            ))}
+            <button onClick={addLink}>+ Add Link</button>
+          </div>
+        </section>
+      )}
 
-      <section>
-        <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wide mb-3">Service Links</h3>
-        <div className="space-y-3">
-          {serviceLinks.map((link, i) => (
-            <div key={i} className="flex gap-2 items-start">
-              <div className="flex flex-col gap-1 flex-1">
-                <input type="text" value={link.label} placeholder="Label"
-                  onChange={e => handleServiceLinkChange(i, 'label', e.target.value)} />
-                <input type="text" value={link.url} placeholder="URL"
-                  onChange={e => handleServiceLinkChange(i, 'url', e.target.value)} />
+      {activeTab === 'content' && (
+        <section>
+          <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wide mb-3">Service Links</h3>
+          <div className="space-y-3">
+            {serviceLinks.map((link, i) => (
+              <div key={i} className="flex gap-2 items-start">
+                <div className="flex flex-col gap-1 flex-1">
+                  <input type="text" value={link.label} placeholder="Label"
+                    onChange={e => handleServiceLinkChange(i, 'label', e.target.value)} />
+                  <input type="text" value={link.url} placeholder="URL"
+                    onChange={e => handleServiceLinkChange(i, 'url', e.target.value)} />
+                </div>
+                <button onClick={() => removeServiceLink(i)} title="Remove link" style={{ marginTop: '4px' }}>×</button>
               </div>
-              <button onClick={() => removeServiceLink(i)} title="Remove link" style={{ marginTop: '4px' }}>×</button>
-            </div>
-          ))}
-          <button onClick={addServiceLink}>+ Add Service Link</button>
-        </div>
-      </section>
+            ))}
+            <button onClick={addServiceLink}>+ Add Service Link</button>
+          </div>
+        </section>
+      )}
 
-      <section>
-        <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wide mb-3">Style</h3>
-        <div className="space-y-3">
-          <ColorInput label="Background Color" value={template.bgColor    ?? '#000000'} onChange={v => handleTemplate('bgColor', v)} />
-          <ColorInput label="Text Color"        value={template.textColor  ?? '#000000'} onChange={v => handleTemplate('textColor', v)} />
-          <ColorInput label="Link Color"        value={template.linkColor  ?? '#000000'} onChange={v => handleTemplate('linkColor', v)} />
-          {textTemplateFields.map(({ key, label, min, max, step }) => (
-            <RangeField
-              key={key}
-              label={label}
-              value={template[key] ?? ''}
-              onChange={v => handleTemplate(key, v)}
-              min={min} max={max} step={step}
-            />
-          ))}
-        </div>
-      </section>
+      {activeTab === 'style' && (
+        <section>
+          <div className="space-y-3">
+            <ColorInput label="Background Color" value={template.bgColor    ?? '#000000'} onChange={v => handleTemplate('bgColor', v)} />
+            <ColorInput label="Text Color"        value={template.textColor  ?? '#000000'} onChange={v => handleTemplate('textColor', v)} />
+            <ColorInput label="Link Color"        value={template.linkColor  ?? '#000000'} onChange={v => handleTemplate('linkColor', v)} />
+            {textTemplateFields.map(({ key, label, min, max, step }) => (
+              <RangeField
+                key={key}
+                label={label}
+                value={template[key] ?? ''}
+                onChange={v => handleTemplate(key, v)}
+                min={min} max={max} step={step}
+              />
+            ))}
+          </div>
+        </section>
+      )}
     </div>
   )
 }

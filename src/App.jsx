@@ -71,6 +71,8 @@ const TYPE_COLORS = {
 
 const ALL_TYPES = ['announcement', 'navbar', 'about', 'services', 'carousel', 'testimonial', 'gallery', 'cta', 'footer', 'hero', 'contact']
 
+const GLOBAL_TYPES = new Set(['announcement', 'navbar', 'footer'])
+
 const BUILDERS = {
   announcement: <AnnouncementBuilder />,
   navbar:       <NavbarBuilder />,
@@ -287,6 +289,32 @@ function DragHandle({ side, onMouseDown, t, active }) {
   )
 }
 
+/* ─── non-sortable wrapper for global sections (announcement/navbar/footer) ─── */
+function GlobalCanvasItem({ id, selectedComponent, onSelect, editable, children }) {
+  const [hovered, setHovered] = useState(false)
+  return (
+    <div
+      style={{ position: 'relative' }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
+      {editable && (
+        <div style={{
+          position: 'absolute', left: 0, top: 0, bottom: 0, width: '22px',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          opacity: hovered ? 1 : 0, transition: 'opacity 0.15s', zIndex: 10,
+          cursor: 'default',
+        }}>
+          <span style={{ color: '#6366f1', fontSize: '16px', lineHeight: 1, userSelect: 'none', textShadow: '0 1px 4px rgba(99,102,241,0.4)' }}>⠿</span>
+        </div>
+      )}
+      <div onClick={() => onSelect(id)} style={{ cursor: 'pointer' }}>
+        {children}
+      </div>
+    </div>
+  )
+}
+
 /* ─── shell ─── */
 function Shell({
   selectedComponent, setSelectedComponent,
@@ -298,12 +326,20 @@ function Shell({
   const { theme, addSection, removeSection, updatePageOrder, removeSectionFromAllPages } = useTheme()
 
   /* Derive active page order from store */
-  const activePage = theme.pages?.find(p => p.id === theme.activePage)
-  const order = activePage?.order ?? []
+  const activePageId = theme.pages?.activePage
+  const isHomePage   = activePageId === 'home'
+  const activePage   = theme.pages?.list?.find(p => p.id === activePageId)
+  const order = activePage?.sections ?? []
   function setOrder(v) {
     const next = typeof v === 'function' ? v(order) : v
-    updatePageOrder(theme.activePage, next)
+    updatePageOrder(activePageId, next)
   }
+
+  /* Global sections always sourced from home page */
+  const homeSections    = theme.pages?.list?.find(p => p.id === 'home')?.sections ?? []
+  const announcementKeys = homeSections.filter(k => getType(k) === 'announcement')
+  const navbarKeys       = homeSections.filter(k => getType(k) === 'navbar')
+  const footerKeys       = homeSections.filter(k => getType(k) === 'footer')
   const t = tokens(isDark)
 
   const [confirmingRemove, setConfirmingRemove] = useState(false)
@@ -420,33 +456,60 @@ function Shell({
     }
   }
 
-  const dotPattern  = `radial-gradient(circle, ${t.dotColor} 1px, transparent 1px)`
-  const visibleKeys = order.filter(key => visibility[key])
+  const dotPattern      = `radial-gradient(circle, ${t.dotColor} 1px, transparent 1px)`
+  const visiblePageKeys = order.filter(key => !GLOBAL_TYPES.has(getType(key)) && visibility[key])
+
+  function selectionStyle(key) {
+    return {
+      outline:      selectedComponent === key ? '2px solid #6366f1' : '2px solid transparent',
+      boxShadow:    selectedComponent === key ? '0 0 0 4px #6366f133, 0 4px 24px #6366f166' : 'none',
+      borderRadius: '3px',
+      transition:   'outline 0.15s ease, box-shadow 0.15s ease',
+      overflow:     'visible',
+      position:     'relative',
+      zIndex:       selectedComponent === key ? 1 : 0,
+    }
+  }
+
+  function renderGlobalKeys(keys) {
+    return keys.filter(k => visibility[k]).map(key => (
+      <GlobalCanvasItem
+        key={key}
+        id={key}
+        selectedComponent={selectedComponent}
+        onSelect={setSelectedComponent}
+        editable={isHomePage}
+      >
+        <div style={selectionStyle(key)}>
+          {PREVIEWS[getType(key)]}
+        </div>
+      </GlobalCanvasItem>
+    ))
+  }
 
   /* canvas card contents — no own DndContext, uses parent */
   const cardContents = (
-    <SortableContext items={visibleKeys} strategy={verticalListSortingStrategy}>
-      {visibleKeys.map(key => (
-        <SortableCanvasItem
-          key={key}
-          id={key}
-          onSelect={setSelectedComponent}
-          onDuplicate={() => duplicateItem(key)}
-        >
-          <div style={{
-            outline: selectedComponent === key ? '2px solid #6366f1' : '2px solid transparent',
-            boxShadow: selectedComponent === key ? '0 0 0 4px #6366f133, 0 4px 24px #6366f166' : 'none',
-            borderRadius: '3px',
-            transition: 'outline 0.15s ease, box-shadow 0.15s ease',
-            overflow: 'visible',
-            position: 'relative',
-            zIndex: selectedComponent === key ? 1 : 0,
-          }}>
-            {PREVIEWS[getType(key)]}
-          </div>
-        </SortableCanvasItem>
-      ))}
-    </SortableContext>
+    <>
+      {renderGlobalKeys(announcementKeys)}
+      {renderGlobalKeys(navbarKeys)}
+
+      <SortableContext items={visiblePageKeys} strategy={verticalListSortingStrategy}>
+        {visiblePageKeys.map(key => (
+          <SortableCanvasItem
+            key={key}
+            id={key}
+            onSelect={setSelectedComponent}
+            onDuplicate={() => duplicateItem(key)}
+          >
+            <div style={selectionStyle(key)}>
+              {PREVIEWS[getType(key)]}
+            </div>
+          </SortableCanvasItem>
+        ))}
+      </SortableContext>
+
+      {renderGlobalKeys(footerKeys)}
+    </>
   )
 
   return (
@@ -718,6 +781,10 @@ function Shell({
               </span>
               <span style={{ color: t.canvasLabel, opacity: 0.5, fontSize: '11px' }}>·</span>
               <span style={{ color: t.canvasLabel, fontSize: '11px', opacity: 0.7 }}>
+                {theme.pages?.list?.find(p => p.id === activePageId)?.label ?? 'Home'}
+              </span>
+              <span style={{ color: t.canvasLabel, opacity: 0.5, fontSize: '11px' }}>·</span>
+              <span style={{ color: t.canvasLabel, fontSize: '11px', opacity: 0.7 }}>
                 {Math.round(currentWidth)}px
               </span>
               <span style={{ color: t.canvasLabel, opacity: 0.5, fontSize: '11px' }}>·</span>
@@ -796,10 +863,16 @@ function Shell({
           <div style={{
             padding: '0 16px', height: '49px',
             borderBottom: `1px solid ${t.border}`,
-            flexShrink: 0, display: 'flex', alignItems: 'center',
+            flexShrink: 0, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '2px',
           }}>
             <span style={{ color: t.textActive, fontSize: '13px', fontWeight: '600', whiteSpace: 'nowrap' }}>
               Editor
+            </span>
+            <span style={{ color: t.textMuted, fontSize: '11px', fontFamily: 'Inter, sans-serif', whiteSpace: 'nowrap' }}>
+              {theme.pages?.list?.find(p => p.id === activePageId)?.label ?? 'Home'}
+              {selectedComponent && (
+                <> <span style={{ opacity: 0.5 }}>›</span> {getLabel(selectedComponent)}</>
+              )}
             </span>
           </div>
           {/* Editor tab bar */}
@@ -842,8 +915,8 @@ function Shell({
             }
           </div>
 
-          {/* Remove Section footer */}
-          {selectedComponent && (
+          {/* Remove Section footer — hidden for global sections on non-home pages */}
+          {selectedComponent && (isHomePage || !GLOBAL_TYPES.has(getType(selectedComponent))) && (
             <div style={{ flexShrink: 0, borderTop: `1px solid ${t.border}`, padding: '12px 16px' }}>
               {!confirmingRemove ? (
                 <button

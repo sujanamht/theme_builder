@@ -16,7 +16,7 @@ const textTemplateFields = [
   { key: 'padding',  label: 'Padding',   min: 0,  max: 120, step: 8 },
 ]
 
-export default function CTABuilder() {
+export default function CTABuilder({ activeTab = 'content' }) {
   const { theme, updateSection } = useTheme()
   const { data, template } = theme.cta
 
@@ -32,57 +32,60 @@ export default function CTABuilder() {
     <div className="p-4 space-y-6">
       <h2 className="text-lg font-semibold">CTA</h2>
 
-      <section>
-        <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wide mb-3">Content</h3>
-        <div className="space-y-3">
-          {dataFields.map(({ key, label, placeholder }) => (
-            <label key={key} className="flex flex-col gap-1">
-              {label}
-              <input
-                type="text"
-                value={data[key] ?? ''}
-                placeholder={placeholder}
-                onChange={e => handleData(key, e.target.value)}
+      {activeTab === 'content' && (
+        <section>
+          <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wide mb-3">Content</h3>
+          <div className="space-y-3">
+            {dataFields.map(({ key, label, placeholder }) => (
+              <label key={key} className="flex flex-col gap-1">
+                {label}
+                <input
+                  type="text"
+                  value={data[key] ?? ''}
+                  placeholder={placeholder}
+                  onChange={e => handleData(key, e.target.value)}
+                />
+              </label>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {activeTab === 'style' && (
+        <section>
+          <div className="space-y-3">
+            <ColorInput label="Background Color"      value={template.bgColor          ?? '#000000'} onChange={v => handleTemplate('bgColor', v)} />
+            <ColorInput label="Text Color"            value={template.textColor        ?? '#000000'} onChange={v => handleTemplate('textColor', v)} />
+            <ColorInput label="Primary Button Bg"     value={template.primaryBtnBg     ?? '#000000'} onChange={v => handleTemplate('primaryBtnBg', v)} />
+            <ColorInput label="Primary Button Text"   value={template.primaryBtnText   ?? '#000000'} onChange={v => handleTemplate('primaryBtnText', v)} />
+            <ColorInput label="Secondary Button Bg"   value={template.secondaryBtnBg   ?? '#000000'} onChange={v => handleTemplate('secondaryBtnBg', v)} />
+            <ColorInput label="Secondary Button Text" value={template.secondaryBtnText ?? '#000000'} onChange={v => handleTemplate('secondaryBtnText', v)} />
+
+            {textTemplateFields.map(({ key, label, min, max, step }) => (
+              <RangeField
+                key={key}
+                label={label}
+                value={template[key] ?? ''}
+                onChange={v => handleTemplate(key, v)}
+                min={min} max={max} step={step}
               />
+            ))}
+
+            <label className="flex flex-col gap-1">
+              Text Align
+              <select
+                value={template.textAlign ?? 'center'}
+                onChange={e => handleTemplate('textAlign', e.target.value)}
+                style={{ width: '100%' }}
+              >
+                <option value="left">Left</option>
+                <option value="center">Center</option>
+                <option value="right">Right</option>
+              </select>
             </label>
-          ))}
-        </div>
-      </section>
-
-      <section>
-        <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wide mb-3">Style</h3>
-        <div className="space-y-3">
-          <ColorInput label="Background Color"      value={template.bgColor          ?? '#000000'} onChange={v => handleTemplate('bgColor', v)} />
-          <ColorInput label="Text Color"            value={template.textColor        ?? '#000000'} onChange={v => handleTemplate('textColor', v)} />
-          <ColorInput label="Primary Button Bg"     value={template.primaryBtnBg     ?? '#000000'} onChange={v => handleTemplate('primaryBtnBg', v)} />
-          <ColorInput label="Primary Button Text"   value={template.primaryBtnText   ?? '#000000'} onChange={v => handleTemplate('primaryBtnText', v)} />
-          <ColorInput label="Secondary Button Bg"   value={template.secondaryBtnBg   ?? '#000000'} onChange={v => handleTemplate('secondaryBtnBg', v)} />
-          <ColorInput label="Secondary Button Text" value={template.secondaryBtnText ?? '#000000'} onChange={v => handleTemplate('secondaryBtnText', v)} />
-
-          {textTemplateFields.map(({ key, label, min, max, step }) => (
-            <RangeField
-              key={key}
-              label={label}
-              value={template[key] ?? ''}
-              onChange={v => handleTemplate(key, v)}
-              min={min} max={max} step={step}
-            />
-          ))}
-
-          <label className="flex flex-col gap-1">
-            Text Align
-            <select
-              value={template.textAlign ?? 'center'}
-              onChange={e => handleTemplate('textAlign', e.target.value)}
-              style={{ width: '100%' }}
-            >
-              <option value="left">Left</option>
-              <option value="center">Center</option>
-              <option value="right">Right</option>
-            </select>
-          </label>
-        </div>
-      </section>
+          </div>
+        </section>
+      )}
     </div>
   )
 }

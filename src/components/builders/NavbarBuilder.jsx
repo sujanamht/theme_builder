@@ -9,7 +9,7 @@ const textTemplateFields = [
   { key: 'linkSpacing', label: 'Link Spacing', min: 8,  max: 48, step: 4 },
 ]
 
-export default function NavbarBuilder() {
+export default function NavbarBuilder({ activeTab = 'content' }) {
   const { theme, updateSection } = useTheme()
   const { data, template } = theme.navbar
 
@@ -72,21 +72,24 @@ export default function NavbarBuilder() {
     <div className="p-4 space-y-6">
       <h2 className="text-lg font-semibold text-gray-800">Navbar</h2>
 
-      <section>
-        <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wide mb-3">Content</h3>
-        <ImageUploader
-          label="Logo / Brand"
-          value={logo}
-          onChange={handleLogo}
-          textValue={logoText}
-          onTextChange={handleLogoText}
-        />
-      </section>
+      {activeTab === 'content' && (
+        <section>
+          <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wide mb-3">Content</h3>
+          <ImageUploader
+            label="Logo / Brand"
+            value={logo}
+            onChange={handleLogo}
+            textValue={logoText}
+            onTextChange={handleLogoText}
+          />
+        </section>
+      )}
 
-      <section>
-        <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wide mb-3">Nav Links</h3>
-        <div className="space-y-3">
-          {links.map((link, i) => {
+      {activeTab === 'content' && (
+        <section>
+          <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wide mb-3">Nav Links</h3>
+          <div className="space-y-3">
+            {links.map((link, i) => {
             const dropdown    = link.dropdown ?? []
             const showSub     = link._dropdownOpen || dropdown.length > 0
 
@@ -154,34 +157,36 @@ export default function NavbarBuilder() {
             )
           })}
 
-          <button onClick={addLink}>+ Add Link</button>
-        </div>
-      </section>
+            <button onClick={addLink}>+ Add Link</button>
+          </div>
+        </section>
+      )}
 
-      <section>
-        <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wide mb-3">Style</h3>
-        <div className="space-y-3">
-          <ColorInput
-            label="Background Color"
-            value={template.bgColor ?? '#000000'}
-            onChange={v => handleTemplate('bgColor', v)}
-          />
-          <ColorInput
-            label="Text Color"
-            value={template.textColor ?? '#000000'}
-            onChange={v => handleTemplate('textColor', v)}
-          />
-          {textTemplateFields.map(({ key, label, min, max, step }) => (
-            <RangeField
-              key={key}
-              label={label}
-              value={template[key] ?? ''}
-              onChange={v => handleTemplate(key, v)}
-              min={min} max={max} step={step}
+      {activeTab === 'style' && (
+        <section>
+          <div className="space-y-3">
+            <ColorInput
+              label="Background Color"
+              value={template.bgColor ?? '#000000'}
+              onChange={v => handleTemplate('bgColor', v)}
             />
-          ))}
-        </div>
-      </section>
+            <ColorInput
+              label="Text Color"
+              value={template.textColor ?? '#000000'}
+              onChange={v => handleTemplate('textColor', v)}
+            />
+            {textTemplateFields.map(({ key, label, min, max, step }) => (
+              <RangeField
+                key={key}
+                label={label}
+                value={template[key] ?? ''}
+                onChange={v => handleTemplate(key, v)}
+                min={min} max={max} step={step}
+              />
+            ))}
+          </div>
+        </section>
+      )}
     </div>
   )
 }
