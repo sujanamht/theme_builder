@@ -134,6 +134,8 @@ export default function NavbarPreview() {
             isActive={isActive}
             onUpload={v => updateSection('navbar', 'data', { ...data, logo: v })}
             style={{ borderRadius: '6px', flexShrink: 0, height: '36px', width: 'auto', display: 'inline-block' }}
+            aspectRatio="1/1"
+            onCrop={v => updateSection('navbar', 'data', { ...data, logo: v })}
           >
             <img src={logo} alt={logoText || 'logo'} style={{ height: '36px', width: 'auto', objectFit: 'contain', display: 'block' }} />
           </CanvasUpload>

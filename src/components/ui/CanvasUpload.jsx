@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react'
+import CropOverlay from './CropOverlay.jsx'
 
 function UploadIcon({ size }) {
   return (
@@ -37,15 +38,24 @@ export default function CanvasUpload({
   style,
   compact = false,
   shape = 'rect',
+  aspectRatio,
+  onCrop,
 }) {
   const inputRef = useRef()
   const [hovered, setHovered] = useState(false)
+  const [pendingSrc, setPendingSrc] = useState(null)
 
   function handleFile(e) {
     const file = e.target.files?.[0]
     if (!file) return
     const reader = new FileReader()
-    reader.onload = ev => onUpload(ev.target.result)
+    reader.onload = ev => {
+      if (onCrop) {
+        setPendingSrc(ev.target.result)
+      } else {
+        onUpload(ev.target.result)
+      }
+    }
     reader.readAsDataURL(file)
     e.target.value = ''
   }
@@ -147,6 +157,15 @@ export default function CanvasUpload({
         style={{ display: 'none' }}
         onChange={handleFile}
       />
+
+      {pendingSrc && (
+        <CropOverlay
+          src={pendingSrc}
+          aspectRatio={aspectRatio || '16/9'}
+          onCrop={url => { onUpload(url); setPendingSrc(null) }}
+          onClose={() => setPendingSrc(null)}
+        />
+      )}
     </div>
   )
 }

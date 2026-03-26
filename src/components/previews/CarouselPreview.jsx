@@ -144,6 +144,10 @@ export default function CarouselPreview() {
           updateSection('carousel', 'data', { ...data, slides: [{ image: v, title: '', subtitle: '' }] })
         }}
         style={{ ...wrapperStyle }}
+        aspectRatio="16/9"
+        onCrop={v => {
+          updateSection('carousel', 'data', { ...data, slides: [{ image: v, title: '', subtitle: '' }] })
+        }}
       />
     )
   }
@@ -162,6 +166,8 @@ export default function CarouselPreview() {
               ? { ...slideBaseStyle, backgroundImage: `url(${slide.image})` }
               : slideBaseStyle
             }
+            aspectRatio="16/9"
+            onCrop={v => handleSlideUpload(i, v)}
           >
             {/* Dim gradient overlay */}
             <div style={overlayStyle} />

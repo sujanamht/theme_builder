@@ -69,30 +69,6 @@ export default function SortableCanvasItem({ id, children, onSelect, onDuplicate
           }}
           onMouseEnter={e => e.stopPropagation()}
         >
-          {/* Duplicate button */}
-          <button
-            onClick={e => { e.stopPropagation(); onDuplicate() }}
-            title="Duplicate"
-            style={{
-              background: 'rgba(20,20,20,0.85)',
-              border: '1px solid rgba(255,255,255,0.12)',
-              borderRadius: '5px',
-              color: '#ccc',
-              fontSize: '11px',
-              padding: '3px 7px',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '4px',
-              fontFamily: 'Inter, sans-serif',
-              backdropFilter: 'blur(4px)',
-              transition: 'background 0.12s',
-            }}
-            onMouseEnter={e => e.currentTarget.style.background = 'rgba(99,102,241,0.7)'}
-            onMouseLeave={e => e.currentTarget.style.background = 'rgba(20,20,20,0.85)'}
-          >
-            ⧉
-          </button>
         </div>
       )}
 

@@ -26,7 +26,7 @@ export default function TestimonialPreview() {
   const selectedId = useSelection()
   const isActive = selectedId === 'testimonial' || selectedId?.startsWith('testimonial-')
 
-  const heading = data.heading || 'What our customers say'
+  const heading = data.heading || ''
   const items   = data.items   || []
 
   function handleAvatarUpload(index, imageUrl) {
@@ -101,26 +101,48 @@ export default function TestimonialPreview() {
     objectFit:    'cover',
   }
 
-  const emptyState = {
-    color:      template.textColor || '#9ca3af',
-    fontSize:   template.fontSize  || '14px',
-    opacity:    0.4,
-    textAlign:  'center',
-    padding:    '24px 0',
-  }
-
   return (
     <section style={sectionStyle}>
-      <h2 style={headingStyle}>{heading}</h2>
+      {heading
+        ? <h2 style={headingStyle}>{heading}</h2>
+        : <div style={{ width: '280px', height: '28px', borderRadius: '6px', backgroundColor: '#d1d5db', margin: '0 auto 28px' }} />
+      }
 
       {items.length === 0 ? (
-        <p style={emptyState}>No testimonials yet — add some in the editor.</p>
+        <div style={scrollRowStyle}>
+          {[0, 1, 2].map(i => (
+            <div key={i} style={cardStyle}>
+              {/* Quote lines */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', flex: 1 }}>
+                {['100%', '85%', '60%'].map((w, j) => (
+                  <div key={j} style={{ width: w, height: '12px', borderRadius: '4px', backgroundColor: '#e5e7eb' }} />
+                ))}
+              </div>
+
+              {/* Author row */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <div style={{ width: '36px', height: '36px', borderRadius: '50%', backgroundColor: '#e5e7eb', flexShrink: 0 }} />
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                  <div style={{ width: '90px', height: '10px', borderRadius: '4px', backgroundColor: '#e5e7eb' }} />
+                  <div style={{ width: '60px', height: '10px', borderRadius: '4px', backgroundColor: '#e5e7eb' }} />
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
       ) : (
         <div style={scrollRowStyle}>
           {items.map((item, i) => (
             <div key={i} style={cardStyle}>
               {/* Quote */}
-              <p style={quoteStyle}>"{item.quote || 'Their quote will appear here.'}"</p>
+              {item.quote
+                ? <p style={quoteStyle}>"{item.quote}"</p>
+                : <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', flex: 1 }}>
+                    {['100%', '85%', '60%'].map((w, j) => (
+                      <div key={j} style={{ width: w, height: '12px', borderRadius: '4px', backgroundColor: '#e5e7eb' }} />
+                    ))}
+                  </div>
+              }
 
               {/* Author row */}
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
@@ -131,6 +153,8 @@ export default function TestimonialPreview() {
                   style={avatarBaseStyle}
                   compact
                   shape="circle"
+                  aspectRatio="1/1"
+                  onCrop={v => handleAvatarUpload(i, v)}
                 >
                   <img
                     src={item.avatar}
@@ -140,8 +164,14 @@ export default function TestimonialPreview() {
                   />
                 </CanvasUpload>
                 <div>
-                  <p style={nameStyle}>{item.name || 'Name'}</p>
-                  <p style={roleStyle}>{item.role || 'Role'}</p>
+                  {item.name
+                    ? <p style={nameStyle}>{item.name}</p>
+                    : <div style={{ width: '90px', height: '10px', borderRadius: '4px', backgroundColor: '#e5e7eb', marginBottom: '6px' }} />
+                  }
+                  {item.role
+                    ? <p style={roleStyle}>{item.role}</p>
+                    : <div style={{ width: '60px', height: '10px', borderRadius: '4px', backgroundColor: '#e5e7eb' }} />
+                  }
                 </div>
               </div>
             </div>

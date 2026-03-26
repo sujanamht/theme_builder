@@ -91,6 +91,8 @@ export default function HeroPreview() {
       isActive={isActive}
       onUpload={v => updateSection('hero', 'data', { ...data, bgImage: v })}
       style={sectionStyle}
+      aspectRatio="16/9"
+      onCrop={v => updateSection('hero', 'data', { ...data, bgImage: v })}
     >
       {/* Scrim */}
       <div style={scrimStyle} />

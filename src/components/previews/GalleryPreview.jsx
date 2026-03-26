@@ -104,6 +104,8 @@ export default function GalleryPreview() {
               isActive={isActive}
               onUpload={v => handleImageUpload(i, v)}
               style={itemWrapStyle}
+              aspectRatio="4/3"
+              onCrop={v => handleImageUpload(i, v)}
             >
               <img src={item.image} alt={item.caption || ''} style={imgStyle} />
               {item.caption && (
