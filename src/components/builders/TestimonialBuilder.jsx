@@ -109,6 +109,34 @@ export default function TestimonialBuilder({ activeTab = 'content' }) {
       {activeTab === 'style' && (
         <section>
           <div className="space-y-3">
+            <div className="flex flex-col gap-1">
+              <span className="text-sm">Cards visible at once</span>
+              <div style={{ display: 'flex', gap: '8px' }}>
+                {[1, 2, 3].map(n => {
+                  const active = (template.visibleCount ?? 1) === n
+                  return (
+                    <button
+                      key={n}
+                      onClick={() => handleTemplate('visibleCount', n)}
+                      style={{
+                        flex:            1,
+                        padding:         '6px 0',
+                        borderRadius:    '6px',
+                        border:          active ? '2px solid #6366f1' : '2px solid transparent',
+                        background:      active ? 'rgba(99,102,241,0.12)' : 'rgba(255,255,255,0.06)',
+                        color:           active ? '#6366f1' : 'inherit',
+                        fontWeight:      active ? '700' : '400',
+                        fontSize:        '14px',
+                        cursor:          'pointer',
+                        transition:      'all 0.15s',
+                      }}
+                    >
+                      {n}
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
             <ColorInput
               label="Background Color"
               value={template.bgColor ?? '#000000'}

@@ -1,14 +1,8 @@
 import { useTheme } from '../../store/themeStore.jsx'
 import { useSelection } from '../../store/selectionContext.jsx'
 import CanvasUpload from '../ui/CanvasUpload.jsx'
-
-const GRID_COLS = { '2': '1fr 1fr', '3': '1fr 1fr 1fr', '4': '1fr 1fr 1fr 1fr' }
-
-function hexToRgba(hex, alpha) {
-  const c = (hex || '').replace('#', '')
-  if (c.length !== 6) return `rgba(0,0,0,${alpha})`
-  return `rgba(${parseInt(c.slice(0,2),16)},${parseInt(c.slice(2,4),16)},${parseInt(c.slice(4,6),16)},${alpha})`
-}
+import ResponsiveGrid from '../ui/ResponsiveGrid.jsx'
+import { hexToRgba } from '../../utils/colorUtils.js'
 
 export default function GalleryPreview() {
   const { theme, updateSection } = useTheme()
@@ -25,12 +19,10 @@ export default function GalleryPreview() {
     updateSection('gallery', 'data', { ...data, items: updated })
   }
 
-  const textColor  = template.textColor  || '#111827'
-  const fontSize   = template.fontSize   || '14px'
-  const columns    = template.columns    || '3'
-  const gap        = template.gap        || '12px'
+  const textColor  = template.textColor    || '#111827'
+  const fontSize   = template.fontSize     || '14px'
   const radius     = template.borderRadius || '8px'
-  const captionBg  = template.captionBg  || '#000000'
+  const captionBg  = template.captionBg    || '#000000'
 
   const sectionStyle = {
     backgroundColor: template.bgColor || '#f9fafb',
@@ -55,12 +47,6 @@ export default function GalleryPreview() {
     margin:     '0 0 32px',
     textAlign:  'center',
     lineHeight: '1.6',
-  }
-
-  const gridStyle = {
-    display:             'grid',
-    gridTemplateColumns: GRID_COLS[columns] || GRID_COLS['3'],
-    gap,
   }
 
   const itemWrapStyle = {
@@ -96,7 +82,7 @@ export default function GalleryPreview() {
       {items.length === 0 ? (
         <p style={emptyStyle}>No images yet — add some in the editor.</p>
       ) : (
-        <div style={gridStyle}>
+        <ResponsiveGrid cols={{ mobile: 1, tablet: 2, desktop: 3 }} gap={16}>
           {items.map((item, i) => (
             <CanvasUpload
               key={i}
@@ -125,7 +111,7 @@ export default function GalleryPreview() {
               )}
             </CanvasUpload>
           ))}
-        </div>
+        </ResponsiveGrid>
       )}
     </section>
   )

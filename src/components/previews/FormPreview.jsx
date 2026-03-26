@@ -1,5 +1,6 @@
 import { useTheme } from '../../store/themeStore.jsx'
 import { useSelection } from '../../store/selectionContext.jsx'
+import { useContainerWidth } from '../../hooks/useContainerWidth.js'
 
 const FIELD_PLACEHOLDERS = {
   name:    'Your name',
@@ -15,11 +16,16 @@ export default function FormPreview() {
   const selectedId = useSelection()
   const isActive = selectedId === 'form' || selectedId?.startsWith('form-')
 
+  const { ref, width } = useContainerWidth()
+  const isMobile = width < 500
+
   const bg        = template.bgColor    || '#ffffff'
   const textColor = template.textColor  || '#000000'
   const buttonBg  = template.buttonBg   || '#6366f1'
   const buttonTxt = template.buttonText || '#ffffff'
-  const padding   = `${template.padding ?? 48}px 32px`
+  const padding   = isMobile
+    ? `24px 20px`
+    : `${template.padding ?? 48}px 32px`
 
   const enabledFields = Object.entries(data.fields ?? {}).filter(([, on]) => on)
   const isEmpty = !data.heading && !data.subheading && enabledFields.length === 0
@@ -48,7 +54,7 @@ export default function FormPreview() {
   })
 
   return (
-    <section style={{ backgroundColor: bg, padding, width: '100%', boxSizing: 'border-box' }}>
+    <section ref={ref} style={{ backgroundColor: bg, padding, width: '100%', boxSizing: 'border-box' }}>
       <div style={{ maxWidth: '560px', margin: '0 auto' }}>
         {isEmpty ? (
           <>
@@ -62,7 +68,7 @@ export default function FormPreview() {
         ) : (
           <>
             {data.heading && (
-              <h2 style={{ color: textColor, fontSize: '26px', fontWeight: '700', margin: '0 0 8px', lineHeight: '1.2' }}>
+              <h2 style={{ color: textColor, fontSize: isMobile ? '20px' : '26px', fontWeight: '700', margin: '0 0 8px', lineHeight: '1.2' }}>
                 {data.heading}
               </h2>
             )}

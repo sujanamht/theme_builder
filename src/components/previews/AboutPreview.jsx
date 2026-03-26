@@ -1,12 +1,16 @@
 import { useTheme } from '../../store/themeStore.jsx'
 import { useSelection } from '../../store/selectionContext.jsx'
 import CanvasUpload from '../ui/CanvasUpload.jsx'
+import { useContainerWidth } from '../../hooks/useContainerWidth.js'
 
 export default function AboutPreview() {
   const { theme, updateSection } = useTheme()
   const { data, template } = theme.about
   const selectedId = useSelection()
   const isActive = selectedId === 'about' || selectedId?.startsWith('about-')
+
+  const { ref: containerRef, width: containerWidth } = useContainerWidth()
+  const isMobile = containerWidth < 500
 
   const fontSize      = template.fontSize      || '16px'
   const textColor     = template.textColor     || '#111827'
@@ -16,15 +20,17 @@ export default function AboutPreview() {
 
   const sectionStyle = {
     backgroundColor: template.bgColor || '#ffffff',
-    padding:         template.padding || '64px 32px',
+    padding:         isMobile ? '32px 16px' : (template.padding || '64px 32px'),
     width:           '100%',
     boxSizing:       'border-box',
   }
 
   const rowStyle = {
     display:       'flex',
-    flexDirection: imagePosition === 'right' ? 'row-reverse' : 'row',
-    gap:           '48px',
+    flexDirection: isMobile
+      ? 'column'
+      : imagePosition === 'right' ? 'row-reverse' : 'row',
+    gap:           isMobile ? '24px' : '48px',
     alignItems:    'stretch',
     maxWidth:      '1100px',
     margin:        '0 auto',
@@ -33,11 +39,12 @@ export default function AboutPreview() {
   const colStyle = {
     flex:     '1 1 0',
     minWidth: 0,
+    width:    isMobile ? '100%' : undefined,
   }
 
   const headingStyle = {
     color:         textColor,
-    fontSize:      `calc(${fontSize} * 1.8)`,
+    fontSize:      isMobile ? '22px' : `calc(${fontSize} * 1.8)`,
     fontWeight:    '700',
     margin:        '0 0 16px',
     lineHeight:    '1.2',
@@ -46,7 +53,7 @@ export default function AboutPreview() {
 
   const bodyStyle = {
     color:      textColor,
-    fontSize,
+    fontSize:   isMobile ? '14px' : fontSize,
     lineHeight: '1.7',
     opacity:    0.8,
     margin:     '0 0 28px',
@@ -56,9 +63,9 @@ export default function AboutPreview() {
     display:         'inline-block',
     backgroundColor: template.buttonBg   || '#0a0f2c',
     color:           template.buttonText || '#ffffff',
-    fontSize,
+    fontSize:        isMobile ? '14px' : fontSize,
     fontWeight:      '600',
-    padding:         '12px 28px',
+    padding:         isMobile ? '10px 22px' : '12px 28px',
     borderRadius:    '8px',
     border:          'none',
     cursor:          'pointer',
@@ -84,50 +91,52 @@ export default function AboutPreview() {
   })
 
   return (
-    <section style={sectionStyle}>
-      <div style={rowStyle}>
-        {/* Image column */}
-        <div style={colStyle}>
-          <CanvasUpload
-            hasImage={hasImage}
-            isActive={isActive}
-            onUpload={v => updateSection('about', 'data', { ...data, image: v })}
-            aspectRatio="4/3"
-            onCrop={v => updateSection('about', 'data', { ...data, image: v })}
-            style={{ width: '100%', minHeight: '320px', borderRadius: '8px', overflow: 'hidden' }}
-          >
-            <img src={data.image} alt="" style={imgStyle} />
-          </CanvasUpload>
-        </div>
+    <div ref={containerRef} style={{ width: '100%' }}>
+      <section style={sectionStyle}>
+        <div style={rowStyle}>
+          {/* Image column */}
+          <div style={colStyle}>
+            <CanvasUpload
+              hasImage={hasImage}
+              isActive={isActive}
+              onUpload={v => updateSection('about', 'data', { ...data, image: v })}
+              aspectRatio="4/3"
+              onCrop={v => updateSection('about', 'data', { ...data, image: v })}
+              style={{ width: '100%', minHeight: isMobile ? '200px' : '320px', borderRadius: '8px', overflow: 'hidden' }}
+            >
+              <img src={data.image} alt="" style={imgStyle} />
+            </CanvasUpload>
+          </div>
 
-        {/* Text column */}
-        <div style={{ ...colStyle, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-          {isEmpty ? (
-            <>
-              <div style={skeletonBox('60%', '28px', 16)} />
-              <div style={skeletonBox('100%', '14px', 8)} />
-              <div style={skeletonBox('95%',  '14px', 8)} />
-              <div style={skeletonBox('98%',  '14px', 8)} />
-              <div style={skeletonBox('75%',  '14px', 28)} />
-              <div style={skeletonBox('120px', '40px', 0)} />
-            </>
-          ) : (
-            <>
-              {data.heading && <h2 style={headingStyle}>{data.heading}</h2>}
-              {data.body    && <p  style={bodyStyle}>{data.body}</p>}
-              {data.buttonText && (
-                <a
-                  href={data.buttonUrl || '#'}
-                  style={btnStyle}
-                  onClick={e => e.preventDefault()}
-                >
-                  {data.buttonText}
-                </a>
-              )}
-            </>
-          )}
+          {/* Text column */}
+          <div style={{ ...colStyle, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+            {isEmpty ? (
+              <>
+                <div style={skeletonBox('60%', '28px', 16)} />
+                <div style={skeletonBox('100%', '14px', 8)} />
+                <div style={skeletonBox('95%',  '14px', 8)} />
+                <div style={skeletonBox('98%',  '14px', 8)} />
+                <div style={skeletonBox('75%',  '14px', 28)} />
+                <div style={skeletonBox('120px', '40px', 0)} />
+              </>
+            ) : (
+              <>
+                {data.heading && <h2 style={headingStyle}>{data.heading}</h2>}
+                {data.body    && <p  style={bodyStyle}>{data.body}</p>}
+                {data.buttonText && (
+                  <a
+                    href={data.buttonUrl || '#'}
+                    style={btnStyle}
+                    onClick={e => e.preventDefault()}
+                  >
+                    {data.buttonText}
+                  </a>
+                )}
+              </>
+            )}
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </div>
   )
 }

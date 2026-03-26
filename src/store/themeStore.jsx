@@ -23,8 +23,27 @@ const initialState = {
     ],
   },
 
-  announcement: { data: {}, template: {} },
-  navbar:        { data: {}, template: {} },
+  announcement: {
+    data: {
+      message: 'Welcome to Acme Co! Free shipping on all orders over $50.',
+      linkText: 'Shop now',
+      linkUrl: '#',
+    },
+    template: {},
+  },
+
+  navbar: {
+    data: {
+      logoText: 'Acme Co',
+      links: [
+        { label: 'Home',     href: '#' },
+        { label: 'About',    href: '#' },
+        { label: 'Services', href: '#' },
+        { label: 'Contact',  href: '#' },
+      ],
+    },
+    template: {},
+  },
 
   testimonial: {
     template: {},
@@ -53,7 +72,16 @@ const initialState = {
     },
   },
 
-  carousel: { data: {}, template: {} },
+  carousel: {
+    data: {
+      slides: [
+        { image: '', heading: 'Grow Your Business', subheading: 'Tools built for modern teams.' },
+        { image: '', heading: 'Design with Confidence', subheading: 'Pixel-perfect components, every time.' },
+        { image: '', heading: 'Ship Faster', subheading: 'From idea to launch in record time.' },
+      ],
+    },
+    template: {},
+  },
 
   services: {
     template: {},
@@ -100,18 +128,71 @@ const initialState = {
     },
   },
 
-  about:   { data: {}, template: {} },
-  cta:     { data: {}, template: {} },
-  footer:  { data: {}, template: {} },
-  hero:    { data: {}, template: {} },
+  about: {
+    data: {
+      heading: 'We build products people love',
+      body: 'Acme Co was founded in 2018 with a simple mission: make powerful software accessible to everyone. Our team of designers and engineers works tirelessly to craft tools that are fast, reliable, and a joy to use.',
+      imageUrl: '',
+      buttonText: 'Meet the team',
+      buttonUrl: '#',
+    },
+    template: {},
+  },
+
+  cta: {
+    data: {
+      heading: 'Ready to get started?',
+      subheading: 'Join thousands of teams already building with Acme Co.',
+      primaryButtonText: 'Start for free',
+      primaryButtonUrl: '#',
+      secondaryButtonText: 'See pricing',
+      secondaryButtonUrl: '#',
+    },
+    template: {},
+  },
+
+  footer: {
+    data: {
+      brand: 'Acme Co',
+      tagline: 'Building better products, together.',
+      links: [
+        { label: 'Home',    href: '#' },
+        { label: 'About',   href: '#' },
+        { label: 'Blog',    href: '#' },
+        { label: 'Careers', href: '#' },
+      ],
+      serviceLinks: [
+        { label: 'Features',  href: '#' },
+        { label: 'Pricing',   href: '#' },
+        { label: 'Docs',      href: '#' },
+        { label: 'Status',    href: '#' },
+      ],
+      copyright: '',
+      address: '123 Main Street, San Francisco, CA 94103',
+      phone: '',
+      email: 'hello@acmeco.com',
+    },
+    template: {},
+  },
+
+  hero: {
+    data: {
+      heading: 'Build something amazing',
+      subheading: 'Acme Co gives your team the tools to design, build, and ship — all in one place.',
+      buttonText: 'Get started free',
+      buttonUrl: '#',
+      imageUrl: '',
+    },
+    template: {},
+  },
   contact: {
     data: {
-      heading:    '',
-      subheading: '',
-      address:    '',
-      phone:      '',
-      email:      '',
-      hours:      '',
+      heading:    'Get in touch',
+      subheading: 'We would love to hear from you. Drop us a message and we will get back to you within 24 hours.',
+      address:    '123 Main Street, San Francisco, CA 94103',
+      phone:      '+1 (415) 555-0192',
+      email:      'hello@acmeco.com',
+      hours:      'Mon – Fri, 9 am – 6 pm PST',
       mapsUrl:    '',
       socials: {
         instagram: '',
@@ -129,9 +210,9 @@ const initialState = {
 
   form: {
     data: {
-      heading:     '',
-      subheading:  '',
-      submitLabel: '',
+      heading:     'Get in Touch',
+      subheading:  'Fill out the form below and we\'ll be in touch shortly.',
+      submitLabel: 'Send Message',
       fields: {
         name:     true,
         email:    true,
@@ -140,7 +221,7 @@ const initialState = {
         message:  true,
         consent:  false,
       },
-      consentText: '',
+      consentText: 'I agree to the privacy policy and terms of service.',
     },
     template: {
       bgColor:     '#ffffff',

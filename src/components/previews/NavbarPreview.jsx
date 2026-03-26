@@ -2,6 +2,7 @@ import { useState, useRef } from 'react'
 import { useTheme } from '../../store/themeStore.jsx'
 import { useSelection } from '../../store/selectionContext.jsx'
 import CanvasUpload from '../ui/CanvasUpload.jsx'
+import { useContainerWidth } from '../../hooks/useContainerWidth.js'
 
 function DropdownLink({ link, linkStyle, textColor, fontSize }) {
   const [open, setOpen] = useState(false)
@@ -68,6 +69,35 @@ function DropdownLink({ link, linkStyle, textColor, fontSize }) {
   )
 }
 
+function Hamburger({ color, onClick }) {
+  const bar = {
+    display:      'block',
+    width:        '18px',
+    height:       '2px',
+    borderRadius: '1px',
+    background:   color || '#111827',
+  }
+  return (
+    <button
+      onClick={onClick}
+      style={{
+        display:    'flex',
+        flexDirection: 'column',
+        gap:        '4px',
+        flexShrink: 0,
+        background: 'none',
+        border:     'none',
+        cursor:     'pointer',
+        padding:    '4px',
+      }}
+    >
+      <span style={bar} />
+      <span style={bar} />
+      <span style={bar} />
+    </button>
+  )
+}
+
 export default function NavbarPreview() {
   const { theme, updateSection } = useTheme()
   const { data, template } = theme.navbar
@@ -81,6 +111,10 @@ export default function NavbarPreview() {
 
   const logoInputRef = useRef()
   const [logoBadgeHovered, setLogoBadgeHovered] = useState(false)
+  const [menuOpen, setMenuOpen] = useState(false)
+
+  const { ref: navRef, width: navWidth } = useContainerWidth()
+  const isMobile = navWidth < 500
 
   function handleLogoFile(e) {
     const file = e.target.files?.[0]
@@ -107,6 +141,7 @@ export default function NavbarPreview() {
     fontSize:       template.fontSize  || '18px',
     fontWeight:     '700',
     textDecoration: 'none',
+    whiteSpace:     'nowrap',
   }
 
   const linkListStyle = {
@@ -116,6 +151,9 @@ export default function NavbarPreview() {
     listStyle:  'none',
     margin:     0,
     padding:    0,
+    overflow:   'hidden',
+    flexShrink: 1,
+    minWidth:   0,
   }
 
   const linkStyle = {
@@ -123,78 +161,126 @@ export default function NavbarPreview() {
     fontSize:       template.fontSize  || '16px',
     textDecoration: 'none',
     cursor:         'pointer',
+    whiteSpace:     'nowrap',
   }
 
-  return (
-    <nav style={navStyle}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-        {isImage ? (
-          <CanvasUpload
-            hasImage
-            isActive={isActive}
-            onUpload={v => updateSection('navbar', 'data', { ...data, logo: v })}
-            style={{ borderRadius: '6px', flexShrink: 0, height: '36px', width: 'auto', display: 'inline-block' }}
-            aspectRatio="1/1"
-            onCrop={v => updateSection('navbar', 'data', { ...data, logo: v })}
+  const logoArea = (
+    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0, minWidth: 0 }}>
+      {isImage ? (
+        <CanvasUpload
+          hasImage
+          isActive={isActive}
+          onUpload={v => updateSection('navbar', 'data', { ...data, logo: v })}
+          style={{ borderRadius: '6px', flexShrink: 0, height: '36px', width: 'auto', display: 'inline-block' }}
+          aspectRatio="1/1"
+          onCrop={v => updateSection('navbar', 'data', { ...data, logo: v })}
+        >
+          <img src={logo} alt={logoText || 'logo'} style={{ height: '36px', width: 'auto', objectFit: 'contain', display: 'block' }} />
+        </CanvasUpload>
+      ) : (
+        <>
+          <button
+            onClick={() => isActive && logoInputRef.current?.click()}
+            onMouseEnter={() => setLogoBadgeHovered(true)}
+            onMouseLeave={() => setLogoBadgeHovered(false)}
+            style={{
+              display:      'inline-flex',
+              alignItems:   'center',
+              padding:      '4px 10px',
+              borderRadius: '6px',
+              background:   logoBadgeHovered && isActive
+                ? 'rgba(99,102,241,0.12)'
+                : 'rgba(148,163,184,0.15)',
+              color:        logoBadgeHovered && isActive
+                ? 'rgba(99,102,241,0.85)'
+                : '#94a3b8',
+              fontSize:     '11px',
+              fontWeight:   '600',
+              letterSpacing:'0.06em',
+              cursor:       isActive ? 'pointer' : 'default',
+              userSelect:   'none',
+              border:       'none',
+              fontFamily:   'Inter, sans-serif',
+              transition:   'background 0.15s, color 0.15s',
+              flexShrink:   0,
+              whiteSpace:   'nowrap',
+            }}
           >
-            <img src={logo} alt={logoText || 'logo'} style={{ height: '36px', width: 'auto', objectFit: 'contain', display: 'block' }} />
-          </CanvasUpload>
+            LOGO +
+          </button>
+          <input
+            ref={logoInputRef}
+            type="file"
+            accept="image/*"
+            style={{ display: 'none' }}
+            onChange={handleLogoFile}
+          />
+        </>
+      )}
+      <a href="#" style={logoStyle}>{logoText || 'Brand'}</a>
+    </div>
+  )
+
+  const bgColor = template.bgColor || '#ffffff'
+
+  return (
+    <div ref={navRef} style={{ position: 'relative', width: '100%' }}>
+      <nav style={navStyle}>
+        {logoArea}
+
+        {isMobile ? (
+          <Hamburger
+            color={template.textColor || '#111827'}
+            onClick={() => setMenuOpen(prev => !prev)}
+          />
         ) : (
-          <>
-            <button
-              onClick={() => isActive && logoInputRef.current?.click()}
-              onMouseEnter={() => setLogoBadgeHovered(true)}
-              onMouseLeave={() => setLogoBadgeHovered(false)}
+          links.length > 0 && (
+            <ul style={linkListStyle}>
+              {links.map((link, i) => (
+                <DropdownLink
+                  key={i}
+                  link={link}
+                  linkStyle={linkStyle}
+                  textColor={template.textColor}
+                  fontSize={template.fontSize}
+                />
+              ))}
+            </ul>
+          )
+        )}
+      </nav>
+
+      {isMobile && menuOpen && links.length > 0 && (
+        <div style={{
+          position:        'absolute',
+          top:             '100%',
+          left:            0,
+          width:           '100%',
+          backgroundColor: bgColor,
+          borderTop:       '1px solid rgba(0,0,0,0.08)',
+          boxShadow:       '0 4px 12px rgba(0,0,0,0.08)',
+          zIndex:          200,
+          boxSizing:       'border-box',
+        }}>
+          {links.map((link, i) => (
+            <a
+              key={i}
+              href={link.url || '#'}
+              onClick={() => setMenuOpen(false)}
               style={{
-                display:      'inline-flex',
-                alignItems:   'center',
-                padding:      '4px 10px',
-                borderRadius: '6px',
-                background:   logoBadgeHovered && isActive
-                  ? 'rgba(99,102,241,0.12)'
-                  : 'rgba(148,163,184,0.15)',
-                color:        logoBadgeHovered && isActive
-                  ? 'rgba(99,102,241,0.85)'
-                  : '#94a3b8',
-                fontSize:     '11px',
-                fontWeight:   '600',
-                letterSpacing:'0.06em',
-                cursor:       isActive ? 'pointer' : 'default',
-                userSelect:   'none',
-                border:       'none',
-                fontFamily:   'Inter, sans-serif',
-                transition:   'background 0.15s, color 0.15s',
-                flexShrink:   0,
-                whiteSpace:   'nowrap',
+                display:        'block',
+                padding:        '12px 24px',
+                color:          template.textColor || '#111827',
+                fontSize:       template.fontSize  || '16px',
+                textDecoration: 'none',
+                borderBottom:   i < links.length - 1 ? '1px solid rgba(0,0,0,0.05)' : 'none',
               }}
             >
-              LOGO +
-            </button>
-            <input
-              ref={logoInputRef}
-              type="file"
-              accept="image/*"
-              style={{ display: 'none' }}
-              onChange={handleLogoFile}
-            />
-            <a href="#" style={logoStyle}>{logoText || 'Brand'}</a>
-          </>
-        )}
-      </div>
-
-      {links.length > 0 && (
-        <ul style={linkListStyle}>
-          {links.map((link, i) => (
-            <DropdownLink
-              key={i}
-              link={link}
-              linkStyle={linkStyle}
-              textColor={template.textColor}
-              fontSize={template.fontSize}
-            />
+              {link.label || 'Link'}
+            </a>
           ))}
-        </ul>
+        </div>
       )}
-    </nav>
+    </div>
   )
 }

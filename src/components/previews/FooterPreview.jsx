@@ -1,4 +1,5 @@
 import { useTheme } from '../../store/themeStore.jsx'
+import ResponsiveGrid from '../ui/ResponsiveGrid.jsx'
 
 export default function FooterPreview() {
   const { theme } = useTheme()
@@ -25,22 +26,17 @@ export default function FooterPreview() {
     fontFamily:      'Inter, sans-serif',
   }
 
-  const topRowStyle = {
-    display:  'flex',
-    gap:      '32px',
-    flexWrap: 'wrap',
-    padding:  template.padding || '40px 32px',
+  const gridPadding = {
+    padding: template.padding || '40px 32px',
   }
 
   const col1Style = {
-    flex:          '1 1 220px',
     display:       'flex',
     flexDirection: 'column',
     gap:           '10px',
   }
 
   const col234Style = {
-    flex:          '1 1 160px',
     display:       'flex',
     flexDirection: 'column',
     gap:           '8px',
@@ -126,44 +122,46 @@ export default function FooterPreview() {
   if (isEmpty) {
     return (
       <footer style={footerStyle}>
-        <div style={topRowStyle}>
+        <div style={gridPadding}>
+          <ResponsiveGrid cols={{ mobile: 1, tablet: 2, desktop: 4 }} gap={32}>
 
-          {/* Col 1 skeleton */}
-          <div style={col1Style}>
-            <div style={skel('120px', '18px')} />
-            <div style={skel('160px', '12px', 0.5)} />
-            <div style={skel('140px', '11px', 0.4)} />
-            <div style={skel('140px', '11px', 0.4)} />
-            <div style={skel('140px', '11px', 0.4)} />
-            <div style={{ display: 'flex', gap: '8px' }}>
-              <div style={skel('32px', '32px')} />
-              <div style={skel('32px', '32px')} />
+            {/* Col 1 skeleton */}
+            <div style={col1Style}>
+              <div style={skel('120px', '18px')} />
+              <div style={skel('160px', '12px', 0.5)} />
+              <div style={skel('140px', '11px', 0.4)} />
+              <div style={skel('140px', '11px', 0.4)} />
+              <div style={skel('140px', '11px', 0.4)} />
+              <div style={{ display: 'flex', gap: '8px' }}>
+                <div style={skel('32px', '32px')} />
+                <div style={skel('32px', '32px')} />
+              </div>
             </div>
-          </div>
 
-          {/* Col 2 skeleton */}
-          <div style={col234Style}>
-            <div style={skel('90px',  '10px')} />
-            <div style={skel('100px', '11px')} />
-            <div style={skel('120px', '11px')} />
-            <div style={skel('80px',  '11px')} />
-            <div style={skel('110px', '11px')} />
-          </div>
+            {/* Col 2 skeleton */}
+            <div style={col234Style}>
+              <div style={skel('90px',  '10px')} />
+              <div style={skel('100px', '11px')} />
+              <div style={skel('120px', '11px')} />
+              <div style={skel('80px',  '11px')} />
+              <div style={skel('110px', '11px')} />
+            </div>
 
-          {/* Col 3 skeleton */}
-          <div style={col234Style}>
-            <div style={skel('90px',  '10px')} />
-            <div style={skel('100px', '11px')} />
-            <div style={skel('120px', '11px')} />
-            <div style={skel('80px',  '11px')} />
-            <div style={skel('110px', '11px')} />
-          </div>
+            {/* Col 3 skeleton */}
+            <div style={col234Style}>
+              <div style={skel('90px',  '10px')} />
+              <div style={skel('100px', '11px')} />
+              <div style={skel('120px', '11px')} />
+              <div style={skel('80px',  '11px')} />
+              <div style={skel('110px', '11px')} />
+            </div>
 
-          {/* Col 4 skeleton */}
-          <div style={col234Style}>
-            <div style={skel('100%', '200px')} />
-          </div>
+            {/* Col 4 skeleton */}
+            <div style={col234Style}>
+              <div style={skel('100%', '200px')} />
+            </div>
 
+          </ResponsiveGrid>
         </div>
         <div style={bottomBarStyle}>
           <div style={{ width: '240px', height: '11px', borderRadius: '4px', background: 'rgba(255,255,255,0.15)', margin: '0 auto' }} />
@@ -174,67 +172,69 @@ export default function FooterPreview() {
 
   return (
     <footer style={footerStyle}>
-      <div style={topRowStyle}>
+      <div style={gridPadding}>
+        <ResponsiveGrid cols={{ mobile: 1, tablet: 2, desktop: 4 }} gap={32}>
 
-        {/* Col 1 — brand, contact, socials */}
-        <div style={col1Style}>
-          <p style={brandStyle}>{brand}</p>
-          {tagline  && <p style={taglineStyle}>{tagline}</p>}
-          {address  && <p style={contactLineStyle}><span>📍</span>{address}</p>}
-          {phone    && <p style={contactLineStyle}><span>📞</span>{phone}</p>}
-          {email    && <p style={contactLineStyle}><span>✉</span>{email}</p>}
+          {/* Col 1 — brand, contact, socials */}
+          <div style={col1Style}>
+            <p style={brandStyle}>{brand}</p>
+            {tagline  && <p style={taglineStyle}>{tagline}</p>}
+            {address  && <p style={contactLineStyle}><span>📍</span>{address}</p>}
+            {phone    && <p style={contactLineStyle}><span>📞</span>{phone}</p>}
+            {email    && <p style={contactLineStyle}><span>✉</span>{email}</p>}
 
-          {(data.socialFacebook || data.socialTiktok) && (
-            <div style={{ display: 'flex', gap: '8px', marginTop: '4px' }}>
-              {data.socialFacebook && (
-                <a href={data.socialFacebook} style={socialBtnStyle} target="_blank" rel="noreferrer">f</a>
-              )}
-              {data.socialTiktok && (
-                <a href={data.socialTiktok} style={socialBtnStyle} target="_blank" rel="noreferrer">t</a>
-              )}
+            {(data.socialFacebook || data.socialTiktok) && (
+              <div style={{ display: 'flex', gap: '8px', marginTop: '4px' }}>
+                {data.socialFacebook && (
+                  <a href={data.socialFacebook} style={socialBtnStyle} target="_blank" rel="noreferrer">f</a>
+                )}
+                {data.socialTiktok && (
+                  <a href={data.socialTiktok} style={socialBtnStyle} target="_blank" rel="noreferrer">t</a>
+                )}
+              </div>
+            )}
+          </div>
+
+          {/* Col 2 — useful links */}
+          <div style={col234Style}>
+            <p style={colHeadingStyle}>Useful Links</p>
+            {links.map((link, i) => (
+              <a key={i} href={link.url || '#'} style={linkStyle} target="_blank" rel="noreferrer">
+                › {link.label || `Link ${i + 1}`}
+              </a>
+            ))}
+          </div>
+
+          {/* Col 3 — service links */}
+          <div style={col234Style}>
+            <p style={colHeadingStyle}>Our Services</p>
+            {serviceLinks.map((link, i) => (
+              <a key={i} href={link.url || '#'} style={linkStyle} target="_blank" rel="noreferrer">
+                › {link.label || `Service ${i + 1}`}
+              </a>
+            ))}
+          </div>
+
+          {/* Col 4 — embed placeholder */}
+          {data.embedPlaceholder && (
+            <div style={col234Style}>
+              <div style={{
+                backgroundColor: '#1e3080',
+                borderRadius:    '6px',
+                height:          '200px',
+                display:         'flex',
+                alignItems:      'center',
+                justifyContent:  'center',
+                color:           textColor,
+                opacity:         0.5,
+                fontSize,
+              }}>
+                Embed / Social Feed
+              </div>
             </div>
           )}
-        </div>
 
-        {/* Col 2 — useful links */}
-        <div style={col234Style}>
-          <p style={colHeadingStyle}>Useful Links</p>
-          {links.map((link, i) => (
-            <a key={i} href={link.url || '#'} style={linkStyle} target="_blank" rel="noreferrer">
-              › {link.label || `Link ${i + 1}`}
-            </a>
-          ))}
-        </div>
-
-        {/* Col 3 — service links */}
-        <div style={col234Style}>
-          <p style={colHeadingStyle}>Our Services</p>
-          {serviceLinks.map((link, i) => (
-            <a key={i} href={link.url || '#'} style={linkStyle} target="_blank" rel="noreferrer">
-              › {link.label || `Service ${i + 1}`}
-            </a>
-          ))}
-        </div>
-
-        {/* Col 4 — embed placeholder */}
-        {data.embedPlaceholder && (
-          <div style={col234Style}>
-            <div style={{
-              backgroundColor: '#1e3080',
-              borderRadius:    '6px',
-              height:          '200px',
-              display:         'flex',
-              alignItems:      'center',
-              justifyContent:  'center',
-              color:           textColor,
-              opacity:         0.5,
-              fontSize,
-            }}>
-              Embed / Social Feed
-            </div>
-          </div>
-        )}
-
+        </ResponsiveGrid>
       </div>
 
       {/* Bottom bar */}
@@ -243,12 +243,3 @@ export default function FooterPreview() {
   )
 }
 
-/* Convert hex + alpha to rgba for border colors */
-function hexWithAlpha(hex, alpha) {
-  const clean = hex.replace('#', '')
-  if (clean.length !== 6) return `rgba(0,0,0,${alpha})`
-  const r = parseInt(clean.slice(0, 2), 16)
-  const g = parseInt(clean.slice(2, 4), 16)
-  const b = parseInt(clean.slice(4, 6), 16)
-  return `rgba(${r},${g},${b},${alpha})`
-}

@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, cloneElement } from 'react'
 import { ThemeProvider } from './store/themeStore.jsx'
-import { SelectionContext, useSelection } from './store/selectionContext.jsx'
+import { SelectionContext } from './store/selectionContext.jsx'
 import { exportJSON } from './exports/exportJSON.js'
 import { useTheme } from './store/themeStore.jsx'
 import {
@@ -351,6 +351,13 @@ function Shell({
   const [leftTab,          setLeftTab]          = useState('components')
   const [editorTab,        setEditorTab]        = useState('content')
 
+  const [isTooNarrow, setIsTooNarrow] = useState(() => window.innerWidth < 1000)
+  useEffect(() => {
+    function check() { setIsTooNarrow(window.innerWidth < 1000) }
+    window.addEventListener('resize', check)
+    return () => window.removeEventListener('resize', check)
+  }, [])
+
   useEffect(() => { setConfirmingRemove(false) }, [selectedComponent])
 
   /* canvas width resizing (renamed from isDragging to avoid conflict with dnd-kit) */
@@ -515,6 +522,45 @@ function Shell({
       {renderGlobalKeys(footerKeys)}
     </>
   )
+
+  if (isTooNarrow) {
+    return (
+      <div style={{
+        display:         'flex',
+        flexDirection:   'column',
+        alignItems:      'center',
+        justifyContent:  'center',
+        height:          '100vh',
+        width:           '100vw',
+        backgroundColor: '#0f0f0f',
+        padding:         '32px 24px',
+        boxSizing:       'border-box',
+        textAlign:       'center',
+        gap:             '20px',
+      }}>
+        <span style={{ fontSize: '48px', lineHeight: 1 }}>🖥️</span>
+        <div style={{
+          fontSize:      '18px',
+          fontWeight:    '800',
+          letterSpacing: '-0.03em',
+          color:         '#ffffff',
+          fontFamily:    'Inter, sans-serif',
+        }}>
+          Theme<span style={{ color: '#6366f1' }}>Builder</span>
+        </div>
+        <p style={{
+          color:      'rgba(255,255,255,0.55)',
+          fontSize:   '14px',
+          lineHeight: '1.6',
+          maxWidth:   '280px',
+          margin:     0,
+          fontFamily: 'Inter, sans-serif',
+        }}>
+          ThemeBuilder is designed for desktop use. Please open this on a larger screen.
+        </p>
+      </div>
+    )
+  }
 
   return (
     <DndContext sensors={sensors} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>

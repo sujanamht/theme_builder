@@ -1,15 +1,6 @@
 import { useTheme } from '../../store/themeStore.jsx'
-
-const GRID_COLS = { '1': '1fr', '2': '1fr 1fr', '3': '1fr 1fr 1fr' }
-
-function hexToRgba(hex, alpha) {
-  const c = hex.replace('#', '')
-  if (c.length !== 6) return `rgba(0,0,0,${alpha})`
-  const r = parseInt(c.slice(0, 2), 16)
-  const g = parseInt(c.slice(2, 4), 16)
-  const b = parseInt(c.slice(4, 6), 16)
-  return `rgba(${r},${g},${b},${alpha})`
-}
+import ResponsiveGrid from '../ui/ResponsiveGrid.jsx'
+import { hexToRgba } from '../../utils/colorUtils.js'
 
 export default function ServicesPreview() {
   const { theme } = useTheme()
@@ -22,7 +13,6 @@ export default function ServicesPreview() {
   const textColor   = template.textColor   || '#111827'
   const accentColor = template.accentColor || '#6366f1'
   const fontSize    = template.fontSize    || '15px'
-  const columns     = template.columns     || '3'
 
   const sectionStyle = {
     backgroundColor: template.bgColor  || '#f9fafb',
@@ -44,15 +34,9 @@ export default function ServicesPreview() {
     color:      textColor,
     fontSize:   `calc(${fontSize} * 1.05)`,
     opacity:    0.6,
-    margin:     '0 0 40px',
+    margin:     '0 0 32px',
     textAlign:  'center',
     lineHeight: '1.6',
-  }
-
-  const gridStyle = {
-    display:             'grid',
-    gridTemplateColumns: GRID_COLS[columns] || GRID_COLS['3'],
-    gap:                 '20px',
   }
 
   const cardStyle = {
@@ -118,7 +102,7 @@ export default function ServicesPreview() {
       {items.length === 0 ? (
         <p style={emptyStyle}>No services yet — add some in the editor.</p>
       ) : (
-        <div style={gridStyle}>
+        <ResponsiveGrid cols={{ mobile: 1, tablet: 2, desktop: 3 }} gap={24}>
           {items.map((item, i) => (
             <div key={i} style={cardStyle}>
               {item.icon && (
@@ -133,7 +117,7 @@ export default function ServicesPreview() {
               )}
             </div>
           ))}
-        </div>
+        </ResponsiveGrid>
       )}
     </section>
   )

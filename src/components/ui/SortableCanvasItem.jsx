@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 
-export default function SortableCanvasItem({ id, children, onSelect, onDuplicate }) {
+export default function SortableCanvasItem({ id, children, onSelect }) {
   const [hovered, setHovered] = useState(false)
 
   const {
@@ -55,22 +55,6 @@ export default function SortableCanvasItem({ id, children, onSelect, onDuplicate
           ⠿
         </span>
       </div>
-
-      {/* Hover toolbar — top right corner */}
-      {hovered && (
-        <div
-          style={{
-            position: 'absolute',
-            top: 6,
-            right: 8,
-            display: 'flex',
-            gap: '4px',
-            zIndex: 20,
-          }}
-          onMouseEnter={e => e.stopPropagation()}
-        >
-        </div>
-      )}
 
       {/* Preview — click to select */}
       <div onClick={() => onSelect(id)} style={{ cursor: 'pointer' }}>

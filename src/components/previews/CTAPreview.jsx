@@ -1,8 +1,12 @@
 import { useTheme } from '../../store/themeStore.jsx'
+import { useContainerWidth } from '../../hooks/useContainerWidth.js'
 
 export default function CTAPreview() {
   const { theme } = useTheme()
   const { data, template } = theme.cta
+
+  const { ref, width } = useContainerWidth()
+  const isMobile = width < 500
 
   const textAlign  = template.textAlign   || 'center'
   const fontSize   = template.fontSize    || '16px'
@@ -10,24 +14,24 @@ export default function CTAPreview() {
 
   const sectionStyle = {
     backgroundColor: template.bgColor  || '#f9fafb',
-    padding:         template.padding  || '64px 32px',
+    padding:         isMobile ? '32px 20px' : (template.padding || '64px 32px'),
     width:           '100%',
     boxSizing:       'border-box',
     textAlign,
   }
 
   const headingStyle = {
-    color:        textColor,
-    fontSize:     `calc(${fontSize} * 2)`,
-    fontWeight:   '800',
-    margin:       '0 0 12px',
-    lineHeight:   '1.2',
-    letterSpacing:'-0.02em',
+    color:         textColor,
+    fontSize:      isMobile ? '24px' : `calc(${fontSize} * 2)`,
+    fontWeight:    '800',
+    margin:        '0 0 12px',
+    lineHeight:    '1.2',
+    letterSpacing: '-0.02em',
   }
 
   const subheadingStyle = {
     color:      textColor,
-    fontSize:   `calc(${fontSize} * 1.1)`,
+    fontSize:   isMobile ? '14px' : `calc(${fontSize} * 1.1)`,
     opacity:    0.7,
     margin:     '0 0 32px',
     lineHeight: '1.6',
@@ -72,7 +76,7 @@ export default function CTAPreview() {
   const hasSecondary = Boolean(data.secondaryButtonText)
 
   return (
-    <section style={sectionStyle}>
+    <section ref={ref} style={sectionStyle}>
       {data.heading && (
         <h2 style={headingStyle}>{data.heading}</h2>
       )}

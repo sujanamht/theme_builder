@@ -1,6 +1,7 @@
 import { useTheme } from '../../store/themeStore.jsx'
 import { useSelection } from '../../store/selectionContext.jsx'
 import CanvasUpload from '../ui/CanvasUpload.jsx'
+import { useContainerWidth } from '../../hooks/useContainerWidth.js'
 
 export default function HeroPreview() {
   const { theme, updateSection } = useTheme()
@@ -8,9 +9,12 @@ export default function HeroPreview() {
   const selectedId = useSelection()
   const isActive = selectedId === 'hero' || selectedId?.startsWith('hero-')
 
+  const { ref: containerRef, width: containerWidth } = useContainerWidth()
+  const isMobile = containerWidth < 500
+
   const textAlign  = template.textAlign || 'center'
   const textColor  = template.textColor || '#ffffff'
-  const minHeight  = template.minHeight || '480px'
+  const minHeight  = isMobile ? '320px' : (template.minHeight || '480px')
   const hasBgImage = Boolean(data.bgImage)
 
   const justifyContent =
@@ -29,7 +33,7 @@ export default function HeroPreview() {
     display:         'flex',
     alignItems:      'center',
     justifyContent,
-    padding:         '64px 48px',
+    padding:         isMobile ? '36px 20px' : '64px 48px',
     textAlign,
     overflow:        'hidden',
   }
@@ -54,29 +58,29 @@ export default function HeroPreview() {
 
   const headlineStyle = {
     color:         textColor,
-    fontSize:      'clamp(28px, 5vw, 52px)',
+    fontSize:      isMobile ? '26px' : 'clamp(28px, 5vw, 52px)',
     fontWeight:    '800',
     lineHeight:    '1.15',
     letterSpacing: '-0.02em',
-    margin:        '0 0 16px',
+    margin:        '0 0 12px',
   }
 
   const subheadlineStyle = {
     color:      textColor,
-    fontSize:   'clamp(14px, 2vw, 18px)',
+    fontSize:   isMobile ? '14px' : 'clamp(14px, 2vw, 18px)',
     fontWeight: '400',
     lineHeight: '1.6',
     opacity:    0.8,
-    margin:     '0 0 36px',
+    margin:     isMobile ? '0 0 24px' : '0 0 36px',
   }
 
   const btnStyle = {
     display:         'inline-block',
     backgroundColor: template.btnBg   || '#6366f1',
     color:           template.btnText || '#ffffff',
-    fontSize:        '15px',
+    fontSize:        isMobile ? '14px' : '15px',
     fontWeight:      '600',
-    padding:         '13px 32px',
+    padding:         isMobile ? '10px 24px' : '13px 32px',
     borderRadius:    template.btnRadius || '8px',
     border:          'none',
     cursor:          'pointer',
@@ -86,6 +90,7 @@ export default function HeroPreview() {
   }
 
   return (
+    <div ref={containerRef} style={{ width: '100%' }}>
     <CanvasUpload
       hasImage={hasBgImage}
       isActive={isActive}
@@ -121,5 +126,6 @@ export default function HeroPreview() {
         )}
       </div>
     </CanvasUpload>
+    </div>
   )
 }

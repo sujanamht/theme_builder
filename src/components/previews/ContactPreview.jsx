@@ -1,4 +1,5 @@
 import { useTheme } from '../../store/themeStore.jsx'
+import ResponsiveGrid from '../ui/ResponsiveGrid.jsx'
 
 /* ── Inline SVG icons ──────────────────────────────────────────────── */
 function IconInstagram({ size = 18, color }) {
@@ -90,113 +91,112 @@ export default function ContactPreview() {
 
   return (
     <section style={{ backgroundColor: bg, padding, width: '100%', boxSizing: 'border-box' }}>
-      <div style={{
-        display:             'grid',
-        gridTemplateColumns: '1fr 1fr',
-        gap:                 '48px',
-        maxWidth:            '1000px',
-        margin:              '0 auto',
-        alignItems:          'start',
-      }}>
+      <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
+        <ResponsiveGrid
+          cols={{ mobile: 1, tablet: 1, desktop: 2 }}
+          gap={40}
+          style={{ alignItems: 'start' }}
+        >
 
-        {/* ── Left: info ── */}
-        <div>
-          {isEmpty ? (
-            <>
-              <div style={skel('55%', '28px', 12)} />
-              <div style={skel('80%', '14px', 32)} />
-              <div style={skel('70%', '14px', 12)} />
-              <div style={skel('60%', '14px', 12)} />
-              <div style={skel('65%', '14px', 12)} />
-            </>
-          ) : (
-            <>
-              {data.heading && (
-                <h2 style={{ color: textColor, fontSize: '26px', fontWeight: '700', margin: '0 0 8px', lineHeight: '1.2' }}>
-                  {data.heading}
-                </h2>
-              )}
-              {data.subheading && (
-                <p style={{ color: textColor, fontSize: '15px', opacity: 0.7, margin: '0 0 28px', lineHeight: '1.6' }}>
-                  {data.subheading}
-                </p>
-              )}
+          {/* ── Left: info ── */}
+          <div>
+            {isEmpty ? (
+              <>
+                <div style={skel('55%', '28px', 12)} />
+                <div style={skel('80%', '14px', 32)} />
+                <div style={skel('70%', '14px', 12)} />
+                <div style={skel('60%', '14px', 12)} />
+                <div style={skel('65%', '14px', 12)} />
+              </>
+            ) : (
+              <>
+                {data.heading && (
+                  <h2 style={{ color: textColor, fontSize: '26px', fontWeight: '700', margin: '0 0 8px', lineHeight: '1.2' }}>
+                    {data.heading}
+                  </h2>
+                )}
+                {data.subheading && (
+                  <p style={{ color: textColor, fontSize: '15px', opacity: 0.7, margin: '0 0 28px', lineHeight: '1.6' }}>
+                    {data.subheading}
+                  </p>
+                )}
 
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                {infoItems.map(({ icon: Icon, label, value }) => (
-                  <div key={label} style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
-                    <div style={{
-                      width: '34px', height: '34px', borderRadius: '8px',
-                      background: `${accentColor}15`, flexShrink: 0,
-                      display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    }}>
-                      <Icon size={15} color={accentColor} />
-                    </div>
-                    <div>
-                      <div style={{ color: textColor, fontSize: '11px', fontWeight: '600', opacity: 0.5, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '2px' }}>
-                        {label}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                  {infoItems.map(({ icon: Icon, label, value }) => (
+                    <div key={label} style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
+                      <div style={{
+                        width: '34px', height: '34px', borderRadius: '8px',
+                        background: `${accentColor}15`, flexShrink: 0,
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      }}>
+                        <Icon size={15} color={accentColor} />
                       </div>
-                      <div style={{ color: textColor, fontSize: '14px', lineHeight: '1.5', whiteSpace: 'pre-line' }}>
-                        {value}
+                      <div>
+                        <div style={{ color: textColor, fontSize: '11px', fontWeight: '600', opacity: 0.5, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '2px' }}>
+                          {label}
+                        </div>
+                        <div style={{ color: textColor, fontSize: '14px', lineHeight: '1.5', whiteSpace: 'pre-line' }}>
+                          {value}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
-              </div>
-
-              {activeSocials.length > 0 && (
-                <div style={{ display: 'flex', gap: '10px', marginTop: '28px', flexWrap: 'wrap' }}>
-                  {activeSocials.map(([key, url]) => {
-                    const Icon  = SOCIAL_ICONS[key]
-                    const color = SOCIAL_COLORS[key] || accentColor
-                    return (
-                      <a
-                        key={key}
-                        href={url}
-                        onClick={e => e.preventDefault()}
-                        title={key.charAt(0).toUpperCase() + key.slice(1)}
-                        style={{
-                          width: '38px', height: '38px', borderRadius: '50%',
-                          background: `${color}18`,
-                          display: 'flex', alignItems: 'center', justifyContent: 'center',
-                          textDecoration: 'none', flexShrink: 0,
-                        }}
-                      >
-                        <Icon size={18} color={color} />
-                      </a>
-                    )
-                  })}
+                  ))}
                 </div>
-              )}
-            </>
-          )}
-        </div>
 
-        {/* ── Right: map ── */}
-        <div>
-          {hasMap ? (
-            <iframe
-              src={data.mapsUrl}
-              style={{ width: '100%', aspectRatio: '4/3', borderRadius: '10px', border: 'none', display: 'block' }}
-              allowFullScreen=""
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-              title="Map"
-            />
-          ) : (
-            <div style={{
-              width: '100%', aspectRatio: '4/3', borderRadius: '10px',
-              background: '#f3f4f6',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-            }}>
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px', opacity: 0.35 }}>
-                <IconPin size={28} color={textColor} />
-                <span style={{ fontSize: '12px', color: textColor, fontFamily: 'Inter, sans-serif' }}>Paste a Maps embed URL</span>
+                {activeSocials.length > 0 && (
+                  <div style={{ display: 'flex', gap: '10px', marginTop: '28px', flexWrap: 'wrap' }}>
+                    {activeSocials.map(([key, url]) => {
+                      const Icon  = SOCIAL_ICONS[key]
+                      const color = SOCIAL_COLORS[key] || accentColor
+                      return (
+                        <a
+                          key={key}
+                          href={url}
+                          onClick={e => e.preventDefault()}
+                          title={key.charAt(0).toUpperCase() + key.slice(1)}
+                          style={{
+                            width: '38px', height: '38px', borderRadius: '50%',
+                            background: `${color}18`,
+                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            textDecoration: 'none', flexShrink: 0,
+                          }}
+                        >
+                          <Icon size={18} color={color} />
+                        </a>
+                      )
+                    })}
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+
+          {/* ── Right: map ── */}
+          <div>
+            {hasMap ? (
+              <iframe
+                src={data.mapsUrl}
+                style={{ width: '100%', aspectRatio: '4/3', borderRadius: '10px', border: 'none', display: 'block' }}
+                allowFullScreen=""
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                title="Map"
+              />
+            ) : (
+              <div style={{
+                width: '100%', aspectRatio: '4/3', borderRadius: '10px',
+                background: '#f3f4f6',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+              }}>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px', opacity: 0.35 }}>
+                  <IconPin size={28} color={textColor} />
+                  <span style={{ fontSize: '12px', color: textColor, fontFamily: 'Inter, sans-serif' }}>Paste a Maps embed URL</span>
+                </div>
               </div>
-            </div>
-          )}
-        </div>
+            )}
+          </div>
 
+        </ResponsiveGrid>
       </div>
     </section>
   )
