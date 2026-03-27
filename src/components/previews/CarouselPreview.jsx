@@ -43,7 +43,7 @@ export default function CarouselPreview() {
 
   const arrowColor  = template.arrowColor || '#ffffff'
   const dotColor    = template.dotColor   || '#ffffff'
-  const height      = template.height     || '360px'
+  const height      = template.height     || '560px'
   const arrowSize   = isMobile ? 16 : 20
   const arrowBtnPx  = isMobile ? '32px' : '40px'
 
@@ -86,33 +86,36 @@ export default function CarouselPreview() {
   const overlayStyle = {
     position:      'absolute',
     inset:         0,
-    background:    'linear-gradient(to top, rgba(0,0,0,0.55) 0%, transparent 60%)',
+    background:    'rgba(0,0,0,0.45)',
     pointerEvents: 'none',
   }
 
   const textBlockStyle = {
-    position: 'absolute',
-    bottom:   isMobile ? '24px' : '48px',
-    left:     isMobile ? '16px' : '32px',
-    right:    isMobile ? '16px' : '32px',
-    zIndex:   2,
+    position:  'absolute',
+    top:       '50%',
+    left:      '50%',
+    transform: 'translate(-50%, -50%)',
+    textAlign: 'center',
+    width:     '90%',
+    zIndex:    2,
   }
 
   const titleStyle = {
-    color:      template.textColor || '#ffffff',
-    fontSize:   isMobile
-      ? '16px'
-      : `calc(${template.fontSize || '16px'} * 1.5)`,
-    fontWeight: '700',
-    margin:     '0 0 6px',
-    lineHeight: '1.3',
+    color:        template.textColor || '#ffffff',
+    fontSize:     isMobile ? '1.6rem' : '2.8rem',
+    fontWeight:   800,
+    margin:       '0 0 12px',
+    lineHeight:   '1.15',
+    textShadow:   '0 2px 12px rgba(0,0,0,0.5)',
   }
 
   const subtitleStyle = {
-    color:    template.textColor || '#ffffff',
-    fontSize: isMobile ? '13px' : (template.fontSize || '16px'),
-    opacity:  0.85,
-    margin:   0,
+    color:      template.textColor || '#ffffff',
+    fontSize:   isMobile ? '13px' : (template.fontSize || '16px'),
+    opacity:    0.85,
+    textShadow: '0 1px 6px rgba(0,0,0,0.4)',
+    maxWidth:   '600px',
+    margin:     '0 auto 20px',
   }
 
   const arrowBtnStyle = {
@@ -188,6 +191,18 @@ export default function CarouselPreview() {
                 <div style={textBlockStyle}>
                   {slide.title    && <p style={titleStyle}>{slide.title}</p>}
                   {slide.subtitle && <p style={subtitleStyle}>{slide.subtitle}</p>}
+                  <button style={{
+                    background:   template.dotColor || '#1e3a8a',
+                    color:        '#ffffff',
+                    padding:      '10px 28px',
+                    borderRadius: '6px',
+                    border:       'none',
+                    fontSize:     '14px',
+                    fontWeight:   600,
+                    cursor:       'pointer',
+                  }}>
+                    Learn More
+                  </button>
                 </div>
               )}
             </CanvasUpload>

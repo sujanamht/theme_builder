@@ -12,15 +12,20 @@ export default function AboutPreview() {
   const { ref: containerRef, width: containerWidth } = useContainerWidth()
   const isMobile = containerWidth < 500
 
-  const fontSize      = template.fontSize      || '16px'
-  const textColor     = template.textColor     || '#111827'
+  const textColor     = template.textColor     || '#0a0a0a'
   const imagePosition = template.imagePosition || 'left'
   const hasImage      = Boolean(data.image)
   const isEmpty       = !data.heading && !data.body
 
+  const padV = isMobile ? '32px' : (template.padding ?? '64px')
+  const padH = isMobile ? '16px' : '48px'
+
   const sectionStyle = {
     backgroundColor: template.bgColor || '#ffffff',
-    padding:         isMobile ? '32px 16px' : (template.padding || '64px 32px'),
+    paddingTop:      padV,
+    paddingBottom:   padV,
+    paddingLeft:     padH,
+    paddingRight:    padH,
     width:           '100%',
     boxSizing:       'border-box',
   }
@@ -31,7 +36,7 @@ export default function AboutPreview() {
       ? 'column'
       : imagePosition === 'right' ? 'row-reverse' : 'row',
     gap:           isMobile ? '24px' : '48px',
-    alignItems:    'stretch',
+    alignItems:    'center',
     maxWidth:      '1100px',
     margin:        '0 auto',
   }
@@ -44,28 +49,26 @@ export default function AboutPreview() {
 
   const headingStyle = {
     color:         textColor,
-    fontSize:      isMobile ? '22px' : `calc(${fontSize} * 1.8)`,
-    fontWeight:    '700',
+    fontSize:      isMobile ? '1.5rem' : '2rem',
+    fontWeight:    800,
     margin:        '0 0 16px',
     lineHeight:    '1.2',
-    letterSpacing: '-0.01em',
   }
 
   const bodyStyle = {
-    color:      textColor,
-    fontSize:   isMobile ? '14px' : fontSize,
-    lineHeight: '1.7',
-    opacity:    0.8,
+    color:      '#374151',
+    fontSize:   isMobile ? '14px' : (template.fontSize ?? '16px'),
+    lineHeight: '1.75',
     margin:     '0 0 28px',
   }
 
   const btnStyle = {
     display:         'inline-block',
-    backgroundColor: template.buttonBg   || '#0a0f2c',
+    backgroundColor: template.buttonBg   || '#0a0a0a',
     color:           template.buttonText || '#ffffff',
-    fontSize:        isMobile ? '14px' : fontSize,
-    fontWeight:      '600',
-    padding:         isMobile ? '10px 22px' : '12px 28px',
+    fontSize:        '0.95rem',
+    fontWeight:      600,
+    padding:         '12px 28px',
     borderRadius:    '8px',
     border:          'none',
     cursor:          'pointer',
@@ -74,10 +77,10 @@ export default function AboutPreview() {
   }
 
   const imgStyle = {
-    width:      '100%',
-    height:     '100%',
-    objectFit:  'cover',
-    display:    'block',
+    width:     '100%',
+    height:    '100%',
+    objectFit: 'cover',
+    display:   'block',
   }
 
   // ── skeleton ────────────────────────────────────────────────────────────────
@@ -102,7 +105,7 @@ export default function AboutPreview() {
               onUpload={v => updateSection('about', 'data', { ...data, image: v })}
               aspectRatio="4/3"
               onCrop={v => updateSection('about', 'data', { ...data, image: v })}
-              style={{ width: '100%', minHeight: isMobile ? '200px' : '320px', borderRadius: '8px', overflow: 'hidden' }}
+              style={{ width: '100%', aspectRatio: '4/3', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 4px 24px rgba(0,0,0,0.10)' }}
             >
               <img src={data.image} alt="" style={imgStyle} />
             </CanvasUpload>
