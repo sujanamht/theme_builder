@@ -15,19 +15,29 @@ export default function ColorInput({ label, value, onChange }) {
     }
   }, [value])
 
-  function handleTextChange(raw) {
-    let next = raw
-    if (!next.startsWith('#')) next = '#' + next.replace(/#/g, '')
-    if (!VALID_CHARS.test(next)) return   // reject invalid chars silently
-    next = next.toUpperCase()
+function handleTextChange(raw) {
+  let next = raw
+
+  // Allow empty input (user is clearing the field)
+  if (next === '' || next === '#') {
     setText(next)
-    if (HEX_RE.test(next)) {
-      setInvalid(false)
-      onChange(next)
-    } else {
-      setInvalid(next.length > 1)         // only show error after first char
-    }
+    setInvalid(true)
+    return
   }
+
+  // Auto-prepend # if user types a hex digit directly
+  if (!next.startsWith('#')) next = '#' + next.replace(/#/g, '')
+
+  if (!VALID_CHARS.test(next)) return   // reject invalid chars silently
+  next = next.toUpperCase()
+  setText(next)
+  if (HEX_RE.test(next)) {
+    setInvalid(false)
+    onChange(next)
+  } else {
+    setInvalid(next.length > 1)
+  }
+}
 
   function handlePickerChange(e) {
     const hex = e.target.value.toUpperCase()

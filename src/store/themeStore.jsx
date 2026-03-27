@@ -40,7 +40,7 @@ const initialState = {
 
   navbar: {
     data: {
-      logoText: 'Arcova',
+      logoText: '',
       links: [
         { label: 'Product',   href: '#' },
         { label: 'Solutions', href: '#' },

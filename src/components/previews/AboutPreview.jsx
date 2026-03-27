@@ -63,19 +63,20 @@ export default function AboutPreview() {
     margin:     '0 0 28px',
   }
 
-  const btnStyle = {
-    display:         'inline-block',
-    backgroundColor: template.buttonBg   || (darkMode ? '#f4f4f5' : '#0a0a0a'),
-    color:           template.buttonText || (darkMode ? '#18181b' : '#ffffff'),
-    fontSize:        '0.95rem',
-    fontWeight:      600,
-    padding:         '12px 28px',
-    borderRadius:    '8px',
-    border:          'none',
-    cursor:          'pointer',
-    textDecoration:  'none',
-    lineHeight:      '1',
-  }
+const btnStyle = {
+  display:         'inline-block',
+  backgroundColor: template.buttonBg   || (darkMode ? '#f4f4f5' : '#0a0a0a'),
+  color:           template.buttonText || (darkMode ? '#18181b' : '#ffffff'),
+  fontSize:        '0.95rem',
+  fontWeight:      600,
+  padding:         '12px 28px',
+  borderRadius:    '8px',
+  border:          'none',
+  cursor:          'pointer',
+  textDecoration:  'none',
+  lineHeight:      '1',
+  width:           'fit-content',  // ← add this
+}
 
   const imgStyle = {
     width:     '100%',
