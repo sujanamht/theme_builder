@@ -1,4 +1,4 @@
-import { useTheme } from '../../store/themeStore.jsx'
+import { useTheme, useDarkMode } from '../../store/themeStore.jsx'
 import { useSelection } from '../../store/selectionContext.jsx'
 import { useContainerWidth } from '../../hooks/useContainerWidth.js'
 
@@ -15,12 +15,13 @@ export default function FormPreview() {
   const { data, template } = theme.form
   const selectedId = useSelection()
   const isActive = selectedId === 'form' || selectedId?.startsWith('form-')
+  const darkMode = useDarkMode()
 
   const { ref, width } = useContainerWidth()
   const isMobile = width < 500
 
-  const bg        = template.bgColor    || '#ffffff'
-  const textColor = template.textColor  || '#000000'
+  const bg        = template.bgColor    || (darkMode ? '#18181b' : '#ffffff')
+  const textColor = template.textColor  || (darkMode ? '#f4f4f5' : '#111827')
   const buttonBg  = template.buttonBg   || '#6366f1'
   const buttonTxt = template.buttonText || '#ffffff'
   const padding   = isMobile
@@ -36,8 +37,8 @@ export default function FormPreview() {
     padding:         '10px 14px',
     fontSize:        '14px',
     color:           textColor,
-    background:      'transparent',
-    border:          `1px solid ${textColor}33`,
+    background:      darkMode ? 'transparent' : '#f9fafb',
+    border:          darkMode ? `1px solid ${textColor}33` : '1px solid #d1d5db',
     borderRadius:    '6px',
     boxSizing:       'border-box',
     outline:         'none',
@@ -49,7 +50,7 @@ export default function FormPreview() {
     width:           w,
     height:          h,
     borderRadius:    '6px',
-    backgroundColor: '#d1d5db',
+    backgroundColor: darkMode ? '#3f3f46' : '#d1d5db',
     marginBottom:    mb,
   })
 

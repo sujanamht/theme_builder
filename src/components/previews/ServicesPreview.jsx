@@ -1,21 +1,22 @@
-import { useTheme } from '../../store/themeStore.jsx'
+import { useTheme, useDarkMode } from '../../store/themeStore.jsx'
 import ResponsiveGrid from '../ui/ResponsiveGrid.jsx'
 import { hexToRgba } from '../../utils/colorUtils.js'
 
 export default function ServicesPreview() {
   const { theme } = useTheme()
   const { data, template } = theme.services
+  const darkMode = useDarkMode()
 
   const heading     = data.heading    || ''
   const subheading  = data.subheading || ''
   const items       = data.items      || []
 
-  const textColor   = template.textColor   || '#111827'
+  const textColor   = template.textColor   || (darkMode ? '#f4f4f5' : '#111827')
   const accentColor = template.accentColor || '#6366f1'
   const fontSize    = template.fontSize    || '15px'
 
   const sectionStyle = {
-    backgroundColor: template.bgColor  || '#f9fafb',
+    backgroundColor: template.bgColor  || (darkMode ? '#18181b' : '#f9fafb'),
     padding:         template.padding  || '64px 32px',
     width:           '100%',
     boxSizing:       'border-box',
@@ -40,13 +41,13 @@ export default function ServicesPreview() {
   }
 
   const cardStyle = {
-    backgroundColor: template.cardBg       || '#ffffff',
+    backgroundColor: template.cardBg       || (darkMode ? '#27272a' : '#ffffff'),
     borderRadius:    template.borderRadius  || '12px',
+    border:          darkMode ? '1px solid #3f3f46' : '1px solid #e5e7eb',
     padding:         '24px',
     display:         'flex',
     flexDirection:   'column',
     gap:             '12px',
-    boxShadow:       '0 1px 4px rgba(0,0,0,0.06)',
   }
 
   const iconCircleStyle = {

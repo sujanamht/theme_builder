@@ -1,4 +1,4 @@
-import { useTheme } from '../../store/themeStore.jsx'
+import { useTheme, useDarkMode } from '../../store/themeStore.jsx'
 import { useSelection } from '../../store/selectionContext.jsx'
 import CanvasUpload from '../ui/CanvasUpload.jsx'
 import { useContainerWidth } from '../../hooks/useContainerWidth.js'
@@ -8,6 +8,7 @@ export default function HeroPreview() {
   const { data, template } = theme.hero
   const selectedId = useSelection()
   const isActive = selectedId === 'hero' || selectedId?.startsWith('hero-')
+  const darkMode = useDarkMode()
 
   const { ref: containerRef, width: containerWidth } = useContainerWidth()
   const isMobile = containerWidth < 600
@@ -17,10 +18,10 @@ export default function HeroPreview() {
 
   const eyebrowText   = template.eyebrowText  ?? 'Welcome to Arcova'
   const imagePosition = template.imagePosition ?? 'right'
-  const bgColor       = template.bgColor       ?? '#ffffff'
-  const textColor     = template.textColor     ?? '#0a0a0a'
-  const btnBg         = template.btnBg         ?? '#0a0a0a'
-  const btnText       = template.btnText       ?? '#ffffff'
+  const bgColor       = template.bgColor       ?? (darkMode ? '#18181b' : '#ffffff')
+  const textColor     = template.textColor     ?? (darkMode ? '#f4f4f5' : '#0a0a0a')
+  const btnBg         = template.btnBg         ?? (darkMode ? '#f4f4f5' : '#0a0a0a')
+  const btnText       = template.btnText       ?? (darkMode ? '#18181b' : '#ffffff')
 
   return (
     <>
@@ -71,7 +72,7 @@ export default function HeroPreview() {
                   fontWeight:    '600',
                   letterSpacing: '0.1em',
                   textTransform: 'uppercase',
-                  color:         '#71717a',
+                  color:         darkMode ? '#a1a1aa' : '#71717a',
                 }}>
                   {eyebrowText}
                 </span>
@@ -91,7 +92,7 @@ export default function HeroPreview() {
                   {data.headline}
                 </h1>
               ) : (
-                <div style={{ width: '80%', height: isMobile ? '48px' : '80px', borderRadius: '8px', background: '#e5e7eb', marginBottom: '20px' }} />
+                <div style={{ width: '80%', height: isMobile ? '48px' : '80px', borderRadius: '8px', background: darkMode ? '#3f3f46' : '#e5e7eb', marginBottom: '20px' }} />
               )}
 
               {/* Subheadline */}
@@ -107,7 +108,7 @@ export default function HeroPreview() {
                   {data.subheadline}
                 </p>
               ) : (
-                <div style={{ width: '90%', height: '40px', borderRadius: '6px', background: '#e5e7eb', marginBottom: '32px' }} />
+                <div style={{ width: '90%', height: '40px', borderRadius: '6px', background: darkMode ? '#3f3f46' : '#e5e7eb', marginBottom: '32px' }} />
               )}
 
               {/* CTA button */}
@@ -148,7 +149,7 @@ export default function HeroPreview() {
                   aspectRatio:  '4/3',
                   borderRadius: '16px',
                   overflow:     'hidden',
-                  background:   '#e5e5e5',
+                  background:   darkMode ? '#3f3f46' : '#e5e5e5',
                   display:      'block',
                 }}
               >

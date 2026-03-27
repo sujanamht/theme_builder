@@ -1,4 +1,4 @@
-import { useTheme } from '../../store/themeStore.jsx'
+import { useTheme, useDarkMode } from '../../store/themeStore.jsx'
 import ResponsiveGrid from '../ui/ResponsiveGrid.jsx'
 
 /* ── Inline SVG icons ──────────────────────────────────────────────── */
@@ -66,9 +66,10 @@ const SOCIAL_COLORS = { instagram: '#e1306c', facebook: '#1877f2', tiktok: '#010
 export default function ContactPreview() {
   const { theme } = useTheme()
   const { data, template } = theme.contact
+  const darkMode = useDarkMode()
 
-  const bg          = template.bgColor     || '#ffffff'
-  const textColor   = template.textColor   || '#111827'
+  const bg          = template.bgColor     || (darkMode ? '#18181b' : '#ffffff')
+  const textColor   = template.textColor   || (darkMode ? '#f4f4f5' : '#111827')
   const accentColor = template.accentColor || '#6366f1'
   const padding     = `${template.padding ?? 64}px 32px`
 
@@ -86,7 +87,7 @@ export default function ContactPreview() {
 
   const skel = (w, h, mb = 0) => ({
     width: w, height: h, borderRadius: '6px',
-    backgroundColor: '#d1d5db', marginBottom: mb,
+    backgroundColor: darkMode ? '#3f3f46' : '#d1d5db', marginBottom: mb,
   })
 
   return (
@@ -185,7 +186,7 @@ export default function ContactPreview() {
             ) : (
               <div style={{
                 width: '100%', aspectRatio: '4/3', borderRadius: '10px',
-                background: '#f3f4f6',
+                background: darkMode ? '#27272a' : '#f3f4f6',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
               }}>
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px', opacity: 0.35 }}>

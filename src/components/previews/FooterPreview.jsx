@@ -1,9 +1,10 @@
-import { useTheme } from '../../store/themeStore.jsx'
+import { useTheme, useDarkMode } from '../../store/themeStore.jsx'
 import ResponsiveGrid from '../ui/ResponsiveGrid.jsx'
 
 export default function FooterPreview() {
   const { theme } = useTheme()
   const { data, template } = theme.footer
+  const darkMode = useDarkMode()
 
   const brand          = data.brand          || 'Brand'
   const tagline        = data.tagline        || ''
@@ -14,12 +15,12 @@ export default function FooterPreview() {
   const phone          = data.phone          || ''
   const email          = data.email          || ''
 
-  const textColor = template.textColor || '#ffffff'
+  const textColor = template.textColor || (darkMode ? '#f4f4f5' : '#111827')
   const linkColor = template.linkColor || textColor
   const fontSize  = template.fontSize  || '14px'
 
   const footerStyle = {
-    backgroundColor: template.bgColor || '#0f1f5c',
+    backgroundColor: template.bgColor || (darkMode ? '#18181b' : '#ffffff'),
     width:           '100%',
     boxSizing:       'border-box',
     color:           textColor,
@@ -90,7 +91,7 @@ export default function FooterPreview() {
     justifyContent:  'center',
     width:           '32px',
     height:          '32px',
-    backgroundColor: 'rgba(255,255,255,0.12)',
+    backgroundColor: darkMode ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.06)',
     borderRadius:    '4px',
     color:           textColor,
     fontSize:        '13px',
@@ -100,7 +101,7 @@ export default function FooterPreview() {
   }
 
   const bottomBarStyle = {
-    borderTop:  '1px solid rgba(255,255,255,0.1)',
+    borderTop:  `1px solid ${darkMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.1)'}`,
     padding:    '16px 32px',
     textAlign:  'center',
     color:      textColor,
@@ -114,7 +115,7 @@ export default function FooterPreview() {
     width:           w,
     height:          h,
     borderRadius:    '4px',
-    background:      'rgba(255,255,255,0.15)',
+    background:      darkMode ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.08)',
     opacity,
     flexShrink:      0,
   })
@@ -164,7 +165,7 @@ export default function FooterPreview() {
           </ResponsiveGrid>
         </div>
         <div style={bottomBarStyle}>
-          <div style={{ width: '240px', height: '11px', borderRadius: '4px', background: 'rgba(255,255,255,0.15)', margin: '0 auto' }} />
+          <div style={{ width: '240px', height: '11px', borderRadius: '4px', background: darkMode ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.08)', margin: '0 auto' }} />
         </div>
       </footer>
     )
@@ -219,7 +220,7 @@ export default function FooterPreview() {
           {data.embedPlaceholder && (
             <div style={col234Style}>
               <div style={{
-                backgroundColor: '#1e3080',
+                backgroundColor: darkMode ? '#27272a' : '#f3f4f6',
                 borderRadius:    '6px',
                 height:          '200px',
                 display:         'flex',

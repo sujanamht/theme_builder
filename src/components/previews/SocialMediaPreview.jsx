@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useTheme } from '../../store/themeStore.jsx'
+import { useTheme, useDarkMode } from '../../store/themeStore.jsx'
 import { useContainerWidth } from '../../hooks/useContainerWidth.js'
 
 const PLATFORM_LABELS = {
@@ -83,9 +83,10 @@ export default function SocialMediaPreview() {
   const isMobile = width < 500
 
   const [activeIndex, setActiveIndex] = useState(0)
+  const darkMode = useDarkMode()
 
-  const bg        = template.bgColor   || '#ffffff'
-  const textColor = template.textColor || '#111827'
+  const bg        = template.bgColor   || (darkMode ? '#18181b' : '#ffffff')
+  const textColor = template.textColor || (darkMode ? '#f4f4f5' : '#111827')
   const padding   = isMobile ? '32px 20px' : `${template.padding ?? 64}px 32px`
 
   const embeds       = (data.embeds || []).filter(e => e.enabled !== false && e.url)
@@ -109,7 +110,7 @@ export default function SocialMediaPreview() {
 
   const skel = (w, h, mb = 0) => ({
     width: w, height: h, borderRadius: '6px',
-    backgroundColor: '#d1d5db', marginBottom: mb,
+    backgroundColor: darkMode ? '#3f3f46' : '#d1d5db', marginBottom: mb,
   })
 
   function renderEmbed({ embed }) {
@@ -121,7 +122,7 @@ export default function SocialMediaPreview() {
         <div style={{
           borderRadius: '10px',
           overflow:     'hidden',
-          background:   '#f3f4f6',
+          background:   darkMode ? '#27272a' : '#f3f4f6',
           height:       '300px',
         }}>
           <iframe
@@ -172,7 +173,7 @@ export default function SocialMediaPreview() {
           !isEmpty && (
             <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(2, 1fr)', gap: '20px' }}>
               {[0, 1].map(i => (
-                <div key={i} style={{ borderRadius: '10px', background: '#f3f4f6', height: '300px' }} />
+                <div key={i} style={{ borderRadius: '10px', background: darkMode ? '#27272a' : '#f3f4f6', height: '300px' }} />
               ))}
             </div>
           )

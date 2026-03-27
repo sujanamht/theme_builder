@@ -418,3 +418,8 @@ export function useTheme() {
   if (!ctx) throw new Error('useTheme must be used inside ThemeProvider')
   return ctx
 }
+
+export function useDarkMode() {
+  const { theme } = useTheme()
+  return theme.globalTheme.darkMode ?? false
+}

@@ -1,16 +1,17 @@
-import { useTheme } from '../../store/themeStore.jsx'
+import { useTheme, useDarkMode } from '../../store/themeStore.jsx'
 import { useContainerWidth } from '../../hooks/useContainerWidth.js'
 
 export default function AnnouncementPreview() {
   const { theme } = useTheme()
   const { data, template } = theme.announcement
+  const darkMode = useDarkMode()
 
   const { ref, width } = useContainerWidth()
   const isMobile = width < 500
 
   const barStyle = {
-    backgroundColor: template.bgColor   || '#1d4ed8',
-    color:           template.textColor || '#ffffff',
+    backgroundColor: template.bgColor   || (darkMode ? '#18181b' : '#1d4ed8'),
+    color:           template.textColor || (darkMode ? '#f4f4f5' : '#ffffff'),
     fontSize:        isMobile ? '12px' : (template.fontSize || '14px'),
     padding:         isMobile ? '8px 16px' : (template.padding || '8px 16px'),
     display:         'flex',
@@ -22,7 +23,7 @@ export default function AnnouncementPreview() {
   }
 
   const linkStyle = {
-    color:          template.textColor || '#ffffff',
+    color:          template.textColor || (darkMode ? '#f4f4f5' : '#ffffff'),
     fontWeight:     '600',
     textDecoration: 'underline',
     fontSize:       isMobile ? '12px' : (template.fontSize || '14px'),

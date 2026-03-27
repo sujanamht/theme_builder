@@ -143,7 +143,7 @@ function tokens(isDark) {
     toolbarBorder:'#1e1e1e',
     canvasBg:     '#0f0f0f',
     dotColor:     '#2a2a2a',
-    card:         '#ffffff',
+    card:         '#0f0f11',
     cardShadow:   '0 8px 40px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.05)',
     urlBarBorder: '#2a2a2a',
     textMuted:    '#888',
@@ -328,12 +328,12 @@ function GlobalCanvasItem({ id, selectedComponent, onSelect, editable, children 
 /* ─── shell ─── */
 function Shell({
   selectedComponent, setSelectedComponent,
-  isDark, setIsDark,
   leftOpen, setLeftOpen,
   rightOpen, setRightOpen,
   visibility, setVisibility,
 }) {
-  const { theme, addSection, removeSection, updatePageOrder, removeSectionFromAllPages } = useTheme()
+  const { theme, addSection, removeSection, updatePageOrder, removeSectionFromAllPages, updateGlobalTheme } = useTheme()
+  const isDark = theme.globalTheme.darkMode ?? false
 
   /* Derive active page order from store */
   const activePageId = theme.pages?.activePage
@@ -570,7 +570,7 @@ function Shell({
 
   return (
     <DndContext sensors={sensors} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
-      <div style={{ display: 'flex', height: '100vh', background: t.shell, overflow: 'hidden', transition: allTransition }}>
+      <div style={{ display: 'flex', height: '100vh', background: t.shell, overflow: 'hidden', transition: allTransition, color: t.textActive }}>
 
         {/* ══ LEFT PANEL ══ */}
         <nav style={{
@@ -709,7 +709,7 @@ function Shell({
               {/* Theme tab */}
               {leftTab === 'theme' && (
                 <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-                  <GlobalThemePanel isDark={isDark} setIsDark={setIsDark} />
+                  <GlobalThemePanel />
                 </div>
               )}
 
@@ -783,7 +783,7 @@ function Shell({
 
             {/* Right controls */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
-              <IconBtn onClick={() => setIsDark(d => !d)} title="Toggle theme" t={t} style={{ border: `1px solid ${t.border}`, padding: '5px 8px' }}>
+              <IconBtn onClick={() => updateGlobalTheme('darkMode', !isDark)} title="Toggle theme" t={t} style={{ border: `1px solid ${t.border}`, padding: '5px 8px' }}>
                 {isDark ? <IconSun color={t.textMuted} /> : <IconMoon color={t.textMuted} />}
               </IconBtn>
               <button
@@ -1146,7 +1146,6 @@ function Shell({
 /* ─── root ─── */
 export default function App() {
   const [selectedComponent, setSelectedComponent] = useState(null)
-  const [isDark,      setIsDark]      = useState(true)
   const [leftOpen,    setLeftOpen]    = useState(true)
   const [rightOpen,   setRightOpen]   = useState(true)
   const [visibility,  setVisibility]  = useState(INITIAL_VISIBILITY)
@@ -1156,7 +1155,6 @@ export default function App() {
       <SelectionContext.Provider value={selectedComponent}>
         <Shell
           selectedComponent={selectedComponent} setSelectedComponent={setSelectedComponent}
-          isDark={isDark}         setIsDark={setIsDark}
           leftOpen={leftOpen}     setLeftOpen={setLeftOpen}
           rightOpen={rightOpen}   setRightOpen={setRightOpen}
           visibility={visibility} setVisibility={setVisibility}

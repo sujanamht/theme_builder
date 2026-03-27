@@ -22,7 +22,9 @@
   /* ── Builder panel inputs: shared ── */
   .builder-panel input[type="text"],
   .builder-panel input[type="url"],
-  .builder-panel input[type="email"] {
+  .builder-panel input[type="email"],
+  .builder-panel textarea,
+  .builder-panel select {
     border-radius: 6px;
     padding: 6px 10px;
     font-size: 13px;
@@ -34,9 +36,16 @@
 
   .builder-panel input[type="text"]:focus,
   .builder-panel input[type="url"]:focus,
-  .builder-panel input[type="email"]:focus {
+  .builder-panel input[type="email"]:focus,
+  .builder-panel textarea:focus,
+  .builder-panel select:focus {
     border-color: #6366f1;
     box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+  }
+
+  .builder-panel textarea {
+    resize: vertical;
+    min-height: 72px;
   }
 
   .builder-panel input[type="color"] {
@@ -83,14 +92,17 @@
   /* ── DARK theme ── */
   .builder-panel[data-theme="dark"] input[type="text"],
   .builder-panel[data-theme="dark"] input[type="url"],
-  .builder-panel[data-theme="dark"] input[type="email"] {
+  .builder-panel[data-theme="dark"] input[type="email"],
+  .builder-panel[data-theme="dark"] textarea,
+  .builder-panel[data-theme="dark"] select {
     background-color: #2a2a2a;
     border: 1px solid #3a3a3a;
     color: #ffffff;
   }
 
   .builder-panel[data-theme="dark"] input[type="text"]::placeholder,
-  .builder-panel[data-theme="dark"] input[type="url"]::placeholder {
+  .builder-panel[data-theme="dark"] input[type="url"]::placeholder,
+  .builder-panel[data-theme="dark"] textarea::placeholder {
     color: #555;
   }
 
@@ -131,30 +143,33 @@
   /* ── LIGHT theme ── */
   .builder-panel[data-theme="light"] input[type="text"],
   .builder-panel[data-theme="light"] input[type="url"],
-  .builder-panel[data-theme="light"] input[type="email"] {
-    background-color: #f4f4f5;
-    border: 1px solid #d4d4d8;
+  .builder-panel[data-theme="light"] input[type="email"],
+  .builder-panel[data-theme="light"] textarea,
+  .builder-panel[data-theme="light"] select {
+    background-color: #f9fafb;
+    border: 1px solid #d1d5db;
     color: #111111;
   }
 
   .builder-panel[data-theme="light"] input[type="text"]::placeholder,
-  .builder-panel[data-theme="light"] input[type="url"]::placeholder {
-    color: #a1a1aa;
+  .builder-panel[data-theme="light"] input[type="url"]::placeholder,
+  .builder-panel[data-theme="light"] textarea::placeholder {
+    color: #9ca3af;
   }
 
   .builder-panel[data-theme="light"] input[type="color"] {
-    background: #f4f4f5;
-    border: 1px solid #d4d4d8;
+    background: #f9fafb;
+    border: 1px solid #d1d5db;
   }
 
   .builder-panel[data-theme="light"] label {
-    color: #52525b;
+    color: #374151;
     font-size: 12px;
     font-weight: 500;
   }
 
   .builder-panel[data-theme="light"] h3 {
-    color: #a1a1aa;
+    color: #9ca3af;
     font-size: 10px;
     font-weight: 600;
     letter-spacing: 0.08em;
@@ -167,12 +182,16 @@
     font-weight: 600;
   }
 
+  .builder-panel[data-theme="light"] span {
+    color: #374151;
+  }
+
   .builder-panel[data-theme="light"] button[title="Remove link"] {
-    color: #a1a1aa;
+    color: #9ca3af;
   }
 
   .builder-panel[data-theme="light"] button:not([title="Remove link"]) {
-    border: 1px dashed #d4d4d8;
-    color: #a1a1aa;
+    border: 1px dashed #d1d5db;
+    color: #6b7280;
   }
 }

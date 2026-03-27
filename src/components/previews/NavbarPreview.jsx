@@ -1,10 +1,10 @@
 import { useState, useRef } from 'react'
-import { useTheme } from '../../store/themeStore.jsx'
+import { useTheme, useDarkMode } from '../../store/themeStore.jsx'
 import { useSelection } from '../../store/selectionContext.jsx'
 import CanvasUpload from '../ui/CanvasUpload.jsx'
 import { useContainerWidth } from '../../hooks/useContainerWidth.js'
 
-function DropdownLink({ link, linkStyle, textColor, fontSize }) {
+function DropdownLink({ link, linkStyle, textColor, fontSize, darkMode }) {
   const [open, setOpen] = useState(false)
   const dropdown = link.dropdown ?? []
   const hasDropdown = dropdown.length > 0
@@ -14,7 +14,7 @@ function DropdownLink({ link, linkStyle, textColor, fontSize }) {
     top:             '100%',
     left:            0,
     marginTop:       '6px',
-    background:      '#ffffff',
+    background:      darkMode ? '#27272a' : '#ffffff',
     borderRadius:    '8px',
     boxShadow:       '0 4px 24px rgba(0,0,0,0.12), 0 0 0 1px rgba(0,0,0,0.06)',
     minWidth:        '160px',
@@ -27,7 +27,7 @@ function DropdownLink({ link, linkStyle, textColor, fontSize }) {
   const subItemStyle = {
     display:    'block',
     padding:    '8px 16px',
-    color:      textColor || '#111827',
+    color:      textColor || (darkMode ? '#f4f4f5' : '#111827'),
     fontSize:   fontSize  || '14px',
     textDecoration: 'none',
     whiteSpace: 'nowrap',
@@ -56,7 +56,7 @@ function DropdownLink({ link, linkStyle, textColor, fontSize }) {
               <a
                 href={sub.url || '#'}
                 style={subItemStyle}
-                onMouseEnter={e => e.currentTarget.style.background = '#f4f4f5'}
+                onMouseEnter={e => e.currentTarget.style.background = darkMode ? '#3f3f46' : '#f4f4f5'}
                 onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
               >
                 {sub.label || `Sub-link ${si + 1}`}
@@ -103,6 +103,7 @@ export default function NavbarPreview() {
   const { data, template } = theme.navbar
   const selectedId = useSelection()
   const isActive = selectedId === 'navbar' || selectedId?.startsWith('navbar-')
+  const darkMode = useDarkMode()
 
   const logo     = data.logo     || ''
   const logoText = data.logoText || ''
@@ -126,18 +127,18 @@ export default function NavbarPreview() {
   }
 
   const navStyle = {
-    backgroundColor: template.bgColor  || '#ffffff',
+    backgroundColor: template.bgColor  || (darkMode ? '#18181b' : '#ffffff'),
     padding:         template.padding  || '12px 24px',
     display:         'flex',
     alignItems:      'center',
     justifyContent:  'space-between',
     width:           '100%',
     boxSizing:       'border-box',
-    borderBottom:    '1px solid #e5e7eb',
+    borderBottom:    `1px solid ${darkMode ? '#27272a' : '#e5e7eb'}`,
   }
 
   const logoStyle = {
-    color:          template.textColor || '#111827',
+    color:          template.textColor || (darkMode ? '#f4f4f5' : '#111827'),
     fontSize:       template.fontSize  || '18px',
     fontWeight:     '700',
     textDecoration: 'none',
@@ -157,7 +158,7 @@ export default function NavbarPreview() {
   }
 
   const linkStyle = {
-    color:          template.textColor || '#111827',
+    color:          template.textColor || (darkMode ? '#f4f4f5' : '#111827'),
     fontSize:       template.fontSize  || '16px',
     textDecoration: 'none',
     cursor:         'pointer',
@@ -221,7 +222,7 @@ export default function NavbarPreview() {
     </div>
   )
 
-  const bgColor = template.bgColor || '#ffffff'
+  const bgColor = template.bgColor || (darkMode ? '#18181b' : '#ffffff')
 
   return (
     <div ref={navRef} style={{ position: 'relative', width: '100%' }}>
@@ -230,7 +231,7 @@ export default function NavbarPreview() {
 
         {isMobile ? (
           <Hamburger
-            color={template.textColor || '#111827'}
+            color={template.textColor || (darkMode ? '#f4f4f5' : '#111827')}
             onClick={() => setMenuOpen(prev => !prev)}
           />
         ) : (
@@ -243,6 +244,7 @@ export default function NavbarPreview() {
                   linkStyle={linkStyle}
                   textColor={template.textColor}
                   fontSize={template.fontSize}
+                  darkMode={darkMode}
                 />
               ))}
             </ul>
@@ -257,7 +259,7 @@ export default function NavbarPreview() {
           left:            0,
           width:           '100%',
           backgroundColor: bgColor,
-          borderTop:       '1px solid rgba(0,0,0,0.08)',
+          borderTop:       `1px solid ${darkMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)'}`,
           boxShadow:       '0 4px 12px rgba(0,0,0,0.08)',
           zIndex:          200,
           boxSizing:       'border-box',
@@ -270,10 +272,10 @@ export default function NavbarPreview() {
               style={{
                 display:        'block',
                 padding:        '12px 24px',
-                color:          template.textColor || '#111827',
+                color:          template.textColor || (darkMode ? '#f4f4f5' : '#111827'),
                 fontSize:       template.fontSize  || '16px',
                 textDecoration: 'none',
-                borderBottom:   i < links.length - 1 ? '1px solid rgba(0,0,0,0.05)' : 'none',
+                borderBottom:   i < links.length - 1 ? `1px solid ${darkMode ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.05)'}` : 'none',
               }}
             >
               {link.label || 'Link'}

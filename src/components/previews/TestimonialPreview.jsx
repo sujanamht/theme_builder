@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useTheme } from '../../store/themeStore.jsx'
+import { useTheme, useDarkMode } from '../../store/themeStore.jsx'
 import { useSelection } from '../../store/selectionContext.jsx'
 import CanvasUpload from '../ui/CanvasUpload.jsx'
 import { useContainerWidth } from '../../hooks/useContainerWidth.js'
@@ -57,6 +57,7 @@ export default function TestimonialPreview() {
   const isMobile = width < 500
 
   const [activeIndex, setActiveIndex] = useState(0)
+  const darkMode = useDarkMode()
 
   const heading      = data.heading || ''
   const items        = data.items   || []
@@ -81,10 +82,10 @@ export default function TestimonialPreview() {
     updateSection('testimonial', 'data', { ...data, items: updated })
   }
 
-  const textColor = template.textColor || '#111827'
+  const textColor = template.textColor || (darkMode ? '#f4f4f5' : '#111827')
 
   const sectionStyle = {
-    backgroundColor: template.bgColor  || '#f9fafb',
+    backgroundColor: template.bgColor  || (darkMode ? '#18181b' : '#f9fafb'),
     color:           textColor,
     fontSize:        template.fontSize  || '14px',
     padding:         template.padding   || '48px 24px',
@@ -101,10 +102,10 @@ export default function TestimonialPreview() {
   }
 
   const cardStyle = {
-    backgroundColor: template.cardBg      || '#ffffff',
+    backgroundColor: template.cardBg      || (darkMode ? '#27272a' : '#ffffff'),
     borderRadius:    template.borderRadius || '12px',
+    border:          darkMode ? '1px solid #3f3f46' : '1px solid #e5e7eb',
     padding:         '24px',
-    boxShadow:       '0 1px 4px rgba(0,0,0,0.08)',
     display:         'flex',
     flexDirection:   'column',
     gap:             '16px',
@@ -146,7 +147,7 @@ export default function TestimonialPreview() {
           ? <p style={quoteStyle}>"{item.quote}"</p>
           : <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', flex: 1 }}>
               {['100%', '85%', '60%'].map((w, j) => (
-                <div key={j} style={{ width: w, height: '12px', borderRadius: '4px', backgroundColor: '#e5e7eb' }} />
+                <div key={j} style={{ width: w, height: '12px', borderRadius: '4px', backgroundColor: darkMode ? '#3f3f46' : '#e5e7eb' }} />
               ))}
             </div>
         }
@@ -171,11 +172,11 @@ export default function TestimonialPreview() {
           <div>
             {item.name
               ? <p style={nameStyle}>{item.name}</p>
-              : <div style={{ width: '90px', height: '10px', borderRadius: '4px', backgroundColor: '#e5e7eb', marginBottom: '6px' }} />
+              : <div style={{ width: '90px', height: '10px', borderRadius: '4px', backgroundColor: darkMode ? '#3f3f46' : '#e5e7eb', marginBottom: '6px' }} />
             }
             {item.role
               ? <p style={roleStyle}>{item.role}</p>
-              : <div style={{ width: '60px', height: '10px', borderRadius: '4px', backgroundColor: '#e5e7eb' }} />
+              : <div style={{ width: '60px', height: '10px', borderRadius: '4px', backgroundColor: darkMode ? '#3f3f46' : '#e5e7eb' }} />
             }
           </div>
         </div>
@@ -187,14 +188,14 @@ export default function TestimonialPreview() {
     <div style={cardStyle}>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', flex: 1 }}>
         {['100%', '85%', '60%'].map((w, j) => (
-          <div key={j} style={{ width: w, height: '12px', borderRadius: '4px', backgroundColor: '#e5e7eb' }} />
+          <div key={j} style={{ width: w, height: '12px', borderRadius: '4px', backgroundColor: darkMode ? '#3f3f46' : '#e5e7eb' }} />
         ))}
       </div>
       <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-        <div style={{ width: '36px', height: '36px', borderRadius: '50%', backgroundColor: '#e5e7eb', flexShrink: 0 }} />
+        <div style={{ width: '36px', height: '36px', borderRadius: '50%', backgroundColor: darkMode ? '#3f3f46' : '#e5e7eb', flexShrink: 0 }} />
         <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-          <div style={{ width: '90px', height: '10px', borderRadius: '4px', backgroundColor: '#e5e7eb' }} />
-          <div style={{ width: '60px', height: '10px', borderRadius: '4px', backgroundColor: '#e5e7eb' }} />
+          <div style={{ width: '90px', height: '10px', borderRadius: '4px', backgroundColor: darkMode ? '#3f3f46' : '#e5e7eb' }} />
+          <div style={{ width: '60px', height: '10px', borderRadius: '4px', backgroundColor: darkMode ? '#3f3f46' : '#e5e7eb' }} />
         </div>
       </div>
     </div>
@@ -204,7 +205,7 @@ export default function TestimonialPreview() {
     <section ref={ref} style={sectionStyle}>
       {heading
         ? <h2 style={headingStyle}>{heading}</h2>
-        : <div style={{ width: '280px', height: '28px', borderRadius: '6px', backgroundColor: '#d1d5db', margin: '0 auto 28px' }} />
+        : <div style={{ width: '280px', height: '28px', borderRadius: '6px', backgroundColor: darkMode ? '#3f3f46' : '#d1d5db', margin: '0 auto 28px' }} />
       }
 
       {count === 0 ? (

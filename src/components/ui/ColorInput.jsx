@@ -41,7 +41,7 @@ export default function ColorInput({ label, value, onChange }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
       {label && (
-        <span style={{ fontSize: '12px', fontWeight: '500' }}>{label}</span>
+        <span style={{ fontSize: '12px', fontWeight: '500', color: 'inherit' }}>{label}</span>
       )}
       <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
         {/* Native color picker — always reflects last valid color */}
@@ -72,6 +72,7 @@ export default function ColorInput({ label, value, onChange }) {
             textTransform:  'uppercase',
             letterSpacing:  '0.05em',
             outline:        'none',
+            color: '#111111',
             // Only override border/shadow when invalid; otherwise let .builder-panel CSS rule apply
             ...(invalid ? {
               border:     '1px solid #ef4444',

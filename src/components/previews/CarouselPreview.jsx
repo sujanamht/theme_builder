@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useTheme } from '../../store/themeStore.jsx'
+import { useTheme, useDarkMode } from '../../store/themeStore.jsx'
 import { useSelection } from '../../store/selectionContext.jsx'
 import CanvasUpload from '../ui/CanvasUpload.jsx'
 import { useContainerWidth } from '../../hooks/useContainerWidth.js'
@@ -29,6 +29,7 @@ export default function CarouselPreview() {
   const isActive = selectedId === 'carousel' || selectedId?.startsWith('carousel-')
 
   const [activeIndex, setActiveIndex] = useState(0)
+  const darkMode = useDarkMode()
 
   const { ref, width } = useContainerWidth()
   const isMobile = width < 500
@@ -59,7 +60,7 @@ export default function CarouselPreview() {
     width:           '100%',
     height,
     overflow:        'hidden',
-    backgroundColor: template.bgColor || '#1e1e2e',
+    backgroundColor: template.bgColor || (darkMode ? '#18181b' : '#e5e7eb'),
     boxSizing:       'border-box',
   }
 
