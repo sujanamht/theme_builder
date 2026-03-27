@@ -10,122 +10,162 @@ export default function HeroPreview() {
   const isActive = selectedId === 'hero' || selectedId?.startsWith('hero-')
 
   const { ref: containerRef, width: containerWidth } = useContainerWidth()
-  const isMobile = containerWidth < 500
+  const isMobile = containerWidth < 600
 
-  const textAlign  = template.textAlign || 'center'
-  const textColor  = template.textColor || '#ffffff'
-  const minHeight  = isMobile ? '320px' : (template.minHeight || '480px')
-  const hasBgImage = Boolean(data.bgImage)
+  const accent        = theme.globalTheme?.primaryColor || '#6366f1'
+  const hasBgImage    = Boolean(data.bgImage)
 
-  const justifyContent =
-    textAlign === 'left'  ? 'flex-start' :
-    textAlign === 'right' ? 'flex-end'   : 'center'
-
-  const sectionStyle = {
-    position:        'relative',
-    width:           '100%',
-    minHeight,
-    boxSizing:       'border-box',
-    backgroundColor: template.bgColor || '#0f172a',
-    backgroundImage: hasBgImage ? `url(${data.bgImage})` : 'none',
-    backgroundSize:  'cover',
-    backgroundPosition: 'center',
-    display:         'flex',
-    alignItems:      'center',
-    justifyContent,
-    padding:         isMobile ? '36px 20px' : '64px 48px',
-    textAlign,
-    overflow:        'hidden',
-  }
-
-  /* Dark scrim so text stays readable over a photo */
-  const scrimStyle = {
-    position:   'absolute',
-    inset:       0,
-    background:  hasBgImage
-      ? 'linear-gradient(to bottom, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.25) 100%)'
-      : 'none',
-    pointerEvents: 'none',
-    zIndex:      0,
-  }
-
-  const contentStyle = {
-    position:  'relative',
-    zIndex:    1,
-    maxWidth:  '680px',
-    width:     '100%',
-  }
-
-  const headlineStyle = {
-    color:         textColor,
-    fontSize:      isMobile ? '26px' : 'clamp(28px, 5vw, 52px)',
-    fontWeight:    '800',
-    lineHeight:    '1.15',
-    letterSpacing: '-0.02em',
-    margin:        '0 0 12px',
-  }
-
-  const subheadlineStyle = {
-    color:      textColor,
-    fontSize:   isMobile ? '14px' : 'clamp(14px, 2vw, 18px)',
-    fontWeight: '400',
-    lineHeight: '1.6',
-    opacity:    0.8,
-    margin:     isMobile ? '0 0 24px' : '0 0 36px',
-  }
-
-  const btnStyle = {
-    display:         'inline-block',
-    backgroundColor: template.btnBg   || '#6366f1',
-    color:           template.btnText || '#ffffff',
-    fontSize:        isMobile ? '14px' : '15px',
-    fontWeight:      '600',
-    padding:         isMobile ? '10px 24px' : '13px 32px',
-    borderRadius:    template.btnRadius || '8px',
-    border:          'none',
-    cursor:          'pointer',
-    textDecoration:  'none',
-    lineHeight:      '1',
-    transition:      'opacity 0.15s',
-  }
+  const eyebrowText   = template.eyebrowText  ?? 'Welcome to Arcova'
+  const imagePosition = template.imagePosition ?? 'right'
+  const bgColor       = template.bgColor       ?? '#ffffff'
+  const textColor     = template.textColor     ?? '#0a0a0a'
+  const btnBg         = template.btnBg         ?? '#0a0a0a'
+  const btnText       = template.btnText       ?? '#ffffff'
 
   return (
-    <div ref={containerRef} style={{ width: '100%' }}>
-    <CanvasUpload
-      hasImage={hasBgImage}
-      isActive={isActive}
-      onUpload={v => updateSection('hero', 'data', { ...data, bgImage: v })}
-      style={sectionStyle}
-      aspectRatio="16/9"
-      onCrop={v => updateSection('hero', 'data', { ...data, bgImage: v })}
-    >
-      {/* Scrim */}
-      <div style={scrimStyle} />
+    <>
+      {/* Google Font injection */}
+      <style>{`@import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&display=swap');`}</style>
 
-      {/* Content */}
-      <div style={contentStyle}>
-        {data.headline && (
-          <h1 style={headlineStyle}>{data.headline}</h1>
-        )}
-        {data.subheadline && (
-          <p style={subheadlineStyle}>{data.subheadline}</p>
-        )}
-        {data.ctaText && (
-          <a
-            href={data.ctaUrl || '#'}
-            style={btnStyle}
-            onClick={e => e.preventDefault()}
-          >
-            {data.ctaText}
-          </a>
-        )}
-        {!data.headline && !data.subheadline && !data.ctaText && (
-          <p style={{ color: textColor, opacity: 0.3, fontSize: '14px', margin: 0 }}>
-            Add content in the editor →
-          </p>
-        )}
+      <div ref={containerRef} style={{ width: '100%' }}>
+        <section style={{
+          backgroundColor: bgColor,
+          paddingTop:      isMobile ? '40px' : `${Number(template.padding ?? 64)}px`,
+          paddingBottom:   isMobile ? '32px' : `${Number(template.padding ?? 64)}px`,
+          paddingLeft:     isMobile ? '20px' : '56px',
+          paddingRight:    isMobile ? '20px' : '56px',
+          width:           '100%',
+          boxSizing:       'border-box',
+        }}>
+
+          {/* Two-column row */}
+          <div style={{
+            display:       'flex',
+            flexDirection: isMobile ? 'column' : (imagePosition === 'left' ? 'row-reverse' : 'row'),
+            alignItems:    'center',
+            gap:           isMobile ? '32px' : '56px',
+            maxWidth:      '1100px',
+            margin:        '0 auto',
+          }}>
+
+            {/* ── Left: text ── */}
+            <div style={{ flex: '1 1 0', minWidth: 0 }}>
+
+              {/* Eyebrow */}
+              <div style={{
+                display:     'flex',
+                alignItems:  'center',
+                gap:         '8px',
+                marginBottom:'16px',
+              }}>
+                <span style={{
+                  display:      'inline-block',
+                  width:        '8px',
+                  height:       '8px',
+                  borderRadius: '50%',
+                  background:   accent,
+                  flexShrink:   0,
+                }} />
+                <span style={{
+                  fontSize:      '11px',
+                  fontWeight:    '600',
+                  letterSpacing: '0.1em',
+                  textTransform: 'uppercase',
+                  color:         '#71717a',
+                }}>
+                  {eyebrowText}
+                </span>
+              </div>
+
+              {/* Headline */}
+              {data.headline ? (
+                <h1 style={{
+                  fontFamily:    "'Syne', Georgia, serif",
+                  fontSize:      isMobile ? '2rem' : `${Number(template.headingSize ?? 56)}px`,
+                  fontWeight:    500,
+                  lineHeight:    '1.08',
+                  letterSpacing: '-0.03em',
+                  color:         textColor,
+                  margin:        '0 0 20px',
+                }}>
+                  {data.headline}
+                </h1>
+              ) : (
+                <div style={{ width: '80%', height: isMobile ? '48px' : '80px', borderRadius: '8px', background: '#e5e7eb', marginBottom: '20px' }} />
+              )}
+
+              {/* Subheadline */}
+              {data.subheadline ? (
+                <p style={{
+                  fontSize:   isMobile ? '14px' : '16px',
+                  color:      textColor,
+                  opacity:    0.6,
+                  lineHeight: '1.65',
+                  margin:     '0 0 32px',
+                  maxWidth:   '480px',
+                }}>
+                  {data.subheadline}
+                </p>
+              ) : (
+                <div style={{ width: '90%', height: '40px', borderRadius: '6px', background: '#e5e7eb', marginBottom: '32px' }} />
+              )}
+
+              {/* CTA button */}
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <a
+                  href={data.ctaUrl || '#'}
+                  onClick={e => e.preventDefault()}
+                  style={{
+                    display:        'inline-block',
+                    padding:        '12px 28px',
+                    background:     btnBg,
+                    color:          btnText,
+                    fontSize:       '14px',
+                    fontWeight:     '600',
+                    borderRadius:   '999px',
+                    textDecoration: 'none',
+                    lineHeight:     '1',
+                    whiteSpace:     'nowrap',
+                    flexShrink:     0,
+                  }}
+                >
+                  {data.ctaText || 'Get started'}
+                </a>
+              </div>
+
+            </div>
+
+            {/* ── Right: image ── */}
+            <div style={{ flex: '0 0 auto', width: isMobile ? '100%' : '44%' }}>
+              <CanvasUpload
+                hasImage={hasBgImage}
+                isActive={isActive}
+                onUpload={v => updateSection('hero', 'data', { ...data, bgImage: v })}
+                onCrop={v => updateSection('hero', 'data', { ...data, bgImage: v })}
+                aspectRatio="4/3"
+                style={{
+                  width:        '100%',
+                  aspectRatio:  '4/3',
+                  borderRadius: '16px',
+                  overflow:     'hidden',
+                  background:   '#e5e5e5',
+                  display:      'block',
+                }}
+              >
+                {hasBgImage && (
+                  <img
+                    src={data.bgImage}
+                    alt=""
+                    style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                  />
+                )}
+              </CanvasUpload>
+            </div>
+
+          </div>
+
+        </section>
       </div>
-    </CanvasUpload>
-    </div>
+    </>
   )
 }

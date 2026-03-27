@@ -57,43 +57,47 @@ export default function HeroBuilder({ activeTab = 'content' }) {
       {activeTab === 'style' && (
         <section>
           <div className="space-y-3">
-            <ColorInput label="Background Color" value={template.bgColor     ?? '#000000'} onChange={v => handleTemplate('bgColor', v)} />
-            <ColorInput label="Text Color"        value={template.textColor   ?? '#000000'} onChange={v => handleTemplate('textColor', v)} />
-            <ColorInput label="Button Color"      value={template.btnBg       ?? '#000000'} onChange={v => handleTemplate('btnBg', v)} />
-            <ColorInput label="Button Text Color" value={template.btnText     ?? '#000000'} onChange={v => handleTemplate('btnText', v)} />
-
-            {textTemplateFields.map(({ key, label, min, max, step }) => (
-              <RangeField
-                key={key}
-                label={label}
-                value={template[key] ?? ''}
-                onChange={v => handleTemplate(key, v)}
-                min={min} max={max} step={step}
-              />
-            ))}
+            <ColorInput label="Background Color" value={template.bgColor     ?? '#ffffff'} onChange={v => handleTemplate('bgColor', v)} />
+            <ColorInput label="Text Color"        value={template.textColor   ?? '#0a0a0a'} onChange={v => handleTemplate('textColor', v)} />
+            <ColorInput label="Button Color"      value={template.btnBg       ?? '#0a0a0a'} onChange={v => handleTemplate('btnBg', v)} />
+            <ColorInput label="Button Text Color" value={template.btnText     ?? '#ffffff'} onChange={v => handleTemplate('btnText', v)} />
 
             <label className="flex flex-col gap-1">
-              Button Border Radius
-              <RangeField
-                label="Button Radius"
-                value={template.btnRadius ?? ''}
-                onChange={v => handleTemplate('btnRadius', v)}
-                min={0} max={32} step={2}
+              Eyebrow Text
+              <input
+                type="text"
+                value={template.eyebrowText ?? ''}
+                placeholder="e.g. Welcome to Arcova"
+                onChange={e => handleTemplate('eyebrowText', e.target.value)}
               />
             </label>
 
+            <RangeField
+              label="Heading Font Size"
+              value={template.headingSize ?? 56}
+              onChange={v => handleTemplate('headingSize', v)}
+              min={24} max={96} step={2}
+            />
+
             <label className="flex flex-col gap-1">
-              Text Align
+              Image Position
               <select
-                value={template.textAlign ?? 'center'}
-                onChange={e => handleTemplate('textAlign', e.target.value)}
+                value={template.imagePosition ?? 'right'}
+                onChange={e => handleTemplate('imagePosition', e.target.value)}
                 style={{ width: '100%' }}
               >
-                <option value="left">Left</option>
-                <option value="center">Center</option>
                 <option value="right">Right</option>
+                <option value="left">Left</option>
               </select>
             </label>
+
+            <RangeField
+              label="Section Padding"
+              value={template.padding ?? 64}
+              onChange={v => handleTemplate('padding', v)}
+              min={24} max={120} step={8}
+            />
+
           </div>
         </section>
       )}
