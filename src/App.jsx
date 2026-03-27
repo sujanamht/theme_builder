@@ -25,6 +25,7 @@ import FooterBuilder        from './components/builders/FooterBuilder.jsx'
 import HeroBuilder          from './components/builders/HeroBuilder.jsx'
 import ContactBuilder       from './components/builders/ContactBuilder.jsx'
 import FormBuilder          from './components/builders/FormBuilder.jsx'
+import SocialMediaBuilder   from './components/builders/SocialMediaBuilder.jsx'
 
 import AnnouncementPreview  from './components/previews/AnnouncementPreview.jsx'
 import NavbarPreview        from './components/previews/NavbarPreview.jsx'
@@ -38,6 +39,7 @@ import FooterPreview        from './components/previews/FooterPreview.jsx'
 import HeroPreview          from './components/previews/HeroPreview.jsx'
 import ContactPreview       from './components/previews/ContactPreview.jsx'
 import FormPreview          from './components/previews/FormPreview.jsx'
+import SocialMediaPreview   from './components/previews/SocialMediaPreview.jsx'
 
 /* ─── registries (keyed by type, not instance id) ─── */
 const COMPONENT_LABELS = {
@@ -53,6 +55,7 @@ const COMPONENT_LABELS = {
   cta:          'CTA',
   footer:       'Footer',
   form:         'Form',
+  socialmedia:  'Social Media',
 }
 
 /* Per-type accent colors for the library badge */
@@ -69,9 +72,10 @@ const TYPE_COLORS = {
   contact:      '#06b6d4',
   footer:       '#6b7280',
   form:         '#a855f7',
+  socialmedia:  '#0ea5e9',
 }
 
-const ALL_TYPES = ['announcement', 'navbar', 'about', 'services', 'carousel', 'testimonial', 'gallery', 'cta', 'footer', 'hero', 'contact', 'form']
+const ALL_TYPES = ['announcement', 'navbar', 'about', 'services', 'carousel', 'testimonial', 'gallery', 'cta', 'footer', 'hero', 'contact', 'form', 'socialmedia']
 
 const GLOBAL_TYPES = new Set(['announcement', 'navbar', 'footer'])
 
@@ -88,6 +92,7 @@ const BUILDERS = {
   hero:         <HeroBuilder />,
   contact:      <ContactBuilder />,
   form:         <FormBuilder />,
+  socialmedia:  <SocialMediaBuilder />,
 }
 
 const PREVIEWS = {
@@ -103,6 +108,7 @@ const PREVIEWS = {
   hero:         <HeroPreview />,
   contact:      <ContactPreview />,
   form:         <FormPreview />,
+  socialmedia:  <SocialMediaPreview />,
 }
 
 const INITIAL_VISIBILITY = { announcement: true, navbar: true,  carousel: true, about: true, services: true, testimonial: true, gallery: true, cta: true, footer: true }

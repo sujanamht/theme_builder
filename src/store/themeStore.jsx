@@ -2,6 +2,12 @@ import { createContext, useContext, useState } from 'react'
 
 const HOME_SECTIONS = ['announcement', 'navbar', 'carousel', 'about', 'services', 'testimonial', 'footer']
 
+const SHARED_CONTACT = {
+  address: '240 Kent Avenue, Suite 4B, Brooklyn, NY 11249',
+  phone:   '+1 (718) 555-0143',
+  email:   'hello@arcova.io',
+}
+
 const initialState = {
   globalTheme: {
     fontFamily:      'Inter',
@@ -25,60 +31,68 @@ const initialState = {
 
   announcement: {
     data: {
-      message: 'Welcome to Acme Co! Free shipping on all orders over $50.',
-      linkText: 'Shop now',
-      linkUrl: '#',
+      message: '🎉 Arcova 2.0 is here — smarter workflows, faster results. Limited early access available.',
+      linkText: 'Claim your spot',
+      linkUrl:  '#',
     },
     template: {},
   },
 
   navbar: {
     data: {
-      logoText: 'Acme Co',
+      logoText: 'Arcova',
       links: [
-        { label: 'Home',     href: '#' },
-        { label: 'About',    href: '#' },
-        { label: 'Services', href: '#' },
-        { label: 'Contact',  href: '#' },
+        { label: 'Product',   href: '#' },
+        { label: 'Solutions', href: '#' },
+        { label: 'Pricing',   href: '#' },
+        { label: 'Blog',      href: '#' },
+        { label: 'Contact',   href: '#' },
       ],
     },
     template: {},
   },
 
-  testimonial: {
-    template: {},
+  hero: {
     data: {
-      heading: 'What our customers say',
-      items: [
-        {
-          name: 'Sarah Mitchell',
-          role: 'CEO, Brightline Co.',
-          quote: 'This product completely changed how our team works. The speed and reliability are unmatched.',
-          avatar: '',
-        },
-        {
-          name: 'James Okafor',
-          role: 'Lead Designer, Studio Nox',
-          quote: 'Incredibly intuitive. We shipped our redesign in half the time we expected.',
-          avatar: '',
-        },
-        {
-          name: 'Priya Sharma',
-          role: 'Founder, Loopback Labs',
-          quote: 'The best investment we made this year. Onboarding was seamless and support is top-notch.',
-          avatar: '',
-        },
-      ],
+      headline:    'Run your entire operation from one place',
+      subheadline: 'Arcova brings your projects, people, and performance data into a single workspace — so your team can focus on what actually moves the needle.',
+      ctaText:     'Start free trial',
+      ctaUrl:      '#',
+      bgImage:     'https://placehold.co/1200x600',
     },
+    template: {},
   },
 
   carousel: {
     data: {
       slides: [
-        { image: '', heading: 'Grow Your Business', subheading: 'Tools built for modern teams.' },
-        { image: '', heading: 'Design with Confidence', subheading: 'Pixel-perfect components, every time.' },
-        { image: '', heading: 'Ship Faster', subheading: 'From idea to launch in record time.' },
+        {
+          image:      'https://placehold.co/1200x500',
+          title:      'Unified project management',
+          subtitle:   'Plan, track, and deliver work without switching tabs.',
+        },
+        {
+          image:      'https://placehold.co/1200x500',
+          title:      'Real-time team collaboration',
+          subtitle:   'Comments, assignments, and status updates — all in context.',
+        },
+        {
+          image:      'https://placehold.co/1200x500',
+          title:      'Powerful reporting built in',
+          subtitle:   'Get the insights you need to ship faster and plan smarter.',
+        },
       ],
+    },
+    template: {},
+  },
+
+  about: {
+    data: {
+      heading:    'Built for teams that move fast',
+      body:       'Arcova was founded in 2020 by a team of engineers and operators who were tired of duct-taping five tools together just to run a sprint. We built the product we always wanted — one that adapts to how your team works, not the other way around. Today, over 8,000 teams rely on Arcova to run their day-to-day.',
+      image:      'https://placehold.co/600x400',
+      buttonText: 'Meet the team',
+      buttonUrl:  '#',
     },
     template: {},
   },
@@ -86,29 +100,56 @@ const initialState = {
   services: {
     template: {},
     data: {
-      heading: 'What we offer',
-      subheading: 'Everything you need to build, launch, and grow.',
+      heading:    'Everything your team needs',
+      subheading: 'One platform to replace the fragmented stack slowing you down.',
       items: [
         {
-          icon: '⚡',
-          title: 'Lightning Fast',
-          description: 'Optimised for speed from the ground up. Your users will notice the difference.',
-          linkText: 'Learn more',
-          linkUrl: '#',
+          icon:        '🗂️',
+          title:       'Project Workspaces',
+          description: 'Organise tasks, timelines, and docs in one structured workspace. Works for sprints, campaigns, or long-term roadmaps.',
+          linkText:    'See how it works',
+          linkUrl:     '#',
         },
         {
-          icon: '🔒',
-          title: 'Secure by Default',
-          description: 'End-to-end encryption and best-in-class security practices built in.',
-          linkText: 'Learn more',
-          linkUrl: '#',
+          icon:        '📊',
+          title:       'Live Analytics',
+          description: 'Track team velocity, project health, and delivery metrics in real time. No spreadsheets required.',
+          linkText:    'Explore analytics',
+          linkUrl:     '#',
         },
         {
-          icon: '📈',
-          title: 'Built to Scale',
-          description: 'Handles millions of users without breaking a sweat. Grow without limits.',
-          linkText: 'Learn more',
-          linkUrl: '#',
+          icon:        '🔗',
+          title:       'Deep Integrations',
+          description: 'Connect Arcova to Slack, GitHub, Jira, and 40+ other tools your team already uses — in minutes.',
+          linkText:    'View integrations',
+          linkUrl:     '#',
+        },
+      ],
+    },
+  },
+
+  testimonial: {
+    template: {},
+    data: {
+      heading: 'Trusted by teams at fast-growing companies',
+      items: [
+        {
+          name:   'Natalie Chen',
+          role:   'VP of Engineering, Luma Health',
+          quote:  'Arcova cut our sprint planning time in half. The visibility it gives across the whole eng org is something we couldn\'t get anywhere else.',
+          avatar: 'https://i.pravatar.cc/80?img=47',
+        },
+        {
+          name:   'Marcus Lindqvist',
+          role:   'Head of Product, Folio',
+          quote:  'We evaluated six tools before landing on Arcova. Nothing else came close for cross-functional collaboration. Our roadmap process is night and day.',
+          avatar: 'https://i.pravatar.cc/80?img=12',
+        },
+        {
+          name:   'Aisha Okonkwo',
+          role:   'CEO, Stackline',
+          quote:  'From onboarding to our first full sprint, it took less than a day. The team adopted it without any training — that never happens.',
+          avatar: 'https://i.pravatar.cc/80?img=31',
         },
       ],
     },
@@ -117,87 +158,83 @@ const initialState = {
   gallery: {
     template: {},
     data: {
-      heading: 'Our Work',
-      subheading: 'A selection of recent projects we are proud of.',
+      heading:    'Product in action',
+      subheading: 'A look at what your team\'s workspace could look like.',
       items: [
-        { image: '', caption: 'Brand identity for Solaris' },
-        { image: '', caption: 'Mobile app UI — Trackr' },
-        { image: '', caption: 'E-commerce redesign' },
-        { image: '', caption: 'Dashboard for DataFlow' },
+        { image: 'https://placehold.co/600x400', caption: 'Project dashboard overview' },
+        { image: 'https://placehold.co/600x400', caption: 'Sprint board with live status' },
+        { image: 'https://placehold.co/600x400', caption: 'Analytics & velocity report' },
+        { image: 'https://placehold.co/600x400', caption: 'Team workspace — doc view' },
       ],
     },
   },
 
-  about: {
-    data: {
-      heading: 'We build products people love',
-      body: 'Acme Co was founded in 2018 with a simple mission: make powerful software accessible to everyone. Our team of designers and engineers works tirelessly to craft tools that are fast, reliable, and a joy to use.',
-      imageUrl: '',
-      buttonText: 'Meet the team',
-      buttonUrl: '#',
-    },
-    template: {},
-  },
-
   cta: {
     data: {
-      heading: 'Ready to get started?',
-      subheading: 'Join thousands of teams already building with Acme Co.',
-      primaryButtonText: 'Start for free',
-      primaryButtonUrl: '#',
-      secondaryButtonText: 'See pricing',
-      secondaryButtonUrl: '#',
+      heading:             'Ready to bring your team together?',
+      subheading:          'Join 8,000+ teams using Arcova to ship faster, collaborate better, and hit their goals.',
+      primaryButtonText:   'Start free — no credit card',
+      primaryButtonUrl:    '#',
+      secondaryButtonText: 'Book a demo',
+      secondaryButtonUrl:  '#',
     },
     template: {},
   },
 
   footer: {
     data: {
-      brand: 'Acme Co',
-      tagline: 'Building better products, together.',
+      brand:    'Arcova',
+      tagline:  'The workspace for high-performing teams.',
       links: [
-        { label: 'Home',    href: '#' },
-        { label: 'About',   href: '#' },
-        { label: 'Blog',    href: '#' },
-        { label: 'Careers', href: '#' },
+        { label: 'Home',     href: '#' },
+        { label: 'About',    href: '#' },
+        { label: 'Blog',     href: '#' },
+        { label: 'Careers',  href: '#' },
+        { label: 'Press',    href: '#' },
       ],
       serviceLinks: [
-        { label: 'Features',  href: '#' },
-        { label: 'Pricing',   href: '#' },
-        { label: 'Docs',      href: '#' },
-        { label: 'Status',    href: '#' },
+        { label: 'Features',     href: '#' },
+        { label: 'Integrations', href: '#' },
+        { label: 'Pricing',      href: '#' },
+        { label: 'Changelog',    href: '#' },
+        { label: 'Status',       href: '#' },
       ],
-      copyright: '',
-      address: '123 Main Street, San Francisco, CA 94103',
-      phone: '',
-      email: 'hello@acmeco.com',
+      copyright: `© ${new Date().getFullYear()} Arcova, Inc. All rights reserved.`,
+      ...SHARED_CONTACT,
     },
     template: {},
   },
 
-  hero: {
+  socialmedia: {
     data: {
-      heading: 'Build something amazing',
-      subheading: 'Acme Co gives your team the tools to design, build, and ship — all in one place.',
-      buttonText: 'Get started free',
-      buttonUrl: '#',
-      imageUrl: '',
+      heading:    'Follow us on social',
+      subheading: 'Stay up to date with the latest from Arcova — product updates, team stories, and more.',
+      embeds: [
+        { platform: 'youtube',   url: 'https://www.youtube.com/embed/dQw4w9WgXcQ',                                                                                          enabled: true },
+        { platform: 'instagram', url: 'https://www.instagram.com/p/C8pHjMZNG9b/embed',                                                                                      enabled: true },
+        { platform: 'tiktok',    url: 'https://www.tiktok.com/embed/v2/7310742018639400235',                                                                                 enabled: true },
+        { platform: 'facebook',  url: 'https://www.facebook.com/plugins/video.php?href=https%3A%2F%2Fwww.facebook.com%2Ffacebook%2Fvideos%2F10153231379946729%2F',          enabled: true },
+      ],
     },
-    template: {},
+    template: {
+      bgColor:   '#ffffff',
+      textColor: '#111827',
+      padding:   64,
+      textAlign: 'center',
+    },
   },
+
   contact: {
     data: {
       heading:    'Get in touch',
-      subheading: 'We would love to hear from you. Drop us a message and we will get back to you within 24 hours.',
-      address:    '123 Main Street, San Francisco, CA 94103',
-      phone:      '+1 (415) 555-0192',
-      email:      'hello@acmeco.com',
-      hours:      'Mon – Fri, 9 am – 6 pm PST',
-      mapsUrl:    '',
+      subheading: 'Have a question or want to see Arcova in action? We\'d love to hear from you — our team typically replies within a few hours.',
+      ...SHARED_CONTACT,
+      hours:   'Monday – Friday, 9 am – 6 pm ET',
+      mapsUrl: '',
       socials: {
-        instagram: '',
-        facebook:  '',
-        tiktok:    '',
+        instagram: 'https://instagram.com/arcova',
+        facebook:  'https://facebook.com/arcova',
+        tiktok:    'https://tiktok.com/@arcova',
       },
     },
     template: {
@@ -210,25 +247,25 @@ const initialState = {
 
   form: {
     data: {
-      heading:     'Get in Touch',
-      subheading:  'Fill out the form below and we\'ll be in touch shortly.',
-      submitLabel: 'Send Message',
+      heading:     'Request a demo',
+      subheading:  'Tell us a bit about yourself and we\'ll set up a personalised walkthrough of Arcova for your team.',
+      submitLabel: 'Request demo',
       fields: {
-        name:     true,
-        email:    true,
-        phone:    false,
-        subject:  false,
-        message:  true,
-        consent:  false,
+        name:    true,
+        email:   true,
+        phone:   true,
+        subject: false,
+        message: true,
+        consent: true,
       },
-      consentText: 'I agree to the privacy policy and terms of service.',
+      consentText: 'I agree to Arcova\'s privacy policy and consent to being contacted about my request.',
     },
     template: {
-      bgColor:     '#ffffff',
-      textColor:   '#000000',
-      buttonBg:    '#6366f1',
-      buttonText:  '#ffffff',
-      padding:     48,
+      bgColor:    '#ffffff',
+      textColor:  '#000000',
+      buttonBg:   '#6366f1',
+      buttonText: '#ffffff',
+      padding:    48,
     },
   },
 }
@@ -349,10 +386,10 @@ export function ThemeProvider({ children }) {
   }
 
   function addSection(id) {
-    setTheme(prev => ({
-      ...prev,
-      [id]: { data: {}, template: {} },
-    }))
+    setTheme(prev => {
+      if (prev[id]) return prev
+      return { ...prev, [id]: { data: {}, template: {} } }
+    })
   }
 
   function removeSection(id) {

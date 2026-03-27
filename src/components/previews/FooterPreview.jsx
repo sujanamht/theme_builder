@@ -179,10 +179,10 @@ export default function FooterPreview() {
           <div style={col1Style}>
             <p style={brandStyle}>{brand}</p>
             {tagline  && <p style={taglineStyle}>{tagline}</p>}
-            {address  && <p style={contactLineStyle}><span>📍</span>{address}</p>}
-            {phone    && <p style={contactLineStyle}><span>📞</span>{phone}</p>}
+            
             {email    && <p style={contactLineStyle}><span>✉</span>{email}</p>}
-
+            {phone    && <p style={contactLineStyle}><span>📞</span>{phone}</p>}
+            {address  && <p style={contactLineStyle}><span>📍</span>{address}</p>}
             {(data.socialFacebook || data.socialTiktok) && (
               <div style={{ display: 'flex', gap: '8px', marginTop: '4px' }}>
                 {data.socialFacebook && (
