@@ -40,6 +40,7 @@ function ToggleRow({ label, checked, onChange }) {
 export default function NavbarBuilder({ activeTab = 'content' }) {
   const { theme, updateSection } = useTheme()
   const { data, template } = theme.navbar
+  const pages = theme.pages?.list ?? []
 
   const logo     = data.logo     ?? ''
   const logoText = data.logoText ?? ''
@@ -94,6 +95,18 @@ export default function NavbarBuilder({ activeTab = 'content' }) {
       i === linkIdx ? { ...l, dropdown: (l.dropdown ?? []).filter((_, si) => si !== subIdx) } : l
     )
     setLinks(next)
+  }
+  function setLinkInternal(i, pageId) {
+    const activePageId = theme.pages?.activePage
+    const defaultPageId = (pages.find(p => p.id !== activePageId) ?? pages[0])?.id ?? ''
+    setLinks(links.map((l, idx) => idx === i ? { ...l, pageId: pageId ?? defaultPageId, url: '#' } : l))
+  }
+  function setLinkExternal(i) {
+    setLinks(links.map((l, idx) => {
+      if (idx !== i) return l
+      const { pageId, ...rest } = l
+      return rest
+    }))
   }
 
   return (
@@ -155,12 +168,47 @@ export default function NavbarBuilder({ activeTab = 'content' }) {
                               placeholder="Label"
                               onChange={e => handleLinkChange(i, 'label', e.target.value)}
                             />
-                            <input
-                              type="text"
-                              value={link.url}
-                              placeholder="URL"
-                              onChange={e => handleLinkChange(i, 'url', e.target.value)}
-                            />
+                            {/* Link type toggle */}
+                            <div style={{ display: 'flex', gap: '3px', marginBottom: '1px' }}>
+                              {[['external', 'URL'], ['internal', 'Page']].map(([mode, label]) => {
+                                const isActive = mode === 'internal' ? link.pageId != null : link.pageId == null
+                                return (
+                                  <button
+                                    key={mode}
+                                    onClick={() => mode === 'internal'
+                                      ? setLinkInternal(i)
+                                      : setLinkExternal(i)
+                                    }
+                                    style={{
+                                      flex: 1, padding: '2px 0', borderRadius: '4px', border: '1px solid #3a3a3a',
+                                      background: isActive ? '#6366f1' : 'transparent',
+                                      color: isActive ? '#fff' : '#888',
+                                      fontSize: '10px', fontWeight: '500', cursor: 'pointer',
+                                      fontFamily: 'Inter, sans-serif', transition: 'background 0.15s, color 0.15s',
+                                    }}
+                                  >
+                                    {label}
+                                  </button>
+                                )
+                              })}
+                            </div>
+                            {link.pageId != null ? (
+                              <select
+                                value={link.pageId}
+                                onChange={e => handleLinkChange(i, 'pageId', e.target.value)}
+                              >
+                                {pages.map(p => (
+                                  <option key={p.id} value={p.id}>{p.label}</option>
+                                ))}
+                              </select>
+                            ) : (
+                              <input
+                                type="text"
+                                value={link.url}
+                                placeholder="URL"
+                                onChange={e => handleLinkChange(i, 'url', e.target.value)}
+                              />
+                            )}
                           </div>
                           <button onClick={() => removeLink(i)} title="Remove link" style={{ marginTop: '2px' }}>×</button>
                         </div>

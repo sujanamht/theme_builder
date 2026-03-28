@@ -4,7 +4,7 @@ import { useSelection } from '../../store/selectionContext.jsx'
 import CanvasUpload from '../ui/CanvasUpload.jsx'
 import { useContainerWidth } from '../../hooks/useContainerWidth.js'
 
-function DropdownLink({ link, linkStyle, textColor, fontSize, darkMode }) {
+function DropdownLink({ link, linkStyle, textColor, fontSize, darkMode, onInternalNav }) {
   const [open, setOpen] = useState(false)
   const dropdown = link.dropdown ?? []
   const hasDropdown = dropdown.length > 0
@@ -39,15 +39,23 @@ function DropdownLink({ link, linkStyle, textColor, fontSize, darkMode }) {
       onMouseEnter={() => hasDropdown && setOpen(true)}
       onMouseLeave={() => setOpen(false)}
     >
-      <a
-        href={link.url || '#'}
-        style={{ ...linkStyle, display: 'flex', alignItems: 'center', gap: '4px', userSelect: 'none' }}
-      >
-        {link.label || 'Link'}
-        {hasDropdown && (
-          <span style={{ fontSize: '10px', opacity: 0.6, lineHeight: 1 }}>▾</span>
-        )}
-      </a>
+      {link.pageId != null ? (
+        <button
+          onClick={() => onInternalNav?.(link.pageId)}
+          style={{ ...linkStyle, display: 'flex', alignItems: 'center', gap: '4px', userSelect: 'none', background: 'none', border: 'none', padding: 0 }}
+        >
+          {link.label || 'Link'}
+          {hasDropdown && <span style={{ fontSize: '10px', opacity: 0.6, lineHeight: 1 }}>▾</span>}
+        </button>
+      ) : (
+        <a
+          href={link.url || '#'}
+          style={{ ...linkStyle, display: 'flex', alignItems: 'center', gap: '4px', userSelect: 'none' }}
+        >
+          {link.label || 'Link'}
+          {hasDropdown && <span style={{ fontSize: '10px', opacity: 0.6, lineHeight: 1 }}>▾</span>}
+        </a>
+      )}
 
       {hasDropdown && open && (
         <ul style={dropdownBoxStyle}>
@@ -99,7 +107,7 @@ function Hamburger({ color, onClick }) {
 }
 
 export default function NavbarPreview() {
-  const { theme, updateSection } = useTheme()
+  const { theme, updateSection, setActivePage } = useTheme()
   const { data, template } = theme.navbar
   const selectedId = useSelection()
   const isActive = selectedId === 'navbar' || selectedId?.startsWith('navbar-')
@@ -259,6 +267,7 @@ export default function NavbarPreview() {
                   textColor={template.textColor}
                   fontSize={template.fontSize}
                   darkMode={darkMode}
+                  onInternalNav={setActivePage}
                 />
               ))}
             </ul>
@@ -278,23 +287,40 @@ export default function NavbarPreview() {
           zIndex:           200,
           boxSizing:        'border-box',
         }}>
-          {links.map((link, i) => (
-            <a
-              key={i}
-              href={link.url || '#'}
-              onClick={() => setMenuOpen(false)}
-              style={{
-                display:        'block',
-                padding:        '12px 24px',
-                color:          template.textColor || (darkMode ? '#f4f4f5' : '#111827'),
-                fontSize:       template.fontSize  || '16px',
-                textDecoration: 'none',
-                borderBottom:   i < links.length - 1 ? `1px solid ${darkMode ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.05)'}` : 'none',
-              }}
-            >
-              {link.label || 'Link'}
-            </a>
-          ))}
+          {links.map((link, i) => {
+            const mobileItemStyle = {
+              display:        'block',
+              width:          '100%',
+              padding:        '12px 24px',
+              color:          template.textColor || (darkMode ? '#f4f4f5' : '#111827'),
+              fontSize:       template.fontSize  || '16px',
+              textDecoration: 'none',
+              textAlign:      'left',
+              background:     'none',
+              border:         'none',
+              borderBottom:   i < links.length - 1 ? `1px solid ${darkMode ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.05)'}` : 'none',
+              cursor:         'pointer',
+              boxSizing:      'border-box',
+            }
+            return link.pageId != null ? (
+              <button
+                key={i}
+                onClick={() => { setActivePage(link.pageId); setMenuOpen(false) }}
+                style={mobileItemStyle}
+              >
+                {link.label || 'Link'}
+              </button>
+            ) : (
+              <a
+                key={i}
+                href={link.url || '#'}
+                onClick={() => setMenuOpen(false)}
+                style={mobileItemStyle}
+              >
+                {link.label || 'Link'}
+              </a>
+            )
+          })}
         </div>
       )}
     </div>

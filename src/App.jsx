@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef, cloneElement } from 'react'
-import { ThemeProvider } from './store/themeStore.jsx'
 import { SelectionContext } from './store/selectionContext.jsx'
 import { exportJSON } from './exports/exportJSON.js'
 import { useTheme } from './store/themeStore.jsx'
@@ -318,7 +317,7 @@ function GlobalCanvasItem({ id, selectedComponent, onSelect, editable, children 
           <span style={{ color: '#6366f1', fontSize: '16px', lineHeight: 1, userSelect: 'none', textShadow: '0 1px 4px rgba(99,102,241,0.4)' }}>⠿</span>
         </div>
       )}
-      <div onClick={() => onSelect(id)} style={{ cursor: 'pointer' }}>
+      <div onClick={e => { if (e.target.closest('button, a')) return; onSelect(id) }} style={{ cursor: 'pointer' }}>
         {children}
       </div>
     </div>
@@ -795,6 +794,25 @@ function Shell({
                 {isDark ? <IconSun color={t.textMuted} /> : <IconMoon color={t.textMuted} />}
               </IconBtn>
               <button
+                onClick={() => window.open('/preview', '_blank')}
+                style={{
+                  background: 'transparent', color: t.textMuted, border: `1px solid ${t.border}`,
+                  borderRadius: '6px', padding: '6px 12px',
+                  fontSize: '12px', fontWeight: '500', cursor: 'pointer',
+                  fontFamily: 'Inter, sans-serif', transition: 'background 0.15s, color 0.15s',
+                  display: 'flex', alignItems: 'center', gap: '5px',
+                }}
+                onMouseEnter={e => { e.currentTarget.style.background = t.hoverBg; e.currentTarget.style.color = t.textActive }}
+                onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = t.textMuted }}
+                title="Preview (fullscreen)"
+              >
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                  <circle cx="12" cy="12" r="3" />
+                </svg>
+                Preview
+              </button>
+              <button
                 onClick={() => exportJSON(theme)}
                 style={{
                   background: '#6366f1', color: '#fff', border: 'none',
@@ -1159,15 +1177,13 @@ export default function App() {
   const [visibility,  setVisibility]  = useState(INITIAL_VISIBILITY)
 
   return (
-    <ThemeProvider>
-      <SelectionContext.Provider value={selectedComponent}>
-        <Shell
-          selectedComponent={selectedComponent} setSelectedComponent={setSelectedComponent}
-          leftOpen={leftOpen}     setLeftOpen={setLeftOpen}
-          rightOpen={rightOpen}   setRightOpen={setRightOpen}
-          visibility={visibility} setVisibility={setVisibility}
-        />
-      </SelectionContext.Provider>
-    </ThemeProvider>
+    <SelectionContext.Provider value={selectedComponent}>
+      <Shell
+        selectedComponent={selectedComponent} setSelectedComponent={setSelectedComponent}
+        leftOpen={leftOpen}     setLeftOpen={setLeftOpen}
+        rightOpen={rightOpen}   setRightOpen={setRightOpen}
+        visibility={visibility} setVisibility={setVisibility}
+      />
+    </SelectionContext.Provider>
   )
 }

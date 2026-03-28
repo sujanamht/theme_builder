@@ -2,6 +2,34 @@ import { createContext, useContext, useState } from 'react'
 
 const HOME_SECTIONS = ['announcement', 'navbar', 'carousel', 'about', 'services', 'testimonial', 'footer']
 
+const INITIAL_PAGES = [
+  { id: 'home',    label: 'Home',    sections: HOME_SECTIONS },
+  { id: 'about',   label: 'About',   sections: ['about', 'cta'] },
+  { id: 'contact', label: 'Contact', sections: ['contact', 'form'] },
+  { id: 'blog',    label: 'Blog',    sections: [] },
+  { id: 'custom',  label: 'Custom',  sections: [] },
+]
+
+/* Syncs navbar links with a pages list.
+   - Updates labels for existing page links
+   - Removes links whose pageId no longer exists
+   - Appends new links for pages with no existing link
+   - Leaves external links (no pageId) untouched */
+function syncNavbarLinks(links, pages) {
+  const synced = links
+    .filter(l => !l.pageId || pages.some(p => p.id === l.pageId))
+    .map(l => {
+      if (!l.pageId) return l
+      const page = pages.find(p => p.id === l.pageId)
+      return page ? { ...l, label: page.label } : l
+    })
+  const existing = new Set(synced.filter(l => l.pageId).map(l => l.pageId))
+  const additions = pages
+    .filter(p => !existing.has(p.id))
+    .map(p => ({ label: p.label, url: '#', pageId: p.id }))
+  return [...synced, ...additions]
+}
+
 const SHARED_CONTACT = {
   address: '240 Kent Avenue, Suite 4B, Brooklyn, NY 11249',
   phone:   '+1 (718) 555-0143',
@@ -20,13 +48,7 @@ const initialState = {
 
   pages: {
     activePage: 'home',
-    list: [
-      { id: 'home',    label: 'Home',    sections: HOME_SECTIONS },
-      { id: 'about',   label: 'About',   sections: [] },
-      { id: 'contact', label: 'Contact', sections: [] },
-      { id: 'blog',    label: 'Blog',    sections: [] },
-      { id: 'custom',  label: 'Custom',  sections: [] },
-    ],
+    list: INITIAL_PAGES,
   },
 
   announcement: {
@@ -41,13 +63,7 @@ const initialState = {
   navbar: {
     data: {
       logoText: '',
-      links: [
-        { label: 'Product',   href: '#' },
-        { label: 'Solutions', href: '#' },
-        { label: 'Pricing',   href: '#' },
-        { label: 'Blog',      href: '#' },
-        { label: 'Contact',   href: '#' },
-      ],
+      links: INITIAL_PAGES.map(p => ({ label: p.label, url: '#', pageId: p.id })),
     },
     template: {},
   },
@@ -311,27 +327,25 @@ export function ThemeProvider({ children }) {
 
   function addPage() {
     setTheme(prev => {
-      const num = prev.pages.list.length + 1
-      const id  = `page-${Date.now()}`
+      const num     = prev.pages.list.length + 1
+      const id      = `page-${Date.now()}`
+      const newList = [...prev.pages.list, { id, label: `Page ${num}`, sections: [] }]
       return {
         ...prev,
-        pages: {
-          activePage: id,
-          list: [...prev.pages.list, { id, label: `Page ${num}`, sections: [] }],
-        },
+        pages:  { activePage: id, list: newList },
+        navbar: { ...prev.navbar, data: { ...prev.navbar.data, links: syncNavbarLinks(prev.navbar.data.links ?? [], newList) } },
       }
     })
   }
 
   function addCustomPage(label) {
     setTheme(prev => {
-      const id = `page-${Date.now()}`
+      const id      = `page-${Date.now()}`
+      const newList = [...prev.pages.list, { id, label, sections: [] }]
       return {
         ...prev,
-        pages: {
-          ...prev.pages,
-          list: [...prev.pages.list, { id, label, sections: [] }],
-        },
+        pages:  { ...prev.pages, list: newList },
+        navbar: { ...prev.navbar, data: { ...prev.navbar.data, links: syncNavbarLinks(prev.navbar.data.links ?? [], newList) } },
       }
     })
   }
@@ -343,7 +357,8 @@ export function ThemeProvider({ children }) {
       const newActive = prev.pages.activePage === id ? nextList[0].id : prev.pages.activePage
       return {
         ...prev,
-        pages: { activePage: newActive, list: nextList },
+        pages:  { activePage: newActive, list: nextList },
+        navbar: { ...prev.navbar, data: { ...prev.navbar.data, links: syncNavbarLinks(prev.navbar.data.links ?? [], nextList) } },
       }
     })
   }
@@ -356,13 +371,14 @@ export function ThemeProvider({ children }) {
   }
 
   function renamePage(id, label) {
-    setTheme(prev => ({
-      ...prev,
-      pages: {
-        ...prev.pages,
-        list: prev.pages.list.map(p => p.id === id ? { ...p, label } : p),
-      },
-    }))
+    setTheme(prev => {
+      const newList = prev.pages.list.map(p => p.id === id ? { ...p, label } : p)
+      return {
+        ...prev,
+        pages:  { ...prev.pages, list: newList },
+        navbar: { ...prev.navbar, data: { ...prev.navbar.data, links: syncNavbarLinks(prev.navbar.data.links ?? [], newList) } },
+      }
+    })
   }
 
   function removeSectionFromAllPages(sectionId) {

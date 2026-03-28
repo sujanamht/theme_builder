@@ -57,7 +57,7 @@ export default function SortableCanvasItem({ id, children, onSelect }) {
       </div>
 
       {/* Preview — click to select */}
-      <div onClick={() => onSelect(id)} style={{ cursor: 'pointer' }}>
+      <div onClick={e => { if (e.target.closest('button, a')) return; onSelect(id) }} style={{ cursor: 'pointer' }}>
         {children}
       </div>
     </div>
