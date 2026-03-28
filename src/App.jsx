@@ -332,7 +332,7 @@ function Shell({
   rightOpen, setRightOpen,
   visibility, setVisibility,
 }) {
-  const { theme, addSection, removeSection, updatePageOrder, removeSectionFromAllPages, updateGlobalTheme } = useTheme()
+  const { theme, addSection, removeSection, updateSection, updatePageOrder, removeSectionFromAllPages, updateGlobalTheme } = useTheme()
   const isDark = theme.globalTheme.darkMode ?? false
 
   /* Derive active page order from store */
@@ -464,6 +464,14 @@ function Shell({
       const realOver   = oid.replace('panel__', '')
       if (realActive !== realOver && order.includes(realActive) && order.includes(realOver)) {
         setOrder(arrayMove(order, order.indexOf(realActive), order.indexOf(realOver)))
+      }
+    } else if (aid.startsWith('navlink__')) {
+      /* ── Navbar link reorder ── */
+      const ai    = parseInt(aid.replace('navlink__', ''), 10)
+      const oi    = parseInt(oid.replace('navlink__', ''), 10)
+      const links = theme.navbar.data.links ?? []
+      if (ai !== oi && ai >= 0 && oi >= 0 && ai < links.length && oi < links.length) {
+        updateSection('navbar', 'data', { ...theme.navbar.data, links: arrayMove(links, ai, oi) })
       }
     } else {
       /* ── Canvas reorder ── */
