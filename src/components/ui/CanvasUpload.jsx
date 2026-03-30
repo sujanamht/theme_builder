@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import CropOverlay from './CropOverlay.jsx'
 
 function UploadIcon({ size }) {
@@ -158,13 +159,14 @@ export default function CanvasUpload({
         onChange={handleFile}
       />
 
-      {pendingSrc && (
+      {pendingSrc && createPortal(
         <CropOverlay
           src={pendingSrc}
           aspectRatio={aspectRatio || '16/9'}
           onCrop={url => { onUpload(url); setPendingSrc(null) }}
           onClose={() => setPendingSrc(null)}
-        />
+        />,
+        document.body
       )}
     </div>
   )

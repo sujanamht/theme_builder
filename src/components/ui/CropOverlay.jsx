@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useRef, useState, useEffect } from 'react'
 
 const MIN_W = 80
 
@@ -6,9 +6,10 @@ export default function CropOverlay({ src, aspectRatio, onCrop, onClose }) {
   const [ratioW, ratioH] = aspectRatio.split('/').map(Number)
   const ratio = ratioW / ratioH
 
-  const imgRef   = useRef()
-  const [imgRect, setImgRect] = useState(null)  // viewport coords
-  const [crop,    setCrop]    = useState(null)   // viewport coords { x, y, w, h }
+  const imgRef        = useRef()
+  const imgWrapperRef = useRef()
+  const [imgRect, setImgRect] = useState(null)  // viewport coords — mouse math only
+  const [crop,    setCrop]    = useState(null)   // relative to image wrapper { x, y, w, h }
   const dragMode = useRef(null)
   // { type: 'move',   dx, dy }
   // { type: 'resize', corner: 'tl'|'tr'|'bl'|'br', startX, startCrop }
@@ -16,8 +17,8 @@ export default function CropOverlay({ src, aspectRatio, onCrop, onClose }) {
   // ── helpers ────────────────────────────────────────────────────────────────
 
   function getImgViewportRect() {
-    if (!imgRef.current) return null
-    const r = imgRef.current.getBoundingClientRect()
+    if (!imgWrapperRef.current) return null
+    const r = imgWrapperRef.current.getBoundingClientRect()
     return { left: r.left, top: r.top, width: r.width, height: r.height }
   }
 
@@ -31,8 +32,8 @@ export default function CropOverlay({ src, aspectRatio, onCrop, onClose }) {
       h = w / ratio
     }
     return {
-      x: ir.left + (ir.width  - w) / 2,
-      y: ir.top  + (ir.height - h) / 2,
+      x: (ir.width  - w) / 2,
+      y: (ir.height - h) / 2,
       w,
       h,
     }
@@ -41,26 +42,52 @@ export default function CropOverlay({ src, aspectRatio, onCrop, onClose }) {
   function clampMove(c, ir) {
     return {
       ...c,
-      x: Math.max(ir.left, Math.min(c.x, ir.left + ir.width  - c.w)),
-      y: Math.max(ir.top,  Math.min(c.y, ir.top  + ir.height - c.h)),
+      x: Math.max(0, Math.min(c.x, ir.width  - c.w)),
+      y: Math.max(0, Math.min(c.y, ir.height - c.h)),
     }
   }
 
-  // ── image load ─────────────────────────────────────────────────────────────
+  // ── image load (ResizeObserver) ────────────────────────────────────────────
 
-  function handleImgLoad() {
-    const ir = getImgViewportRect()
-    if (!ir) return
-    setImgRect(ir)
-    setCrop(buildInitialCrop(ir))
-  }
+  useEffect(() => {
+    const img     = imgRef.current
+    const wrapper = imgWrapperRef.current
+    if (!img || !wrapper) return
+
+    let initialCropSet = false
+
+    const observer = new ResizeObserver(() => {
+      const r = wrapper.getBoundingClientRect()
+      const ir = { left: r.left, top: r.top, width: r.width, height: r.height }
+      setImgRect(ir)
+      if (!initialCropSet) {
+        initialCropSet = true
+        setCrop(buildInitialCrop(ir))
+      }
+    })
+
+    function onLoad() { observer.observe(wrapper) }
+
+    if (img.complete && img.naturalWidth > 0) {
+      observer.observe(wrapper)
+    } else {
+      img.addEventListener('load', onLoad)
+    }
+
+    return () => {
+      observer.disconnect()
+      img.removeEventListener('load', onLoad)
+    }
+  }, [])
 
   // ── move mousedown ─────────────────────────────────────────────────────────
 
   function handleCropMouseDown(e) {
     e.preventDefault()
     e.stopPropagation()
-    dragMode.current = { type: 'move', dx: e.clientX - crop.x, dy: e.clientY - crop.y }
+    const ir = getImgViewportRect()
+    if (ir) setImgRect(ir)
+    dragMode.current = { type: 'move', dx: e.clientX - ir.left - crop.x, dy: e.clientY - ir.top - crop.y }
   }
 
   // ── resize mousedown ───────────────────────────────────────────────────────
@@ -68,6 +95,8 @@ export default function CropOverlay({ src, aspectRatio, onCrop, onClose }) {
   function handleCornerMouseDown(corner, e) {
     e.preventDefault()
     e.stopPropagation()
+    const ir = getImgViewportRect()
+    if (ir) setImgRect(ir)
     dragMode.current = { type: 'resize', corner, startX: e.clientX, startCrop: { ...crop } }
   }
 
@@ -79,7 +108,7 @@ export default function CropOverlay({ src, aspectRatio, onCrop, onClose }) {
 
     if (mode.type === 'move') {
       setCrop(prev => clampMove(
-        { ...prev, x: e.clientX - mode.dx, y: e.clientY - mode.dy },
+        { ...prev, x: e.clientX - imgRect.left - mode.dx, y: e.clientY - imgRect.top - mode.dy },
         imgRect,
       ))
       return
@@ -96,23 +125,23 @@ export default function CropOverlay({ src, aspectRatio, onCrop, onClose }) {
       let maxW
       if (corner === 'br') {
         maxW = Math.min(
-          imgRect.left + imgRect.width - sc.x,
-          (imgRect.top + imgRect.height - sc.y) * ratio,
+          imgRect.width  - sc.x,
+          (imgRect.height - sc.y) * ratio,
         )
       } else if (corner === 'bl') {
         maxW = Math.min(
-          sc.x + sc.w - imgRect.left,
-          (imgRect.top + imgRect.height - sc.y) * ratio,
+          sc.x + sc.w,
+          (imgRect.height - sc.y) * ratio,
         )
       } else if (corner === 'tr') {
         maxW = Math.min(
-          imgRect.left + imgRect.width - sc.x,
-          (sc.y + sc.h - imgRect.top) * ratio,
+          imgRect.width - sc.x,
+          (sc.y + sc.h) * ratio,
         )
       } else { // tl
         maxW = Math.min(
-          sc.x + sc.w - imgRect.left,
-          (sc.y + sc.h - imgRect.top) * ratio,
+          sc.x + sc.w,
+          (sc.y + sc.h) * ratio,
         )
       }
 
@@ -141,8 +170,8 @@ export default function CropOverlay({ src, aspectRatio, onCrop, onClose }) {
     const scaleX = img.naturalWidth  / imgRect.width
     const scaleY = img.naturalHeight / imgRect.height
 
-    const sx = (crop.x - imgRect.left) * scaleX
-    const sy = (crop.y - imgRect.top)  * scaleY
+    const sx = crop.x * scaleX
+    const sy = crop.y * scaleY
     const sw = crop.w * scaleX
     const sh = crop.h * scaleY
 
@@ -177,97 +206,101 @@ export default function CropOverlay({ src, aspectRatio, onCrop, onClose }) {
       onMouseMove={handleOverlayMouseMove}
       onMouseUp={handleOverlayMouseUp}
     >
-      <img
-        ref={imgRef}
-        src={src}
-        alt=""
-        style={{ maxWidth: '90vw', maxHeight: '85vh', objectFit: 'contain', display: 'block', pointerEvents: 'none' }}
-        onLoad={handleImgLoad}
-        draggable={false}
-      />
+      <div
+        ref={imgWrapperRef}
+        style={{ position: 'relative', display: 'inline-block', lineHeight: 0 }}
+      >
+        <img
+          ref={imgRef}
+          src={src}
+          alt=""
+          style={{ maxWidth: '90vw', maxHeight: '85vh', objectFit: 'contain', display: 'block', pointerEvents: 'none' }}
+          draggable={false}
+        />
 
-      {crop && (
-        <>
-          {/* Crop box */}
-          <div
-            onMouseDown={handleCropMouseDown}
-            style={{
-              position:  'fixed',
-              left:      crop.x,
-              top:       crop.y,
-              width:     crop.w,
-              height:    crop.h,
-              border:    '2px solid #fff',
-              boxSizing: 'border-box',
-              cursor:    'move',
-            }}
-          >
-            {/* Rule-of-thirds grid */}
-            {[1, 2].map(n => (
-              <div key={`v${n}`} style={{
+        {crop && (
+          <>
+            {/* Crop box */}
+            <div
+              onMouseDown={handleCropMouseDown}
+              style={{
+                position:  'absolute',
+                left:      crop.x,
+                top:       crop.y,
+                width:     crop.w,
+                height:    crop.h,
+                border:    '2px solid #fff',
+                boxSizing: 'border-box',
+                cursor:    'move',
+              }}
+            >
+              {/* Rule-of-thirds grid */}
+              {[1, 2].map(n => (
+                <div key={`v${n}`} style={{
+                  position:      'absolute',
+                  top:           0,
+                  bottom:        0,
+                  left:          `${(n / 3) * 100}%`,
+                  width:         '1px',
+                  background:    'rgba(255,255,255,0.3)',
+                  pointerEvents: 'none',
+                }} />
+              ))}
+              {[1, 2].map(n => (
+                <div key={`h${n}`} style={{
+                  position:      'absolute',
+                  left:          0,
+                  right:         0,
+                  top:           `${(n / 3) * 100}%`,
+                  height:        '1px',
+                  background:    'rgba(255,255,255,0.3)',
+                  pointerEvents: 'none',
+                }} />
+              ))}
+
+              {/* Corner handles */}
+              {corners.map(({ id, style }) => (
+                <div
+                  key={id}
+                  onMouseDown={e => handleCornerMouseDown(id, e)}
+                  style={{
+                    position:   'absolute',
+                    width:      8,
+                    height:     8,
+                    background: '#fff',
+                    ...style,
+                  }}
+                />
+              ))}
+            </div>
+
+            {/* Confirm button — just below crop box, centered */}
+            <button
+              onClick={handleConfirm}
+              style={{
                 position:      'absolute',
-                top:           0,
-                bottom:        0,
-                left:          `${(n / 3) * 100}%`,
-                width:         '1px',
-                background:    'rgba(255,255,255,0.3)',
-                pointerEvents: 'none',
-              }} />
-            ))}
-            {[1, 2].map(n => (
-              <div key={`h${n}`} style={{
-                position:      'absolute',
-                left:          0,
-                right:         0,
-                top:           `${(n / 3) * 100}%`,
-                height:        '1px',
-                background:    'rgba(255,255,255,0.3)',
-                pointerEvents: 'none',
-              }} />
-            ))}
-
-            {/* Corner handles */}
-            {corners.map(({ id, style }) => (
-              <div
-                key={id}
-                onMouseDown={e => handleCornerMouseDown(id, e)}
-                style={{
-                  position:   'absolute',
-                  width:      8,
-                  height:     8,
-                  background: '#fff',
-                  ...style,
-                }}
-              />
-            ))}
-          </div>
-
-          {/* Confirm button — just below crop box, centered */}
-          <button
-            onClick={handleConfirm}
-            style={{
-              position:      'fixed',
-              left:          crop.x + crop.w / 2,
-              top:           crop.y + crop.h + 10,
-              transform:     'translateX(-50%)',
-              zIndex:        1001,
-              background:    '#fff',
-              border:        'none',
-              borderRadius:  '20px',
-              color:         '#111',
-              fontSize:      '13px',
-              fontWeight:    700,
-              padding:       '6px 18px',
-              cursor:        'pointer',
-              fontFamily:    'Inter, sans-serif',
-              letterSpacing: '0.02em',
-              whiteSpace:    'nowrap',
-            }}
-          >
-            ✓ Crop
-          </button>
-        </>
-      )}
+                left:          crop.x + crop.w / 2,
+                top:           Math.min(crop.y + crop.h + 10, (imgRect?.height ?? 0) - 36),
+                transform:     'translateX(-50%)',
+                zIndex:        1001,
+                background:    '#fff',
+                border:        'none',
+                borderRadius:  '20px',
+                color:         '#111',
+                fontSize:      '13px',
+                fontWeight:    700,
+                padding:       '6px 18px',
+                cursor:        'pointer',
+                fontFamily:    'Inter, sans-serif',
+                letterSpacing: '0.02em',
+                whiteSpace:    'nowrap',
+              }}
+            >
+              ✓ Crop
+            </button>
+          </>
+        )}
+      </div>
 
       {/* Cancel button */}
       <button

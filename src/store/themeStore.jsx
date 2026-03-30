@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from 'react'
+import { createContext, useContext, useState, useEffect } from 'react'
 
 const HOME_SECTIONS = ['announcement', 'navbar', 'carousel', 'about', 'services', 'testimonial', 'footer']
 
@@ -289,7 +289,21 @@ const initialState = {
 const ThemeContext = createContext(null)
 
 export function ThemeProvider({ children }) {
-  const [theme, setTheme] = useState(initialState)
+  function loadState() {
+    try {
+      const saved = localStorage.getItem('theme_builder_state')
+      return saved ? JSON.parse(saved) : initialState
+    } catch {
+      return initialState
+    }
+  }
+  const [theme, setTheme] = useState(loadState)
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('theme_builder_state', JSON.stringify(theme))
+    } catch {}
+  }, [theme])
 
   function updateSection(section, field, value) {
     setTheme(prev => ({
