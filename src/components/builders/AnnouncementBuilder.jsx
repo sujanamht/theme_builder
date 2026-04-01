@@ -71,6 +71,24 @@ export default function AnnouncementBuilder({ activeTab = 'content' }) {
                 min={min} max={max} step={step}
               />
             ))}
+            <label className="flex items-center gap-2 text-sm text-gray-700 cursor-pointer select-none">
+              <input
+                type="checkbox"
+                checked={template.marquee ?? false}
+                onChange={e => handleTemplate('marquee', e.target.checked)}
+                className="w-4 h-4"
+              />
+              Marquee on mobile
+            </label>
+            {template.marquee && (
+              <RangeField
+                label="Scroll Speed"
+                value={template.marqueeSpeed ?? 30}
+                onChange={v => handleTemplate('marqueeSpeed', Number(v))}
+                min={5} max={60} step={5}
+                unit=""
+              />
+            )}
           </div>
         </section>
       )}

@@ -40,39 +40,85 @@ export default function AnnouncementPreview() {
   const message  = data.message  || 'Your announcement message goes here.'
   const linkText = data.linkText
   const linkUrl  = data.linkUrl  || '#'
+  const speed    = template.marqueeSpeed ?? 30
+
+  const closeBtn = !isActive && (
+    <button
+      onClick={() => setDismissed(true)}
+      style={{
+        position:   'absolute',
+        right:      0,
+        top:        '50%',
+        transform:  'translateY(-50%)',
+        background: 'none',
+        border:     'none',
+        color:      'inherit',
+        cursor:     'pointer',
+        opacity:    0.7,
+        padding:    '0 12px',
+        fontSize:   '16px',
+        lineHeight: 1,
+      }}
+      onMouseEnter={e => { e.currentTarget.style.opacity = '1' }}
+      onMouseLeave={e => { e.currentTarget.style.opacity = '0.7' }}
+      aria-label="Dismiss announcement"
+    >
+      ×
+    </button>
+  )
+
+  if (isMobile && template.marquee) {
+    const trackItem = (
+      <span style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', paddingRight: '4rem' }}>
+        <span>{message}</span>
+        {linkText && (
+          <a href={linkUrl} style={linkStyle} target="_blank" rel="noreferrer">{linkText}</a>
+        )}
+      </span>
+    )
+
+    return (
+      <div ref={ref} style={barStyle}>
+        <style>{`
+          @keyframes announcement-scroll {
+            from { transform: translateX(0); }
+            to   { transform: translateX(-50%); }
+          }
+        `}</style>
+        <div style={{ overflow: 'hidden', flex: 1, marginRight: closeBtn ? '32px' : 0 }}>
+          <div
+            style={{
+              display:    'inline-flex',
+              whiteSpace: 'nowrap',
+              animation:  `announcement-scroll ${speed}s linear infinite`,
+            }}
+            onMouseEnter={e => { e.currentTarget.style.animationPlayState = 'paused' }}
+            onMouseLeave={e => { e.currentTarget.style.animationPlayState = 'running' }}
+          >
+            {trackItem}
+            {trackItem}
+          </div>
+        </div>
+        {closeBtn}
+      </div>
+    )
+  }
 
   return (
     <div ref={ref} style={barStyle}>
-      <span>{message}</span>
-      {linkText && (
-        <a href={linkUrl} style={linkStyle} target="_blank" rel="noreferrer">
-          {linkText}
-        </a>
+      {isMobile ? (
+        <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: 1, marginRight: closeBtn ? '32px' : 0 }}>
+          {message}
+        </span>
+      ) : (
+        <>
+          <span>{message}</span>
+          {linkText && (
+            <a href={linkUrl} style={linkStyle} target="_blank" rel="noreferrer">{linkText}</a>
+          )}
+        </>
       )}
-      {!isActive && (
-        <button
-          onClick={() => setDismissed(true)}
-          style={{
-            position:   'absolute',
-            right:      0,
-            top:        '50%',
-            transform:  'translateY(-50%)',
-            background: 'none',
-            border:     'none',
-            color:      'inherit',
-            cursor:     'pointer',
-            opacity:    0.7,
-            padding:    '0 12px',
-            fontSize:   '16px',
-            lineHeight: 1,
-          }}
-          onMouseEnter={e => { e.currentTarget.style.opacity = '1' }}
-          onMouseLeave={e => { e.currentTarget.style.opacity = '0.7' }}
-          aria-label="Dismiss announcement"
-        >
-          ×
-        </button>
-      )}
+      {closeBtn}
     </div>
   )
 }

@@ -57,7 +57,7 @@ const initialState = {
       linkText: 'Claim your spot',
       linkUrl:  '#',
     },
-    template: {},
+    template: { marquee: true, marqueeSpeed: 30 },
   },
 
   navbar: {
