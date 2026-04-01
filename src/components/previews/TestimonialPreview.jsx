@@ -4,6 +4,7 @@ import { useSelection } from '../../store/selectionContext.jsx'
 import CanvasUpload from '../ui/CanvasUpload.jsx'
 import { useContainerWidth } from '../../hooks/useContainerWidth.js'
 import { CONTENT_MAX_WIDTH } from '../../constants/layout.js'
+import DotIndicators from '../ui/DotIndicators.jsx'
 
 function getInitials(name) {
   if (!name) return '?'
@@ -232,26 +233,13 @@ export default function TestimonialPreview() {
             <ArrowBtn dir="next" onClick={next} color={textColor} />
           </div>
 
-          {count > 1 && (
-            <div style={{ display: 'flex', justifyContent: 'center', gap: '6px', marginTop: '16px' }}>
-              {items.map((_, i) => (
-                <button
-                  key={i}
-                  onClick={() => setActiveIndex(i)}
-                  style={{
-                    width:        i === safeIndex ? '20px' : '8px',
-                    height:       '8px',
-                    borderRadius: '4px',
-                    border:       'none',
-                    background:   i === safeIndex ? '#6366f1' : `${textColor}33`,
-                    cursor:       'pointer',
-                    padding:      0,
-                    transition:   'width 0.3s ease, background 0.2s ease',
-                  }}
-                />
-              ))}
-            </div>
-          )}
+          <DotIndicators
+            count={count}
+            activeIndex={safeIndex}
+            onDotClick={i => setActiveIndex(i)}
+            accentColor={globalTheme.primaryColor || '#6366f1'}
+            darkMode={darkMode}
+          />
         </>
       )}
       </div>

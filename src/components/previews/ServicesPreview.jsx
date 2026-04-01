@@ -1,13 +1,18 @@
+import { useState, useRef } from 'react'
 import { useTheme, useDarkMode } from '../../store/themeStore.jsx'
 import ResponsiveGrid from '../ui/ResponsiveGrid.jsx'
 import { hexToRgba } from '../../utils/colorUtils.js'
 import { CONTENT_MAX_WIDTH } from '../../constants/layout.js'
+import DotIndicators from '../ui/DotIndicators.jsx'
 
 export default function ServicesPreview() {
   const { theme } = useTheme()
   const { data, template } = theme.services
   const { globalTheme } = theme
   const darkMode = useDarkMode()
+
+  const [activeIndex, setActiveIndex] = useState(0)
+  const carouselRef = useRef(null)
 
   const heading     = data.heading    || ''
   const subheading  = data.subheading || ''
@@ -100,33 +105,97 @@ export default function ServicesPreview() {
 
   const innerStyle = { maxWidth: CONTENT_MAX_WIDTH, margin: '0 auto', width: '100%', boxSizing: 'border-box' }
 
+  const desktopCols  = parseInt(template.columns) || 3
+  const tabletCols   = Math.min(2, desktopCols)
+  const displayMode  = template.displayMode || 'grid'
+  const visibleItems = displayMode === 'single-row' ? items.slice(0, desktopCols) : items
+
+  function renderCard(item, i) {
+    return (
+      <>
+        {item.icon && <div style={iconCircleStyle}>{item.icon}</div>}
+        {item.title && <p style={titleStyle}>{item.title}</p>}
+        {item.description && <p style={descStyle}>{item.description}</p>}
+        {item.linkText && (
+          <a href={item.linkUrl || '#'} style={linkStyle}>{item.linkText} →</a>
+        )}
+      </>
+    )
+  }
+
+  function handleScroll(e) {
+    const el = e.currentTarget
+    const cardWidth = 280 + 24
+    setActiveIndex(Math.round(el.scrollLeft / cardWidth))
+  }
+
   return (
     <section style={sectionStyle}>
       <div style={innerStyle}>
         {heading    && <h2 style={headingStyle}>{heading}</h2>}
         {subheading && <p style={subheadingStyle}>{subheading}</p>}
+        {items.length === 0 && <p style={emptyStyle}>No services yet — add some in the editor.</p>}
+      </div>
 
-        {items.length === 0 ? (
-          <p style={emptyStyle}>No services yet — add some in the editor.</p>
-        ) : (
-          <ResponsiveGrid cols={{ mobile: 1, tablet: 2, desktop: 3 }} gap={24}>
-            {items.map((item, i) => (
+      {items.length > 0 && (displayMode === 'carousel' ? (
+        <div style={innerStyle}>
+          <div
+            ref={carouselRef}
+            onScroll={handleScroll}
+            style={{
+              width:                   '100%',
+              overflowX:               'scroll',
+              overflowY:               'visible',
+              WebkitOverflowScrolling: 'touch',
+              scrollSnapType:          'x mandatory',
+              paddingBottom:           '16px',
+              boxSizing:               'border-box',
+            }}
+          >
+            <div style={{
+              display:      'inline-flex',
+              gap:          '24px',
+              paddingLeft:  '32px',
+              paddingRight: '32px',
+              minWidth:     '100%',
+              boxSizing:    'border-box',
+            }}>
+              {items.map((item, i) => (
+                <div key={i} style={{ ...cardStyle, width: '280px', minWidth: '280px', maxWidth: '280px', flex: '0 0 280px', scrollSnapAlign: 'start', boxSizing: 'border-box' }}>
+                  {renderCard(item, i)}
+                </div>
+              ))}
+            </div>
+          </div>
+          <DotIndicators
+            count={items.length}
+            activeIndex={activeIndex}
+            onDotClick={i => {
+              carouselRef.current?.scrollTo({ left: i * (280 + 24), behavior: 'smooth' })
+              setActiveIndex(i)
+            }}
+            accentColor={accentColor}
+            darkMode={darkMode}
+          />
+        </div>
+      ) : (
+        <div style={innerStyle}>
+          <ResponsiveGrid cols={{ mobile: 1, tablet: tabletCols, desktop: desktopCols }} gap={24}>
+            {visibleItems.map((item, i) => (
               <div key={i} style={cardStyle}>
-                {item.icon && (
-                  <div style={iconCircleStyle}>{item.icon}</div>
-                )}
-                {item.title && <p style={titleStyle}>{item.title}</p>}
-                {item.description && <p style={descStyle}>{item.description}</p>}
-                {item.linkText && (
-                  <a href={item.linkUrl || '#'} style={linkStyle}>
-                    {item.linkText} →
-                  </a>
-                )}
+                {renderCard(item, i)}
               </div>
             ))}
           </ResponsiveGrid>
-        )}
-      </div>
+          {displayMode === 'single-row' && (
+            <div style={{ textAlign: 'right', marginTop: '16px' }}>
+              <a href="#" style={{ color: accentColor, fontWeight: 600, fontSize: '14px', textDecoration: 'none' }}>
+                View all →
+              </a>
+            </div>
+          )}
+        </div>
+      ))}
     </section>
   )
 }

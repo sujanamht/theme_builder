@@ -128,6 +128,16 @@ export default function ServicesBuilder({ activeTab = 'content' }) {
             ))}
 
             <label className="flex flex-col gap-1">
+              Display Mode
+              <select value={template.displayMode ?? 'grid'} onChange={e => handleTemplate('displayMode', e.target.value)}
+                style={{ width: '100%' }}>
+                <option value="grid">Grid (all items)</option>
+                <option value="single-row">Single Row + View All</option>
+                <option value="carousel">Horizontal Carousel</option>
+              </select>
+            </label>
+
+            <label className="flex flex-col gap-1">
               Columns
               <select value={template.columns ?? '3'} onChange={e => handleTemplate('columns', e.target.value)}
                 style={{ width: '100%' }}>
