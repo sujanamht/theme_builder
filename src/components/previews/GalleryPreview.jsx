@@ -3,10 +3,12 @@ import { useSelection } from '../../store/selectionContext.jsx'
 import CanvasUpload from '../ui/CanvasUpload.jsx'
 import ResponsiveGrid from '../ui/ResponsiveGrid.jsx'
 import { hexToRgba } from '../../utils/colorUtils.js'
+import { CONTENT_MAX_WIDTH } from '../../constants/layout.js'
 
 export default function GalleryPreview() {
   const { theme, updateSection } = useTheme()
   const { data, template } = theme.gallery
+  const { globalTheme } = theme
   const selectedId = useSelection()
   const isActive = selectedId === 'gallery' || selectedId?.startsWith('gallery-')
 
@@ -19,6 +21,8 @@ export default function GalleryPreview() {
     updateSection('gallery', 'data', { ...data, items: updated })
   }
 
+  const innerStyle = { maxWidth: CONTENT_MAX_WIDTH, margin: '0 auto', width: '100%', boxSizing: 'border-box' }
+
   const textColor  = template.textColor    || '#111827'
   const fontSize   = template.fontSize     || '14px'
   const radius     = template.borderRadius || '8px'
@@ -29,6 +33,7 @@ export default function GalleryPreview() {
     padding:         template.padding || '64px 32px',
     width:           '100%',
     boxSizing:       'border-box',
+    fontFamily:      template.fontFamily || globalTheme.fontFamily || 'inherit',
   }
 
   const headingStyle = {
@@ -76,6 +81,7 @@ export default function GalleryPreview() {
 
   return (
     <section style={sectionStyle}>
+      <div style={innerStyle}>
       {heading    && <h2 style={headingStyle}>{heading}</h2>}
       {subheading && <p style={subheadingStyle}>{subheading}</p>}
 
@@ -113,6 +119,7 @@ export default function GalleryPreview() {
           ))}
         </ResponsiveGrid>
       )}
+      </div>
     </section>
   )
 }

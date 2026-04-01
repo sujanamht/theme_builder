@@ -2,16 +2,20 @@ import { useTheme, useDarkMode } from '../../store/themeStore.jsx'
 import { useSelection } from '../../store/selectionContext.jsx'
 import CanvasUpload from '../ui/CanvasUpload.jsx'
 import { useContainerWidth } from '../../hooks/useContainerWidth.js'
+import { CONTENT_MAX_WIDTH } from '../../constants/layout.js'
 
 export default function HeroPreview() {
   const { theme, updateSection } = useTheme()
   const { data, template } = theme.hero
+  const { globalTheme } = theme
   const selectedId = useSelection()
   const isActive = selectedId === 'hero' || selectedId?.startsWith('hero-')
   const darkMode = useDarkMode()
 
   const { ref: containerRef, width: containerWidth } = useContainerWidth()
   const isMobile = containerWidth < 600
+
+  const innerStyle = { maxWidth: CONTENT_MAX_WIDTH, margin: '0 auto', width: '100%', boxSizing: 'border-box' }
 
   const accent        = theme.globalTheme?.primaryColor || '#6366f1'
   const hasBgImage    = Boolean(data.bgImage)
@@ -20,7 +24,7 @@ export default function HeroPreview() {
   const imagePosition = template.imagePosition ?? 'right'
   const bgColor       = template.bgColor       ?? (darkMode ? '#18181b' : '#ffffff')
   const textColor     = template.textColor     ?? (darkMode ? '#f4f4f5' : '#0a0a0a')
-  const btnBg         = template.btnBg         ?? (darkMode ? '#f4f4f5' : '#0a0a0a')
+  const btnBg         = template.btnBg         ?? globalTheme.primaryColor ?? (darkMode ? '#f4f4f5' : '#0a0a0a')
   const btnText       = template.btnText       ?? (darkMode ? '#18181b' : '#ffffff')
 
   return (
@@ -37,16 +41,16 @@ export default function HeroPreview() {
           paddingRight:    isMobile ? '20px' : '56px',
           width:           '100%',
           boxSizing:       'border-box',
+          fontFamily:      template.fontFamily || globalTheme.fontFamily || 'inherit',
         }}>
 
           {/* Two-column row */}
           <div style={{
+            ...innerStyle,
             display:       'flex',
             flexDirection: isMobile ? 'column' : (imagePosition === 'left' ? 'row-reverse' : 'row'),
             alignItems:    'center',
             gap:           isMobile ? '32px' : '56px',
-            maxWidth:      '1100px',
-            margin:        '0 auto',
           }}>
 
             {/* ── Left: text ── */}

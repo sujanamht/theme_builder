@@ -2,16 +2,20 @@ import { useTheme, useDarkMode } from '../../store/themeStore.jsx'
 import { useSelection } from '../../store/selectionContext.jsx'
 import CanvasUpload from '../ui/CanvasUpload.jsx'
 import { useContainerWidth } from '../../hooks/useContainerWidth.js'
+import { CONTENT_MAX_WIDTH } from '../../constants/layout.js'
 
 export default function AboutPreview() {
   const { theme, updateSection } = useTheme()
   const { data, template } = theme.about
+  const { globalTheme } = theme
   const selectedId = useSelection()
   const isActive = selectedId === 'about' || selectedId?.startsWith('about-')
   const darkMode = useDarkMode()
 
   const { ref: containerRef, width: containerWidth } = useContainerWidth()
   const isMobile = containerWidth < 500
+
+  const innerStyle = { maxWidth: CONTENT_MAX_WIDTH, margin: '0 auto', width: '100%', boxSizing: 'border-box' }
 
   const textColor     = template.textColor     || (darkMode ? '#f4f4f5' : '#0a0a0a')
   const imagePosition = template.imagePosition || 'left'
@@ -29,17 +33,17 @@ export default function AboutPreview() {
     paddingRight:    padH,
     width:           '100%',
     boxSizing:       'border-box',
+    fontFamily:      template.fontFamily || globalTheme.fontFamily || 'inherit',
   }
 
   const rowStyle = {
+    ...innerStyle,
     display:       'flex',
     flexDirection: isMobile
       ? 'column'
       : imagePosition === 'right' ? 'row-reverse' : 'row',
     gap:           isMobile ? '24px' : '48px',
     alignItems:    'center',
-    maxWidth:      '1100px',
-    margin:        '0 auto',
   }
 
   const colStyle = {
@@ -65,7 +69,7 @@ export default function AboutPreview() {
 
 const btnStyle = {
   display:         'inline-block',
-  backgroundColor: template.buttonBg   || (darkMode ? '#f4f4f5' : '#0a0a0a'),
+  backgroundColor: template.buttonBg   || globalTheme.primaryColor || (darkMode ? '#f4f4f5' : '#0a0a0a'),
   color:           template.buttonText || (darkMode ? '#18181b' : '#ffffff'),
   fontSize:        '0.95rem',
   fontWeight:      600,

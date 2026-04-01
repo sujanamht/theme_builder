@@ -1,10 +1,12 @@
 import { useTheme, useDarkMode } from '../../store/themeStore.jsx'
 import ResponsiveGrid from '../ui/ResponsiveGrid.jsx'
 import { hexToRgba } from '../../utils/colorUtils.js'
+import { CONTENT_MAX_WIDTH } from '../../constants/layout.js'
 
 export default function ServicesPreview() {
   const { theme } = useTheme()
   const { data, template } = theme.services
+  const { globalTheme } = theme
   const darkMode = useDarkMode()
 
   const heading     = data.heading    || ''
@@ -12,7 +14,7 @@ export default function ServicesPreview() {
   const items       = data.items      || []
 
   const textColor   = template.textColor   || (darkMode ? '#f4f4f5' : '#111827')
-  const accentColor = template.accentColor || '#6366f1'
+  const accentColor = template.accentColor || globalTheme.primaryColor || '#6366f1'
   const fontSize    = template.fontSize    || '15px'
 
   const sectionStyle = {
@@ -20,6 +22,7 @@ export default function ServicesPreview() {
     padding:         template.padding  || '64px 32px',
     width:           '100%',
     boxSizing:       'border-box',
+    fontFamily:      template.fontFamily || globalTheme.fontFamily || 'inherit',
   }
 
   const headingStyle = {
@@ -95,31 +98,35 @@ export default function ServicesPreview() {
     padding:   '24px 0',
   }
 
+  const innerStyle = { maxWidth: CONTENT_MAX_WIDTH, margin: '0 auto', width: '100%', boxSizing: 'border-box' }
+
   return (
     <section style={sectionStyle}>
-      {heading    && <h2 style={headingStyle}>{heading}</h2>}
-      {subheading && <p style={subheadingStyle}>{subheading}</p>}
+      <div style={innerStyle}>
+        {heading    && <h2 style={headingStyle}>{heading}</h2>}
+        {subheading && <p style={subheadingStyle}>{subheading}</p>}
 
-      {items.length === 0 ? (
-        <p style={emptyStyle}>No services yet — add some in the editor.</p>
-      ) : (
-        <ResponsiveGrid cols={{ mobile: 1, tablet: 2, desktop: 3 }} gap={24}>
-          {items.map((item, i) => (
-            <div key={i} style={cardStyle}>
-              {item.icon && (
-                <div style={iconCircleStyle}>{item.icon}</div>
-              )}
-              {item.title && <p style={titleStyle}>{item.title}</p>}
-              {item.description && <p style={descStyle}>{item.description}</p>}
-              {item.linkText && (
-                <a href={item.linkUrl || '#'} style={linkStyle}>
-                  {item.linkText} →
-                </a>
-              )}
-            </div>
-          ))}
-        </ResponsiveGrid>
-      )}
+        {items.length === 0 ? (
+          <p style={emptyStyle}>No services yet — add some in the editor.</p>
+        ) : (
+          <ResponsiveGrid cols={{ mobile: 1, tablet: 2, desktop: 3 }} gap={24}>
+            {items.map((item, i) => (
+              <div key={i} style={cardStyle}>
+                {item.icon && (
+                  <div style={iconCircleStyle}>{item.icon}</div>
+                )}
+                {item.title && <p style={titleStyle}>{item.title}</p>}
+                {item.description && <p style={descStyle}>{item.description}</p>}
+                {item.linkText && (
+                  <a href={item.linkUrl || '#'} style={linkStyle}>
+                    {item.linkText} →
+                  </a>
+                )}
+              </div>
+            ))}
+          </ResponsiveGrid>
+        )}
+      </div>
     </section>
   )
 }

@@ -3,13 +3,11 @@ import ColorInput from './ColorInput.jsx'
 
 const FONT_OPTIONS = [
   'Inter',
-  'Syne',
   'DM Sans',
-  'Playfair Display',
-  'Montserrat',
+  'Lato',
   'Poppins',
-  'Roboto Slab',
-  'Space Grotesk',
+  'Playfair Display',
+  'Merriweather',
 ]
 
 export default function GlobalThemePanel() {

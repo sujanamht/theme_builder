@@ -1,5 +1,6 @@
 import { useTheme, useDarkMode } from '../../store/themeStore.jsx'
 import ResponsiveGrid from '../ui/ResponsiveGrid.jsx'
+import { CONTENT_MAX_WIDTH } from '../../constants/layout.js'
 
 /* ── Inline SVG icons ──────────────────────────────────────────────── */
 function IconInstagram({ size = 18, color }) {
@@ -66,15 +67,18 @@ const SOCIAL_COLORS = { instagram: '#e1306c', facebook: '#1877f2', tiktok: '#010
 export default function ContactPreview() {
   const { theme } = useTheme()
   const { data, template } = theme.contact
+  const { globalTheme } = theme
   const darkMode = useDarkMode()
 
   const bg          = template.bgColor     || (darkMode ? '#18181b' : '#ffffff')
   const textColor   = template.textColor   || (darkMode ? '#f4f4f5' : '#111827')
-  const accentColor = template.accentColor || '#6366f1'
+  const accentColor = template.accentColor || globalTheme.primaryColor || '#6366f1'
   const padding     = `${template.padding ?? 64}px 32px`
 
   const hasMap     = Boolean(data.mapsUrl)
   const activeSocials = Object.entries(data.socials ?? {}).filter(([, url]) => Boolean(url))
+
+  const innerStyle = { maxWidth: CONTENT_MAX_WIDTH, margin: '0 auto', width: '100%', boxSizing: 'border-box' }
 
   const infoItems = [
     data.address && { icon: IconPin,   label: 'Address', value: data.address },
@@ -91,8 +95,8 @@ export default function ContactPreview() {
   })
 
   return (
-    <section style={{ backgroundColor: bg, padding, width: '100%', boxSizing: 'border-box' }}>
-      <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
+    <section style={{ backgroundColor: bg, padding, width: '100%', boxSizing: 'border-box', fontFamily: template.fontFamily || globalTheme.fontFamily || 'inherit' }}>
+      <div style={innerStyle}>
         <ResponsiveGrid
           cols={{ mobile: 1, tablet: 1, desktop: 2 }}
           gap={40}

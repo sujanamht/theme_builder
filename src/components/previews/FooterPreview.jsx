@@ -1,9 +1,11 @@
 import { useTheme } from '../../store/themeStore.jsx'
 import ResponsiveGrid from '../ui/ResponsiveGrid.jsx'
+import { CONTENT_MAX_WIDTH } from '../../constants/layout.js'
 
 export default function FooterPreview() {
   const { theme } = useTheme()
   const { data, template } = theme.footer
+  const { globalTheme } = theme
 
   const brand        = data.brand        || 'Brand'
   const tagline      = data.tagline      || ''
@@ -15,20 +17,22 @@ export default function FooterPreview() {
   const email        = data.email        || ''
 
   const bg          = template.bgColor   || '#0f1117'
-  const accentColor = template.linkColor || '#6366f1'
+  const accentColor = template.linkColor || globalTheme.primaryColor || '#6366f1'
   const fontSize    = template.fontSize  || '14px'
 
   const footerStyle = {
     backgroundColor: bg,
     width:           '100%',
     boxSizing:       'border-box',
-    fontFamily:      'Inter, system-ui, -apple-system, sans-serif',
+    fontFamily:      template.fontFamily || globalTheme.fontFamily || 'Inter, system-ui, -apple-system, sans-serif',
   }
 
-  const innerStyle = {
+  const wrapStyle = {
     padding:   template.padding || '80px 48px',
     boxSizing: 'border-box',
   }
+
+  const innerStyle = { maxWidth: CONTENT_MAX_WIDTH, margin: '0 auto', width: '100%', boxSizing: 'border-box' }
 
   const brandStyle = {
     color:         '#ffffff',
@@ -150,26 +154,28 @@ export default function FooterPreview() {
     return (
       <footer style={footerStyle}>
         <style>{scopedCSS}</style>
-        <div style={innerStyle}>
-          <ResponsiveGrid cols={{ mobile: 1, tablet: 2, desktop: 3 }} gap={48}>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-              <div style={skel('130px', '20px')} />
-              <div style={skel('200px', '13px', 0.6)} />
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '6px' }}>
-                <div style={skel('170px', '13px', 0.4)} />
-                <div style={skel('140px', '13px', 0.4)} />
-                <div style={skel('200px', '13px', 0.4)} />
+        <div style={wrapStyle}>
+          <div style={innerStyle}>
+            <ResponsiveGrid cols={{ mobile: 1, tablet: 2, desktop: 3 }} gap={48}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                <div style={skel('130px', '20px')} />
+                <div style={skel('200px', '13px', 0.6)} />
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '6px' }}>
+                  <div style={skel('170px', '13px', 0.4)} />
+                  <div style={skel('140px', '13px', 0.4)} />
+                  <div style={skel('200px', '13px', 0.4)} />
+                </div>
               </div>
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-              <div style={skel('80px', '10px')} />
-              {[100, 125, 90, 115, 105].map((w, i) => <div key={i} style={skel(`${w}px`, '13px', 0.35)} />)}
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-              <div style={skel('90px', '10px')} />
-              {[120, 95, 135, 100, 115].map((w, i) => <div key={i} style={skel(`${w}px`, '13px', 0.35)} />)}
-            </div>
-          </ResponsiveGrid>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                <div style={skel('80px', '10px')} />
+                {[100, 125, 90, 115, 105].map((w, i) => <div key={i} style={skel(`${w}px`, '13px', 0.35)} />)}
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                <div style={skel('90px', '10px')} />
+                {[120, 95, 135, 100, 115].map((w, i) => <div key={i} style={skel(`${w}px`, '13px', 0.35)} />)}
+              </div>
+            </ResponsiveGrid>
+          </div>
         </div>
         <div style={bottomBarStyle}>
           <div style={{ width: '240px', height: '12px', borderRadius: '3px', background: 'rgba(255,255,255,0.06)', margin: '0 auto' }} />
@@ -182,7 +188,8 @@ export default function FooterPreview() {
     <footer style={footerStyle}>
       <style>{scopedCSS}</style>
 
-      <div style={innerStyle}>
+      <div style={wrapStyle}>
+        <div style={innerStyle}>
         <ResponsiveGrid cols={{ mobile: 1, tablet: 2, desktop: 3 }} gap={48}>
 
           {/* Col 1 — brand, tagline, contact info */}
@@ -252,6 +259,7 @@ export default function FooterPreview() {
           </div>
 
         </ResponsiveGrid>
+        </div>
       </div>
 
       {/* Copyright bar */}

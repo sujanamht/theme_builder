@@ -161,6 +161,13 @@ export default function TestimonialBuilder({ activeTab = 'content' }) {
                 min={min} max={max} step={step}
               />
             ))}
+
+            <button
+              onClick={() => updateSection('testimonial', 'template', { ...template, accentColor: null, primaryBtnBg: null, secondaryBtnBg: null, fontFamily: null })}
+              style={{ background: 'none', border: 'none', color: '#6366f1', fontSize: '12px', cursor: 'pointer', padding: '4px 0', textDecoration: 'underline', opacity: 0.8 }}
+            >
+              ↺ Reset to global theme
+            </button>
           </div>
         </section>
       )}

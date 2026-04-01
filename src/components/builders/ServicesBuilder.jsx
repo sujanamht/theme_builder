@@ -136,6 +136,13 @@ export default function ServicesBuilder({ activeTab = 'content' }) {
                 <option value="3">3 Columns</option>
               </select>
             </label>
+
+            <button
+              onClick={() => updateSection('services', 'template', { ...template, accentColor: null, fontFamily: null })}
+              style={{ background: 'none', border: 'none', color: '#6366f1', fontSize: '12px', cursor: 'pointer', padding: '4px 0', textDecoration: 'underline', opacity: 0.8 }}
+            >
+              ↺ Reset to global theme
+            </button>
           </div>
         </section>
       )}

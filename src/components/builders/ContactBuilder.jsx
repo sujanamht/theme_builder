@@ -143,6 +143,13 @@ export default function ContactBuilder({ activeTab = 'content' }) {
               onChange={v => handleTemplate('padding', v)}
               min={0} max={120} step={8}
             />
+
+            <button
+              onClick={() => updateSection('contact', 'template', { ...template, accentColor: null, primaryBtnBg: null, secondaryBtnBg: null, fontFamily: null })}
+              style={{ background: 'none', border: 'none', color: '#6366f1', fontSize: '12px', cursor: 'pointer', padding: '4px 0', textDecoration: 'underline', opacity: 0.8 }}
+            >
+              ↺ Reset to global theme
+            </button>
           </div>
         </section>
       )}

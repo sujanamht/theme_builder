@@ -3,6 +3,7 @@ import { useTheme, useDarkMode } from '../../store/themeStore.jsx'
 import { useSelection } from '../../store/selectionContext.jsx'
 import CanvasUpload from '../ui/CanvasUpload.jsx'
 import { useContainerWidth } from '../../hooks/useContainerWidth.js'
+import { CONTENT_MAX_WIDTH } from '../../constants/layout.js'
 
 function getInitials(name) {
   if (!name) return '?'
@@ -50,6 +51,7 @@ function ArrowBtn({ dir, onClick, color }) {
 export default function TestimonialPreview() {
   const { theme, updateSection } = useTheme()
   const { data, template } = theme.testimonial
+  const { globalTheme } = theme
   const selectedId = useSelection()
   const isActive = selectedId === 'testimonial' || selectedId?.startsWith('testimonial-')
 
@@ -84,6 +86,8 @@ export default function TestimonialPreview() {
 
   const textColor = template.textColor || (darkMode ? '#f4f4f5' : '#111827')
 
+  const innerStyle = { maxWidth: CONTENT_MAX_WIDTH, margin: '0 auto', width: '100%', boxSizing: 'border-box' }
+
   const sectionStyle = {
     backgroundColor: template.bgColor  || (darkMode ? '#18181b' : '#f9fafb'),
     color:           textColor,
@@ -91,6 +95,7 @@ export default function TestimonialPreview() {
     padding:         template.padding   || '48px 24px',
     width:           '100%',
     boxSizing:       'border-box',
+    fontFamily:      template.fontFamily || globalTheme.fontFamily || 'inherit',
   }
 
   const headingStyle = {
@@ -203,6 +208,7 @@ export default function TestimonialPreview() {
 
   return (
     <section ref={ref} style={sectionStyle}>
+      <div style={innerStyle}>
       {heading
         ? <h2 style={headingStyle}>{heading}</h2>
         : <div style={{ width: '280px', height: '28px', borderRadius: '6px', backgroundColor: darkMode ? '#3f3f46' : '#d1d5db', margin: '0 auto 28px' }} />
@@ -248,6 +254,7 @@ export default function TestimonialPreview() {
           )}
         </>
       )}
+      </div>
     </section>
   )
 }

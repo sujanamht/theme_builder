@@ -2,16 +2,20 @@ import { useState } from 'react'
 import { useTheme, useDarkMode } from '../../store/themeStore.jsx'
 import { useSelection } from '../../store/selectionContext.jsx'
 import { useContainerWidth } from '../../hooks/useContainerWidth.js'
+import { CONTENT_MAX_WIDTH } from '../../constants/layout.js'
 
 export default function AnnouncementPreview() {
   const { theme } = useTheme()
   const { data, template } = theme.announcement
+  const { globalTheme } = theme
   const darkMode = useDarkMode()
   const selectedId = useSelection()
   const isActive = selectedId === 'announcement'
 
   const { ref, width } = useContainerWidth()
   const isMobile = width < 500
+
+  const innerStyle = { maxWidth: CONTENT_MAX_WIDTH, margin: '0 auto', width: '100%', boxSizing: 'border-box' }
 
   const [dismissed, setDismissed] = useState(false)
   if (dismissed) return null
@@ -28,6 +32,7 @@ export default function AnnouncementPreview() {
     width:           '100%',
     boxSizing:       'border-box',
     position:        'relative',
+    fontFamily:      template.fontFamily || globalTheme.fontFamily || 'inherit',
   }
 
   const linkStyle = {
@@ -85,18 +90,20 @@ export default function AnnouncementPreview() {
             to   { transform: translateX(-50%); }
           }
         `}</style>
-        <div style={{ overflow: 'hidden', flex: 1, marginRight: closeBtn ? '32px' : 0 }}>
-          <div
-            style={{
-              display:    'inline-flex',
-              whiteSpace: 'nowrap',
-              animation:  `announcement-scroll ${speed}s linear infinite`,
-            }}
-            onMouseEnter={e => { e.currentTarget.style.animationPlayState = 'paused' }}
-            onMouseLeave={e => { e.currentTarget.style.animationPlayState = 'running' }}
-          >
-            {trackItem}
-            {trackItem}
+        <div style={{ ...innerStyle, display: 'flex', alignItems: 'center' }}>
+          <div style={{ overflow: 'hidden', flex: 1, marginRight: closeBtn ? '32px' : 0 }}>
+            <div
+              style={{
+                display:    'inline-flex',
+                whiteSpace: 'nowrap',
+                animation:  `announcement-scroll ${speed}s linear infinite`,
+              }}
+              onMouseEnter={e => { e.currentTarget.style.animationPlayState = 'paused' }}
+              onMouseLeave={e => { e.currentTarget.style.animationPlayState = 'running' }}
+            >
+              {trackItem}
+              {trackItem}
+            </div>
           </div>
         </div>
         {closeBtn}
@@ -106,18 +113,20 @@ export default function AnnouncementPreview() {
 
   return (
     <div ref={ref} style={barStyle}>
-      {isMobile ? (
-        <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: 1, marginRight: closeBtn ? '32px' : 0 }}>
-          {message}
-        </span>
-      ) : (
-        <>
-          <span>{message}</span>
-          {linkText && (
-            <a href={linkUrl} style={linkStyle} target="_blank" rel="noreferrer">{linkText}</a>
-          )}
-        </>
-      )}
+      <div style={{ ...innerStyle, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+        {isMobile ? (
+          <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: 1 }}>
+            {message}
+          </span>
+        ) : (
+          <>
+            <span>{message}</span>
+            {linkText && (
+              <a href={linkUrl} style={linkStyle} target="_blank" rel="noreferrer">{linkText}</a>
+            )}
+          </>
+        )}
+      </div>
       {closeBtn}
     </div>
   )

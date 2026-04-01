@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useTheme, useDarkMode } from '../../store/themeStore.jsx'
 import { useContainerWidth } from '../../hooks/useContainerWidth.js'
+import { CONTENT_MAX_WIDTH } from '../../constants/layout.js'
 
 const PLATFORM_LABELS = {
   facebook:  'Facebook',
@@ -78,6 +79,7 @@ function ArrowBtn({ dir, onClick, color }) {
 export default function SocialMediaPreview() {
   const { theme } = useTheme()
   const { data, template } = theme.socialmedia
+  const { globalTheme } = theme
 
   const { ref, width } = useContainerWidth()
   const isMobile = width < 500
@@ -107,6 +109,8 @@ export default function SocialMediaPreview() {
       }))
 
   const isEmpty = !data.heading && !data.subheading && count === 0
+
+  const innerStyle = { maxWidth: CONTENT_MAX_WIDTH, margin: '0 auto', width: '100%', boxSizing: 'border-box' }
 
   const skel = (w, h, mb = 0) => ({
     width: w, height: h, borderRadius: '6px',
@@ -143,8 +147,8 @@ export default function SocialMediaPreview() {
   }
 
   return (
-    <section ref={ref} style={{ backgroundColor: bg, padding, width: '100%', boxSizing: 'border-box' }}>
-      <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
+    <section ref={ref} style={{ backgroundColor: bg, padding, width: '100%', boxSizing: 'border-box', fontFamily: template.fontFamily || globalTheme.fontFamily || 'inherit' }}>
+      <div style={innerStyle}>
 
         {/* Heading */}
         {isEmpty ? (

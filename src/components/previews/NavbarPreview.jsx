@@ -3,6 +3,7 @@ import { useTheme, useDarkMode } from '../../store/themeStore.jsx'
 import { useSelection } from '../../store/selectionContext.jsx'
 import CanvasUpload from '../ui/CanvasUpload.jsx'
 import { useContainerWidth } from '../../hooks/useContainerWidth.js'
+import { CONTENT_MAX_WIDTH } from '../../constants/layout.js'
 
 function DropdownLink({ link, linkStyle, textColor, fontSize, darkMode, onInternalNav }) {
   const [open, setOpen] = useState(false)
@@ -109,6 +110,7 @@ function Hamburger({ color, onClick }) {
 export default function NavbarPreview() {
   const { theme, updateSection, setActivePage } = useTheme()
   const { data, template } = theme.navbar
+  const { globalTheme } = theme
   const selectedId = useSelection()
   const isActive = selectedId === 'navbar' || selectedId?.startsWith('navbar-')
   const darkMode = useDarkMode()
@@ -124,6 +126,8 @@ export default function NavbarPreview() {
 
   const { ref: navRef, width: navWidth } = useContainerWidth()
   const isMobile = navWidth < 500
+
+  const innerStyle = { maxWidth: CONTENT_MAX_WIDTH, margin: '0 auto', width: '100%', boxSizing: 'border-box' }
 
   function handleLogoFile(e) {
     const file = e.target.files?.[0]
@@ -145,18 +149,23 @@ export default function NavbarPreview() {
     backgroundColor: template.bgColor  || (darkMode ? '#18181b' : '#ffffff'),
     padding:         template.padding  || '12px 24px',
     minHeight:       navHeight         || undefined,
-    display:         'flex',
-    alignItems:      'center',
-    justifyContent:  'space-between',
-    flexDirection:   logoRight ? 'row-reverse' : 'row',
     width:           '100%',
     boxSizing:       'border-box',
+    fontFamily:      template.fontFamily || globalTheme.fontFamily || 'inherit',
     borderBottom:    hasBorder
       ? `1px solid ${borderColor}`
       : `1px solid ${darkMode ? '#27272a' : '#e5e7eb'}`,
     position:        isSticky ? 'sticky' : undefined,
     top:             isSticky ? 0        : undefined,
     zIndex:          isSticky ? 100      : undefined,
+  }
+
+  const navInnerStyle = {
+    ...innerStyle,
+    display:        'flex',
+    alignItems:     'center',
+    justifyContent: 'space-between',
+    flexDirection:  logoRight ? 'row-reverse' : 'row',
   }
 
   const logoStyle = {
@@ -249,30 +258,32 @@ export default function NavbarPreview() {
   return (
     <div ref={navRef} style={{ position: 'relative', width: '100%' }}>
       <nav style={navStyle}>
-        {logoArea}
+        <div style={navInnerStyle}>
+          {logoArea}
 
-        {isMobile ? (
-          <Hamburger
-            color={template.textColor || (darkMode ? '#f4f4f5' : '#111827')}
-            onClick={() => setMenuOpen(prev => !prev)}
-          />
-        ) : (
-          links.length > 0 && (
-            <ul style={linkListStyle}>
-              {links.map((link, i) => (
-                <DropdownLink
-                  key={i}
-                  link={link}
-                  linkStyle={linkStyle}
-                  textColor={template.textColor}
-                  fontSize={template.fontSize}
-                  darkMode={darkMode}
-                  onInternalNav={setActivePage}
-                />
-              ))}
-            </ul>
-          )
-        )}
+          {isMobile ? (
+            <Hamburger
+              color={template.textColor || (darkMode ? '#f4f4f5' : '#111827')}
+              onClick={() => setMenuOpen(prev => !prev)}
+            />
+          ) : (
+            links.length > 0 && (
+              <ul style={linkListStyle}>
+                {links.map((link, i) => (
+                  <DropdownLink
+                    key={i}
+                    link={link}
+                    linkStyle={linkStyle}
+                    textColor={template.textColor}
+                    fontSize={template.fontSize}
+                    darkMode={darkMode}
+                    onInternalNav={setActivePage}
+                  />
+                ))}
+              </ul>
+            )
+          )}
+        </div>
       </nav>
 
       {isMobile && menuOpen && links.length > 0 && (

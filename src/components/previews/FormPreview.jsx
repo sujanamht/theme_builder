@@ -1,6 +1,7 @@
 import { useTheme, useDarkMode } from '../../store/themeStore.jsx'
 import { useSelection } from '../../store/selectionContext.jsx'
 import { useContainerWidth } from '../../hooks/useContainerWidth.js'
+import { CONTENT_MAX_WIDTH } from '../../constants/layout.js'
 
 const FIELD_PLACEHOLDERS = {
   name:    'Your name',
@@ -13,6 +14,7 @@ const FIELD_PLACEHOLDERS = {
 export default function FormPreview() {
   const { theme } = useTheme()
   const { data, template } = theme.form
+  const { globalTheme } = theme
   const selectedId = useSelection()
   const isActive = selectedId === 'form' || selectedId?.startsWith('form-')
   const darkMode = useDarkMode()
@@ -22,7 +24,7 @@ export default function FormPreview() {
 
   const bg        = template.bgColor    || (darkMode ? '#18181b' : '#ffffff')
   const textColor = template.textColor  || (darkMode ? '#f4f4f5' : '#111827')
-  const buttonBg  = template.buttonBg   || '#6366f1'
+  const buttonBg  = template.buttonBg   || globalTheme.primaryColor || '#6366f1'
   const buttonTxt = template.buttonText || '#ffffff'
   const padding   = isMobile
     ? `24px 20px`
@@ -30,6 +32,8 @@ export default function FormPreview() {
 
   const enabledFields = Object.entries(data.fields ?? {}).filter(([, on]) => on)
   const isEmpty = !data.heading && !data.subheading && enabledFields.length === 0
+
+  const innerStyle = { maxWidth: CONTENT_MAX_WIDTH, margin: '0 auto', width: '100%', boxSizing: 'border-box' }
 
   const inputStyle = {
     display:         'block',
@@ -55,8 +59,8 @@ export default function FormPreview() {
   })
 
   return (
-    <section ref={ref} style={{ backgroundColor: bg, padding, width: '100%', boxSizing: 'border-box' }}>
-      <div style={{ maxWidth: '560px', margin: '0 auto' }}>
+    <section ref={ref} style={{ backgroundColor: bg, padding, width: '100%', boxSizing: 'border-box', fontFamily: template.fontFamily || globalTheme.fontFamily || 'inherit' }}>
+      <div style={innerStyle}><div style={{ maxWidth: '560px', margin: '0 auto' }}>
         {isEmpty ? (
           <>
             <div style={skeletonBox('50%', '28px', 12)} />
@@ -128,7 +132,7 @@ export default function FormPreview() {
             </div>
           </>
         )}
-      </div>
+      </div></div>
     </section>
   )
 }
