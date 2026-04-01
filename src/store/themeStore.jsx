@@ -288,6 +288,19 @@ const initialState = {
 
 const ThemeContext = createContext(null)
 
+function stripPlaceholders(obj) {
+  if (typeof obj === 'string') {
+    return obj.includes('placehold.co') ? '' : obj
+  }
+  if (Array.isArray(obj)) return obj.map(stripPlaceholders)
+  if (obj && typeof obj === 'object') {
+    return Object.fromEntries(
+      Object.entries(obj).map(([k, v]) => [k, stripPlaceholders(v)])
+    )
+  }
+  return obj
+}
+
 export function ThemeProvider({ children }) {
   function loadState() {
     try {
@@ -301,8 +314,10 @@ export function ThemeProvider({ children }) {
 
   useEffect(() => {
     try {
-      localStorage.setItem('theme_builder_state', JSON.stringify(theme))
-    } catch {}
+      localStorage.setItem('theme_builder_state', JSON.stringify(stripPlaceholders(theme)))
+    } catch(e) {
+      console.warn('localStorage full, skipping save:', e)
+    }
   }, [theme])
 
   function updateSection(section, field, value) {

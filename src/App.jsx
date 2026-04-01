@@ -241,7 +241,7 @@ function IconChevronDown({ color }) {
   )
 }
 
-/* ─── small icon button ─── */
+
 function IconBtn({ onClick, title, disabled, children, t, style }) {
   return (
     <button
