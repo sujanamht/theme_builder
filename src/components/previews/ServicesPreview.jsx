@@ -142,16 +142,20 @@ export default function ServicesPreview() {
           <div
             ref={carouselRef}
             onScroll={handleScroll}
+            className="services-carousel"
             style={{
               width:                   '100%',
-              overflowX:               'scroll',
+              overflowX:               'auto',
               overflowY:               'visible',
               WebkitOverflowScrolling: 'touch',
               scrollSnapType:          'x mandatory',
               paddingBottom:           '16px',
               boxSizing:               'border-box',
+              scrollbarWidth:          'none',
+              msOverflowStyle:         'none',
             }}
           >
+            <style>{`.services-carousel::-webkit-scrollbar{display:none}`}</style>
             <div style={{
               display:      'inline-flex',
               gap:          '24px',
