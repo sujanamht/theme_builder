@@ -25,6 +25,8 @@ import HeroBuilder          from './components/builders/HeroBuilder.jsx'
 import ContactBuilder       from './components/builders/ContactBuilder.jsx'
 import FormBuilder          from './components/builders/FormBuilder.jsx'
 import SocialMediaBuilder   from './components/builders/SocialMediaBuilder.jsx'
+import BlogListBuilder      from './components/builders/BlogListBuilder.jsx'
+import BlogPostBuilder      from './components/builders/BlogPostBuilder.jsx'
 
 import AnnouncementPreview  from './components/previews/AnnouncementPreview.jsx'
 import NavbarPreview        from './components/previews/NavbarPreview.jsx'
@@ -39,6 +41,8 @@ import HeroPreview          from './components/previews/HeroPreview.jsx'
 import ContactPreview       from './components/previews/ContactPreview.jsx'
 import FormPreview          from './components/previews/FormPreview.jsx'
 import SocialMediaPreview   from './components/previews/SocialMediaPreview.jsx'
+import BlogListPreview      from './components/previews/BlogListPreview.jsx'
+import BlogPostPreview      from './components/previews/BlogPostPreview.jsx'
 
 /* ─── registries (keyed by type, not instance id) ─── */
 const COMPONENT_LABELS = {
@@ -55,6 +59,8 @@ const COMPONENT_LABELS = {
   footer:       'Footer',
   form:         'Form',
   socialmedia:  'Social Media',
+  bloglist:     'Blog List',
+  blogpost:     'Blog Post',
 }
 
 /* Per-type accent colors for the library badge */
@@ -72,9 +78,11 @@ const TYPE_COLORS = {
   footer:       '#6b7280',
   form:         '#a855f7',
   socialmedia:  '#0ea5e9',
+  bloglist:     '#f43f5e',
+  blogpost:     '#fb7185',
 }
 
-const ALL_TYPES = ['announcement', 'navbar', 'about', 'services', 'carousel', 'testimonial', 'gallery', 'cta', 'footer', 'hero', 'contact', 'form', 'socialmedia']
+const ALL_TYPES = ['announcement', 'navbar', 'about', 'services', 'carousel', 'testimonial', 'gallery', 'cta', 'footer', 'hero', 'contact', 'form', 'socialmedia', 'bloglist', 'blogpost']
 
 const GLOBAL_TYPES = new Set(['announcement', 'navbar', 'footer'])
 
@@ -92,6 +100,8 @@ const BUILDERS = {
   contact:      <ContactBuilder />,
   form:         <FormBuilder />,
   socialmedia:  <SocialMediaBuilder />,
+  bloglist:     <BlogListBuilder />,
+  blogpost:     <BlogPostBuilder />,
 }
 
 const PREVIEWS = {
@@ -108,9 +118,11 @@ const PREVIEWS = {
   contact:      <ContactPreview />,
   form:         <FormPreview />,
   socialmedia:  <SocialMediaPreview />,
+  bloglist:     <BlogListPreview />,
+  blogpost:     <BlogPostPreview />,
 }
 
-const INITIAL_VISIBILITY = { announcement: true, navbar: true,  carousel: true, about: true, services: true, testimonial: true, gallery: true, cta: true, footer: true }
+const INITIAL_VISIBILITY = { announcement: true, navbar: true,  carousel: true, about: true, services: true, testimonial: true, gallery: true, cta: true, footer: true, hero: true, contact: true, form: true, socialmedia: true, bloglist: true, blogpost: true }
 
 /* ─── id helpers ─── */
 function getType(id)  { return id.replace(/-\d+$/, '') }

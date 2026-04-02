@@ -6,7 +6,7 @@ const INITIAL_PAGES = [
   { id: 'home',    label: 'Home',    sections: HOME_SECTIONS },
   { id: 'about',   label: 'About',   sections: ['about', 'cta'] },
   { id: 'contact', label: 'Contact', sections: ['contact', 'form'] },
-  { id: 'blog',    label: 'Blog',    sections: [] },
+  { id: 'blog',    label: 'Blog',    sections: [ 'blogpost'] },
   { id: 'custom',  label: 'Custom',  sections: [] },
 ]
 
@@ -261,6 +261,69 @@ const initialState = {
     },
   },
 
+  bloglist: {
+    data: {
+      heading: 'From the Blog',
+      subheading: 'Thoughts on product, design, and building fast-growing teams.',
+      posts: [
+        {
+          id: 'post-1',
+          slug: 'post-1',
+          title: 'How Arcova helped us cut sprint planning time in half',
+          excerpt: 'We sat down with the team at Luma Health to understand how they restructured their entire planning process using Arcova workspaces.',
+          coverImage: 'https://placehold.co/800x450',
+          author: 'Natalie Chen',
+          date: '2024-11-12',
+          tags: ['Case Study', 'Planning'],
+        },
+        {
+          id: 'post-2',
+          slug: 'post-2',
+          title: 'Why async-first teams ship 3x faster',
+          excerpt: 'Async communication isn\'t just a remote-work hack — it\'s a superpower for distributed teams that want to stay in flow and move quickly.',
+          coverImage: 'https://placehold.co/800x450',
+          author: 'Marcus Lindqvist',
+          date: '2024-10-28',
+          tags: ['Culture', 'Remote Work'],
+        },
+        {
+          id: 'post-3',
+          slug: 'post-3',
+          title: 'Building a product roadmap your whole team will actually use',
+          excerpt: 'The best roadmap is one everyone understands. Here\'s how we approach roadmapping at Arcova — and how you can steal our process.',
+          coverImage: 'https://placehold.co/800x450',
+          author: 'Aisha Okonkwo',
+          date: '2024-10-05',
+          tags: ['Product', 'Strategy'],
+        },
+      ],
+    },
+    template: {
+      bgColor: '',
+      textColor: '',
+      accentColor: '',
+      cardBg: '',
+      columns: '3',
+      padding: '64',
+      borderRadius: '12',
+      fontSize: '15',
+    },
+  },
+
+  blogpost: {
+    data: {
+      activePostId: 'post-1',
+    },
+    template: {
+      bgColor: '',
+      textColor: '',
+      accentColor: '',
+      fontSize: '16',
+      padding: '64',
+      maxWidth: '720',
+    },
+  },
+
   form: {
     data: {
       heading:     'Request a demo',
@@ -302,14 +365,16 @@ function stripPlaceholders(obj) {
 }
 
 export function ThemeProvider({ children }) {
-  function loadState() {
-    try {
-      const saved = localStorage.getItem('theme_builder_state')
-      return saved ? JSON.parse(saved) : initialState
-    } catch {
-      return initialState
-    }
+function loadState() {
+  try {
+    const saved = localStorage.getItem('theme_builder_state')
+    if (!saved) return initialState
+    const parsed = JSON.parse(saved)
+    return { ...initialState, ...parsed }
+  } catch {
+    return initialState
   }
+}
   const [theme, setTheme] = useState(loadState)
 
   useEffect(() => {

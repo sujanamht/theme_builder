@@ -14,6 +14,8 @@ import HeroPreview          from '../components/previews/HeroPreview.jsx'
 import ContactPreview       from '../components/previews/ContactPreview.jsx'
 import FormPreview          from '../components/previews/FormPreview.jsx'
 import SocialMediaPreview   from '../components/previews/SocialMediaPreview.jsx'
+import BlogListPreview from '../components/previews/BlogListPreview.jsx'
+import BlogPostPreview from '../components/previews/BlogPostPreview.jsx'
 
 const PREVIEWS = {
   announcement: <AnnouncementPreview />,
@@ -29,6 +31,8 @@ const PREVIEWS = {
   contact:      <ContactPreview />,
   form:         <FormPreview />,
   socialmedia:  <SocialMediaPreview />,
+  bloglist: <BlogListPreview />,
+blogpost: <BlogPostPreview />,
 }
 
 const GLOBAL_TYPES = new Set(['announcement', 'navbar', 'footer'])
