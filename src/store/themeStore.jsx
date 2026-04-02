@@ -6,7 +6,7 @@ const INITIAL_PAGES = [
   { id: 'home',    label: 'Home',    sections: HOME_SECTIONS },
   { id: 'about',   label: 'About',   sections: ['about', 'cta'] },
   { id: 'contact', label: 'Contact', sections: ['contact', 'form'] },
-  { id: 'blog',    label: 'Blog',    sections: [ 'blogpost'] },
+  { id: 'blog',    label: 'Blog',    sections: ['bloglist', 'blogpost'] },
   { id: 'custom',  label: 'Custom',  sections: [] },
 ]
 
@@ -313,6 +313,7 @@ const initialState = {
   blogpost: {
     data: {
       activePostId: 'post-1',
+      blogView: 'list',
     },
     template: {
       bgColor: '',

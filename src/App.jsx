@@ -493,7 +493,13 @@ function Shell({
   }
 
   const dotPattern      = `radial-gradient(circle, ${t.dotColor} 1px, transparent 1px)`
-  const visiblePageKeys = order.filter(key => !GLOBAL_TYPES.has(getType(key)) && visibility[key])
+  const blogView = theme.blogpost?.data?.blogView
+  const visiblePageKeys = order.filter(key => {
+    if (!visibility[key] || GLOBAL_TYPES.has(getType(key))) return false
+    if (key === 'bloglist' && blogView === 'post') return false
+    if (key === 'blogpost' && blogView !== 'post') return false
+    return true
+  })
 
   function selectionStyle(key) {
     return {

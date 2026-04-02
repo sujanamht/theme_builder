@@ -6,7 +6,7 @@ import { CONTENT_MAX_WIDTH } from '../../constants/layout.js'
 import { parsePx } from '../../utils/style.js'
 
 export default function BlogListPreview() {
-  const { theme } = useTheme()
+  const { theme, updateSection } = useTheme()
   const { data, template } = theme.bloglist
   const { globalTheme } = theme
   const darkMode = useDarkMode()
@@ -74,14 +74,18 @@ export default function BlogListPreview() {
         {posts.length > 0 && (
           <ResponsiveGrid cols={{ mobile: 1, tablet: tabletCols, desktop: columns }} gap={24}>
             {posts.map(post => (
-              <div key={post.id} style={{
-                backgroundColor: cardBg,
-                borderRadius:    `${radius}px`,
-                border:          darkMode ? '1px solid #3f3f46' : '1px solid #e5e7eb',
-                overflow:        'hidden',
-                display:         'flex',
-                flexDirection:   'column',
-              }}>
+              <div
+                key={post.id}
+                onClick={() => updateSection('blogpost', 'data', { ...theme.blogpost.data, activePostId: post.id, blogView: 'post' })}
+                style={{
+                  backgroundColor: cardBg,
+                  borderRadius:    `${radius}px`,
+                  border:          darkMode ? '1px solid #3f3f46' : '1px solid #e5e7eb',
+                  overflow:        'hidden',
+                  display:         'flex',
+                  flexDirection:   'column',
+                  cursor:          'pointer',
+                }}>
                 {post.coverImage && (
                   <img
                     src={post.coverImage}
