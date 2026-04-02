@@ -1,6 +1,74 @@
+import { useState } from 'react'
 import { useTheme } from '../../store/themeStore.jsx'
 import ColorInput from '../ui/ColorInput.jsx'
 import RangeField from '../ui/RangeField.jsx'
+import ImageUploader from '../ui/ImageUploader.jsx'
+
+function PostCard({ post, index, isOpen, onToggle, onRemove, onChange }) {
+  const [tagInput, setTagInput] = useState((post.tags ?? []).join(', '))
+
+  function handleTagKey(e) {
+    if (e.key === ',' || e.key === ' ' || e.key === 'Enter') {
+      const tags = tagInput.split(',').map(t => t.trim()).filter(Boolean)
+      onChange(index, 'tags', tags)
+    }
+  }
+
+  return (
+    <div style={{ borderRadius: '8px', border: '1px solid #3a3a3a', overflow: 'hidden' }}>
+      <div onClick={onToggle} style={{ display:'flex', alignItems:'center', justifyContent:'space-between', padding:'10px 12px', cursor:'pointer', userSelect:'none' }}>
+        <span style={{ fontSize:'13px', fontWeight:'600', flex:1, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>
+          {post.title || '(Untitled)'}
+        </span>
+        <div style={{ display:'flex', alignItems:'center', gap:'8px', flexShrink:0 }}>
+          <button onClick={e => { e.stopPropagation(); onRemove(index) }} style={{ background:'none', border:'none', cursor:'pointer', padding:'0 2px', lineHeight:1 }}>×</button>
+          <span style={{ fontSize:'11px', opacity:0.5, lineHeight:1 }}>{isOpen ? '▲' : '▼'}</span>
+        </div>
+      </div>
+
+      {isOpen && (
+        <div className="space-y-2" style={{ padding:'0 12px 12px', borderTop:'1px solid #3a3a3a' }}>
+          <label className="flex flex-col gap-1" style={{ paddingTop:'10px' }}>
+            Title
+            <input type="text" value={post.title ?? ''} placeholder="Post title" onChange={e => onChange(index, 'title', e.target.value)} />
+          </label>
+          <label className="flex flex-col gap-1">
+            Excerpt
+            <textarea rows={3} value={post.excerpt ?? ''} placeholder="Short summary..." onChange={e => onChange(index, 'excerpt', e.target.value)} />
+          </label>
+          <label className="flex flex-col gap-1">
+            Author
+            <input type="text" value={post.author ?? ''} placeholder="Author name" onChange={e => onChange(index, 'author', e.target.value)} />
+          </label>
+          <label className="flex flex-col gap-1">
+            Date
+            <input type="date" value={post.date ?? ''} onChange={e => onChange(index, 'date', e.target.value)} />
+          </label>
+          <label className="flex flex-col gap-1">
+            Tags (comma-separated)
+            <input
+              type="text"
+              value={tagInput}
+              placeholder="e.g. Design, Culture"
+              onChange={e => setTagInput(e.target.value)}
+              onKeyDown={handleTagKey}
+              onBlur={() => onChange(index, 'tags', tagInput.split(',').map(t => t.trim()).filter(Boolean))}
+            />
+          </label>
+          <label className="flex flex-col gap-1">Cover Image</label>
+
+          <ImageUploader
+            label="Upload"
+            value={post.coverImage ?? ''}
+            onChange={v => onChange(index, 'coverImage', v)}
+          />
+
+
+        </div>
+      )}
+    </div>
+  )
+}
 
 export default function BlogListBuilder({ activeTab = 'content' }) {
   const { theme, updateSection } = useTheme()
@@ -9,6 +77,8 @@ export default function BlogListBuilder({ activeTab = 'content' }) {
   const heading    = data.heading    ?? ''
   const subheading = data.subheading ?? ''
   const posts      = data.posts      ?? []
+
+  const [openIndex, setOpenIndex] = useState(null)
 
   function handleData(key, value) {
     updateSection('bloglist', 'data', { ...data, [key]: value })
@@ -23,11 +93,6 @@ export default function BlogListBuilder({ activeTab = 'content' }) {
       i === index ? { ...post, [field]: value } : post
     )
     updateSection('bloglist', 'data', { ...data, posts: updated })
-  }
-
-  function handleTagsChange(index, value) {
-    const tags = value.split(',').map(t => t.trim()).filter(Boolean)
-    handlePostChange(index, 'tags', tags)
   }
 
   function addPost() {
@@ -78,44 +143,17 @@ export default function BlogListBuilder({ activeTab = 'content' }) {
 
           <section>
             <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wide mb-3">Posts</h3>
-            <div className="space-y-4">
+            <div className="space-y-3">
               {posts.map((post, i) => (
-                <div key={post.id ?? i} style={{ borderRadius: '8px', border: '1px solid #3a3a3a', padding: '12px', position: 'relative' }}>
-                  <button onClick={() => removePost(i)} title="Remove post"
-                    style={{ position: 'absolute', top: '8px', right: '8px' }}>×</button>
-                  <div className="space-y-2 pr-6">
-                    <label className="flex flex-col gap-1">
-                      Title
-                      <input type="text" value={post.title ?? ''} placeholder="Post title"
-                        onChange={e => handlePostChange(i, 'title', e.target.value)} />
-                    </label>
-                    <label className="flex flex-col gap-1">
-                      Excerpt
-                      <textarea rows={3} value={post.excerpt ?? ''} placeholder="Short summary..."
-                        onChange={e => handlePostChange(i, 'excerpt', e.target.value)} />
-                    </label>
-                    <label className="flex flex-col gap-1">
-                      Author
-                      <input type="text" value={post.author ?? ''} placeholder="Author name"
-                        onChange={e => handlePostChange(i, 'author', e.target.value)} />
-                    </label>
-                    <label className="flex flex-col gap-1">
-                      Date
-                      <input type="date" value={post.date ?? ''}
-                        onChange={e => handlePostChange(i, 'date', e.target.value)} />
-                    </label>
-                    <label className="flex flex-col gap-1">
-                      Tags (comma-separated)
-                      <input type="text" value={(post.tags ?? []).join(', ')} placeholder="e.g. Design, Culture"
-                        onChange={e => handleTagsChange(i, e.target.value)} />
-                    </label>
-                    <label className="flex flex-col gap-1">
-                      Cover Image URL
-                      <input type="text" value={post.coverImage ?? ''} placeholder="https://..."
-                        onChange={e => handlePostChange(i, 'coverImage', e.target.value)} />
-                    </label>
-                  </div>
-                </div>
+                <PostCard
+                  key={post.id ?? i}
+                  post={post}
+                  index={i}
+                  isOpen={openIndex === i}
+                  onToggle={() => setOpenIndex(openIndex === i ? null : i)}
+                  onRemove={removePost}
+                  onChange={handlePostChange}
+                />
               ))}
               <button onClick={addPost}>+ Add Post</button>
             </div>
@@ -142,6 +180,16 @@ export default function BlogListBuilder({ activeTab = 'content' }) {
                 <option value="1">1 Column</option>
                 <option value="2">2 Columns</option>
                 <option value="3">3 Columns</option>
+              </select>
+            </label>
+
+            <label className="flex flex-col gap-1">
+              Display Mode
+              <select value={template.displayMode ?? 'grid'} onChange={e => handleTemplate('displayMode', e.target.value)}
+                style={{ width: '100%' }}>
+                <option value="grid">Grid</option>
+                <option value="carousel">Carousel</option>
+                <option value="single-row">Single Row</option>
               </select>
             </label>
 
