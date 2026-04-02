@@ -3,6 +3,7 @@ import { useContainerWidth } from '../../hooks/useContainerWidth.js'
 import ResponsiveGrid from '../ui/ResponsiveGrid.jsx'
 import { hexToRgba } from '../../utils/colorUtils.js'
 import { CONTENT_MAX_WIDTH } from '../../constants/layout.js'
+import { parsePx } from '../../utils/style.js'
 
 export default function BlogListPreview() {
   const { theme } = useTheme()
@@ -18,7 +19,7 @@ export default function BlogListPreview() {
   const textColor   = template.textColor   || (darkMode ? '#f4f4f5' : '#111827')
   const accentColor = template.accentColor || globalTheme.primaryColor || '#6366f1'
   const cardBg      = template.cardBg      || (darkMode ? '#27272a' : '#ffffff')
-  const fontSize    = parseInt(template.fontSize, 10) || 15
+  const fontSize    = parsePx(template.fontSize) || 15
   const padding     = parseInt(template.padding, 10)  || 64
   const radius      = parseInt(template.borderRadius, 10) ?? 12
   const columns     = parseInt(template.columns, 10) || 3

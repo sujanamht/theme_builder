@@ -4,6 +4,7 @@ import { useTheme, useDarkMode } from '../../store/themeStore.jsx'
 import CanvasUpload from '../ui/CanvasUpload.jsx'
 import { useContainerWidth } from '../../hooks/useContainerWidth.js'
 import { hexToRgba } from '../../utils/colorUtils.js'
+import { parsePx } from '../../utils/style.js'
 
 export default function BlogPostPreview() {
   const { theme, updateSection } = useTheme()
@@ -21,7 +22,7 @@ export default function BlogPostPreview() {
   const textColor   = template.textColor   || (darkMode ? '#f4f4f5' : '#111827')
   const accentColor = template.accentColor || globalTheme.primaryColor || '#6366f1'
   const bgColor     = template.bgColor     || (darkMode ? '#18181b' : '#ffffff')
-  const fontSize    = parseInt(template.fontSize, 10) || 16
+  const fontSize    = parsePx(template.fontSize) || 16
   const padding     = parseInt(template.padding, 10)  || 64
   const maxWidth    = parseInt(template.maxWidth, 10)  || 720
 

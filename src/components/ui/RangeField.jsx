@@ -1,3 +1,9 @@
+/**
+ * Controlled range slider. When unit is 'px' (the default), onChange receives a
+ * "Npx" string (e.g. "16px"). Consumers should use parsePx() from
+ * src/utils/style.js to convert that string to a plain integer before using it
+ * in arithmetic or CSS calc() expressions.
+ */
 export default function RangeField({ label, value, onChange, min, max, step = 1, unit = 'px' }) {
   const numeric = parseInt(value, 10)
   const current = isNaN(numeric) ? min : Math.min(Math.max(numeric, min), max)

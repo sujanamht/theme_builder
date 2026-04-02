@@ -1,6 +1,7 @@
 import { useTheme, useDarkMode } from '../../store/themeStore.jsx'
 import { useContainerWidth } from '../../hooks/useContainerWidth.js'
 import { CONTENT_MAX_WIDTH } from '../../constants/layout.js'
+import { parsePx } from '../../utils/style.js'
 
 export default function CTAPreview() {
   const { theme } = useTheme()
@@ -12,7 +13,7 @@ export default function CTAPreview() {
   const isMobile = width < 500
 
   const textAlign  = template.textAlign   || 'center'
-  const fontSize   = template.fontSize    || '16px'
+  const fontSize   = parsePx(template.fontSize    || '16px')
   const textColor  = template.textColor   || (darkMode ? '#f4f4f5' : '#111827')
 
   const innerStyle = { maxWidth: CONTENT_MAX_WIDTH, margin: '0 auto', width: '100%', boxSizing: 'border-box' }
@@ -28,7 +29,7 @@ export default function CTAPreview() {
 
   const headingStyle = {
     color:         textColor,
-    fontSize:      isMobile ? '24px' : `calc(${fontSize} * 2)`,
+    fontSize:      isMobile ? '24px' : `${Math.round(fontSize * 2)}px`,
     fontWeight:    '800',
     margin:        '0 0 12px',
     lineHeight:    '1.2',
@@ -37,7 +38,7 @@ export default function CTAPreview() {
 
   const subheadingStyle = {
     color:      textColor,
-    fontSize:   isMobile ? '14px' : `calc(${fontSize} * 1.1)`,
+    fontSize:   isMobile ? '14px' : `${Math.round(fontSize * 1.1)}px`,
     opacity:    0.7,
     margin:     '0 0 32px',
     lineHeight: '1.6',
@@ -53,7 +54,7 @@ export default function CTAPreview() {
   const primaryBtnStyle = {
     backgroundColor: template.primaryBtnBg   || globalTheme.primaryColor || '#6366f1',
     color:           template.primaryBtnText  || '#ffffff',
-    fontSize,
+    fontSize:        `${fontSize}px`,
     fontWeight:      '600',
     padding:         '12px 28px',
     borderRadius:    '8px',
@@ -67,7 +68,7 @@ export default function CTAPreview() {
   const secondaryBtnStyle = {
     backgroundColor: template.secondaryBtnBg   || globalTheme.secondaryColor || 'transparent',
     color:           template.secondaryBtnText  || textColor,
-    fontSize,
+    fontSize:        `${fontSize}px`,
     fontWeight:      '600',
     padding:         '11px 28px',
     borderRadius:    '8px',

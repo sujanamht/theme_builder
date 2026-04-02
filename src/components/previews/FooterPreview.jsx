@@ -1,6 +1,7 @@
 import { useTheme } from '../../store/themeStore.jsx'
 import ResponsiveGrid from '../ui/ResponsiveGrid.jsx'
 import { CONTENT_MAX_WIDTH } from '../../constants/layout.js'
+import { parsePx } from '../../utils/style.js'
 
 export default function FooterPreview() {
   const { theme } = useTheme()
@@ -18,7 +19,7 @@ export default function FooterPreview() {
 
   const bg          = template.bgColor   || '#0f1117'
   const accentColor = template.linkColor || globalTheme.primaryColor || '#6366f1'
-  const fontSize    = template.fontSize  || '14px'
+  const fontSize    = `${parsePx(template.fontSize  || '14px')}px`
 
   const footerStyle = {
     backgroundColor: bg,

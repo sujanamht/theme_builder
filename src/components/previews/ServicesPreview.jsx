@@ -4,6 +4,7 @@ import ResponsiveGrid from '../ui/ResponsiveGrid.jsx'
 import { hexToRgba } from '../../utils/colorUtils.js'
 import { CONTENT_MAX_WIDTH } from '../../constants/layout.js'
 import DotIndicators from '../ui/DotIndicators.jsx'
+import { parsePx } from '../../utils/style.js'
 
 export default function ServicesPreview() {
   const { theme } = useTheme()
@@ -20,7 +21,7 @@ export default function ServicesPreview() {
 
   const textColor   = template.textColor   || (darkMode ? '#f4f4f5' : '#111827')
   const accentColor = template.accentColor || globalTheme.primaryColor || '#6366f1'
-  const fontSize    = template.fontSize    || '15px'
+  const fontSize    = parsePx(template.fontSize    || '15px')
 
   const sectionStyle = {
     backgroundColor: template.bgColor  || (darkMode ? '#18181b' : '#f9fafb'),
@@ -32,7 +33,7 @@ export default function ServicesPreview() {
 
   const headingStyle = {
     color:        textColor,
-    fontSize:     `calc(${fontSize} * 1.9)`,
+    fontSize:     `${Math.round(fontSize * 1.9)}px`,
     fontWeight:   '800',
     margin:       '0 0 10px',
     textAlign:    'center',
@@ -41,7 +42,7 @@ export default function ServicesPreview() {
 
   const subheadingStyle = {
     color:      textColor,
-    fontSize:   `calc(${fontSize} * 1.05)`,
+    fontSize:   `${Math.round(fontSize * 1.05)}px`,
     opacity:    0.6,
     margin:     '0 0 32px',
     textAlign:  'center',
@@ -73,14 +74,14 @@ export default function ServicesPreview() {
 
   const titleStyle = {
     color:      textColor,
-    fontSize:   `calc(${fontSize} * 1.05)`,
+    fontSize:   `${Math.round(fontSize * 1.05)}px`,
     fontWeight: '700',
     margin:     0,
   }
 
   const descStyle = {
     color:      textColor,
-    fontSize,
+    fontSize:   `${fontSize}px`,
     opacity:    0.65,
     margin:     0,
     lineHeight: '1.6',
@@ -89,7 +90,7 @@ export default function ServicesPreview() {
 
   const linkStyle = {
     color:          accentColor,
-    fontSize:       `calc(${fontSize} * 0.9)`,
+    fontSize:       `${Math.round(fontSize * 0.9)}px`,
     fontWeight:     '600',
     textDecoration: 'none',
     marginTop:      'auto',
@@ -98,7 +99,7 @@ export default function ServicesPreview() {
   const emptyStyle = {
     color:     textColor,
     opacity:   0.3,
-    fontSize,
+    fontSize:  `${fontSize}px`,
     textAlign: 'center',
     padding:   '24px 0',
   }

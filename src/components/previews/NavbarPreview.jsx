@@ -5,7 +5,7 @@ import CanvasUpload from '../ui/CanvasUpload.jsx'
 import { useContainerWidth } from '../../hooks/useContainerWidth.js'
 import { CONTENT_MAX_WIDTH } from '../../constants/layout.js'
 
-function DropdownLink({ link, linkStyle, textColor, fontSize, darkMode, onInternalNav }) {
+function DropdownLink({ link, linkStyle, textColor, fontSize, darkMode, onInternalNav, isActivePage, accentColor }) {
   const [open, setOpen] = useState(false)
   const dropdown = link.dropdown ?? []
   const hasDropdown = dropdown.length > 0
@@ -25,6 +25,12 @@ function DropdownLink({ link, linkStyle, textColor, fontSize, darkMode, onIntern
     margin:          '6px 0 0 0',
   }
 
+  const activeStyle = isActivePage ? {
+    color:          accentColor || '#6366f1',
+    fontWeight:     '700',
+    textDecoration: 'underline',
+  } : {}
+
   const subItemStyle = {
     display:        'block',
     padding:        '8px 16px',
@@ -43,7 +49,7 @@ function DropdownLink({ link, linkStyle, textColor, fontSize, darkMode, onIntern
       {link.pageId != null ? (
         <button
           onClick={() => onInternalNav?.(link.pageId)}
-          style={{ ...linkStyle, display: 'flex', alignItems: 'center', gap: '4px', userSelect: 'none', background: 'none', border: 'none', padding: 0 }}
+          style={{ ...linkStyle, ...activeStyle, display: 'flex', alignItems: 'center', gap: '4px', userSelect: 'none', background: 'none', border: 'none', padding: 0 }}
         >
           {link.label || 'Link'}
           {hasDropdown && <span style={{ fontSize: '10px', opacity: 0.6, lineHeight: 1 }}>▾</span>}
@@ -51,7 +57,7 @@ function DropdownLink({ link, linkStyle, textColor, fontSize, darkMode, onIntern
       ) : (
         <a
           href={link.url || '#'}
-          style={{ ...linkStyle, display: 'flex', alignItems: 'center', gap: '4px', userSelect: 'none' }}
+          style={{ ...linkStyle, ...activeStyle, display: 'flex', alignItems: 'center', gap: '4px', userSelect: 'none' }}
         >
           {link.label || 'Link'}
           {hasDropdown && <span style={{ fontSize: '10px', opacity: 0.6, lineHeight: 1 }}>▾</span>}
@@ -114,6 +120,8 @@ export default function NavbarPreview() {
   const selectedId = useSelection()
   const isActive = selectedId === 'navbar' || selectedId?.startsWith('navbar-')
   const darkMode = useDarkMode()
+
+  const activePage = theme.pages?.activePage
 
   const logo     = data.logo     || ''
   const logoText = data.logoText || ''
@@ -278,6 +286,8 @@ export default function NavbarPreview() {
                     fontSize={template.fontSize}
                     darkMode={darkMode}
                     onInternalNav={setActivePage}
+                    isActivePage={link.pageId === activePage}
+                    accentColor={template.accentColor || globalTheme.primaryColor}
                   />
                 ))}
               </ul>
@@ -299,11 +309,16 @@ export default function NavbarPreview() {
           boxSizing:        'border-box',
         }}>
           {links.map((link, i) => {
+            const isActive = link.pageId === activePage
             const mobileItemStyle = {
               display:        'block',
               width:          '100%',
               padding:        '12px 24px',
-              color:          template.textColor || (darkMode ? '#f4f4f5' : '#111827'),
+              color:          isActive
+                ? (template.accentColor || globalTheme.primaryColor || '#6366f1')
+                : (template.textColor || (darkMode ? '#f4f4f5' : '#111827')),
+              fontWeight:     isActive ? '700' : undefined,
+              textDecoration: isActive ? 'underline' : 'none',
               fontSize:       template.fontSize  || '16px',
               textDecoration: 'none',
               textAlign:      'left',

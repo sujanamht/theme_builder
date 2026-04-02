@@ -3,6 +3,7 @@ import { useTheme, useDarkMode } from '../../store/themeStore.jsx'
 import { useSelection } from '../../store/selectionContext.jsx'
 import { useContainerWidth } from '../../hooks/useContainerWidth.js'
 import { CONTENT_MAX_WIDTH } from '../../constants/layout.js'
+import { parsePx } from '../../utils/style.js'
 
 export default function AnnouncementPreview() {
   const { theme } = useTheme()
@@ -14,6 +15,7 @@ export default function AnnouncementPreview() {
 
   const { ref, width } = useContainerWidth()
   const isMobile = width < 500
+  const fontSize = parsePx(template.fontSize || '14px')
 
   const innerStyle = { maxWidth: CONTENT_MAX_WIDTH, margin: '0 auto', width: '100%', boxSizing: 'border-box' }
 
@@ -23,7 +25,7 @@ export default function AnnouncementPreview() {
   const barStyle = {
     backgroundColor: template.bgColor   || (darkMode ? '#18181b' : '#1d4ed8'),
     color:           template.textColor || (darkMode ? '#f4f4f5' : '#ffffff'),
-    fontSize:        isMobile ? '12px' : (template.fontSize || '14px'),
+    fontSize:        isMobile ? '12px' : `${fontSize}px`,
     padding:         isMobile ? '8px 16px' : (template.padding || '8px 16px'),
     display:         'flex',
     alignItems:      'center',
@@ -39,7 +41,7 @@ export default function AnnouncementPreview() {
     color:          template.textColor || (darkMode ? '#f4f4f5' : '#ffffff'),
     fontWeight:     '600',
     textDecoration: 'underline',
-    fontSize:       isMobile ? '12px' : (template.fontSize || '14px'),
+    fontSize:       isMobile ? '12px' : `${fontSize}px`,
   }
 
   const message  = data.message  || 'Your announcement message goes here.'
