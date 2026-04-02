@@ -1,10 +1,12 @@
 import { useState } from 'react'
+import { CONTENT_MAX_WIDTH } from '../../constants/layout.js'
 import { useTheme, useDarkMode } from '../../store/themeStore.jsx'
+import CanvasUpload from '../ui/CanvasUpload.jsx'
 import { useContainerWidth } from '../../hooks/useContainerWidth.js'
 import { hexToRgba } from '../../utils/colorUtils.js'
 
 export default function BlogPostPreview() {
-  const { theme } = useTheme()
+  const { theme, updateSection } = useTheme()
   const { template } = theme.blogpost
   const { globalTheme } = theme
   const darkMode = useDarkMode()
@@ -131,7 +133,7 @@ export default function BlogPostPreview() {
       flex:      1,
       overflowY: 'auto',
       minHeight: 0,
-      padding:   `${padding}px 40px`,
+      padding:   `${padding}px 0`,
       boxSizing: 'border-box',
       fontFamily: template.fontFamily || globalTheme.fontFamily || 'inherit',
     }}>
@@ -153,6 +155,7 @@ export default function BlogPostPreview() {
         </button>
       )}
 
+      <div style={{ maxWidth: `${maxWidth}px`, margin: '0 auto', width: '100%', boxSizing: 'border-box', padding: '0 40px' }}>
       {!activePost ? (
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flex: 1,
 minHeight: 0, }}>
@@ -162,20 +165,23 @@ minHeight: 0, }}>
         </div>
       ) : (
         <div style={{ maxWidth: `${maxWidth}px`, margin: '0 auto', width: '100%', boxSizing: 'border-box' }}>
-          {activePost.coverImage && (
-            <img
-              src={activePost.coverImage}
-              alt={activePost.title}
-              style={{
-                width:        '100%',
-                aspectRatio:  '16/9',
-                objectFit:    'cover',
-                borderRadius: '12px',
-                display:      'block',
-                marginBottom: '32px',
-              }}
-            />
-          )}
+          <CanvasUpload
+            hasImage={!!activePost.coverImage}
+            isActive={true}
+            aspectRatio="16/9"
+            onUpload={v => {
+              const updated = posts.map(p => p.id === activePost.id ? { ...p, coverImage: v } : p)
+              updateSection('bloglist', 'data', { ...theme.bloglist.data, posts: updated })
+            }}
+            onCrop={v => {
+              const updated = posts.map(p => p.id === activePost.id ? { ...p, coverImage: v } : p)
+              updateSection('bloglist', 'data', { ...theme.bloglist.data, posts: updated })
+            }}
+            style={{ width: '100%', aspectRatio: '16/9', borderRadius: '12px', overflow: 'hidden', marginBottom: '32px' }}
+          >
+            <img src={activePost.coverImage} alt={activePost.title}
+              style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+          </CanvasUpload>
 
           {activePost.tags && activePost.tags.length > 0 && (
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '14px' }}>
@@ -219,6 +225,7 @@ minHeight: 0, }}>
           <div style={{ height: '14px', borderRadius: '6px', background: textColor, opacity: 0.04, marginBottom: '12px', width: '60%' }} />
         </div>
       )}
+      </div>
     </div>
   )
 
@@ -289,16 +296,19 @@ minHeight: 0, backgroundColor: bgColor, overflow: 'hidden' }}>
 
   /* ── Wide layout ── */
   return (
-    <div ref={ref} style={{
-      display:         'flex',
-      flexDirection:   'row',
-      flex:            1,
-      minHeight:       0,
-      backgroundColor: bgColor,
-      overflow:        'hidden',
-    }}>
-      {sidebar}
-      {content}
+    <div ref={ref} style={{ backgroundColor: bgColor, height: '100vh', display: 'flex', flexDirection: 'column' }}>
+      <div style={{
+        display:       'flex',
+        flexDirection: 'row',
+        flex:          1,
+        minHeight:     0,
+        maxWidth:      CONTENT_MAX_WIDTH,
+        width:         '100%',
+        margin:        '0 auto',
+      }}>
+        {sidebar}
+        {content}
+      </div>
     </div>
   )
 }

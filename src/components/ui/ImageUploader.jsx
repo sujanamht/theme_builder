@@ -1,15 +1,19 @@
 import { useState, useRef } from 'react'
+import { createPortal } from 'react-dom'
+import CropOverlay from './CropOverlay.jsx'
 
-export default function ImageUploader({ label, value, onChange, textValue, onTextChange }) {
+export default function ImageUploader({ label, value, onChange, textValue, onTextChange, aspectRatio = '16/9', onCrop }) {
   const [mode, setMode] = useState('url')
   const fileRef = useRef(null)
+  const [cropSrc, setCropSrc] = useState(null)
 
   function handleFile(e) {
     const file = e.target.files?.[0]
     if (!file) return
     const reader = new FileReader()
-    reader.onload = ev => onChange(ev.target.result)
+    reader.onload = ev => setCropSrc(ev.target.result)
     reader.readAsDataURL(file)
+    e.target.value = ''
   }
 
   const isImageValue = value && (value.startsWith('http') || value.startsWith('data:'))
@@ -75,6 +79,15 @@ export default function ImageUploader({ label, value, onChange, textValue, onTex
             onChange={e => onTextChange(e.target.value)}
           />
         </label>
+      )}
+      {cropSrc && createPortal(
+        <CropOverlay
+          src={cropSrc}
+          aspectRatio={aspectRatio}
+          onCrop={url => { onChange(url); setCropSrc(null) }}
+          onClose={() => setCropSrc(null)}
+        />,
+        document.body
       )}
     </div>
   )
