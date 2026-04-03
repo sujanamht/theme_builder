@@ -12,6 +12,7 @@ import SortableCanvasItem  from './components/ui/SortableCanvasItem.jsx'
 import SortablePanelItem   from './components/ui/SortablePanelItem.jsx'
 import GlobalThemePanel    from './components/ui/GlobalThemePanel.jsx'
 import PagesPanel          from './components/ui/PagesPanel.jsx'
+import SaveButton          from './components/ui/SaveButton.jsx'
 
 import AnnouncementBuilder  from './components/builders/AnnouncementBuilder.jsx'
 import NavbarBuilder        from './components/builders/NavbarBuilder.jsx'
@@ -862,6 +863,7 @@ function Shell({
                 </svg>
                 Preview
               </button>
+              <SaveButton />
               <button
                 onClick={() => exportJSON(theme)}
                 style={{

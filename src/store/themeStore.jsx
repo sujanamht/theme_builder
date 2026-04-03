@@ -1,4 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react'
+import * as themeService from '../services/themeService.js'
+import { useSaveStatus } from '../services/useSaveStatus.js'
 
 const HOME_SECTIONS = ['announcement', 'navbar', 'carousel', 'about', 'services', 'testimonial', 'footer']
 
@@ -437,38 +439,20 @@ const initialState = {
 
 const ThemeContext = createContext(null)
 
-function stripPlaceholders(obj) {
-  if (typeof obj === 'string') {
-    return obj.includes('placehold.co') ? '' : obj
-  }
-  if (Array.isArray(obj)) return obj.map(stripPlaceholders)
-  if (obj && typeof obj === 'object') {
-    return Object.fromEntries(
-      Object.entries(obj).map(([k, v]) => [k, stripPlaceholders(v)])
-    )
-  }
-  return obj
-}
-
 export function ThemeProvider({ children }) {
-function loadState() {
-  try {
-    const saved = localStorage.getItem('theme_builder_state')
-    if (!saved) return initialState
-    const parsed = JSON.parse(saved)
-    return { ...initialState, ...parsed }
-  } catch {
-    return initialState
-  }
-}
-  const [theme, setTheme] = useState(loadState)
+  const [theme, setTheme] = useState(initialState)
+  const { status: saveStatus, triggerSave } = useSaveStatus()
 
+  // Load from src/data/theme.json on mount
   useEffect(() => {
-    try {
-      localStorage.setItem('theme_builder_state', JSON.stringify(stripPlaceholders(theme)))
-    } catch(e) {
-      console.warn('localStorage full, skipping save:', e)
-    }
+    themeService.load().then(data => {
+      if (data) setTheme(prev => ({ ...prev, ...data }))
+    })
+  }, [])
+
+  // Auto-save on state change (debounced inside themeService)
+  useEffect(() => {
+    themeService.save(theme)
   }, [theme])
 
   function updateSection(section, field, value) {
@@ -613,6 +597,7 @@ function loadState() {
       updatePageOrder, setPageSections,
       addPage, addCustomPage, deletePage, setActivePage, renamePage, removeSectionFromAllPages, setActivePostId,
       addSection, removeSection,
+      saveStatus, triggerSave,
     }}>
       {children}
     </ThemeContext.Provider>

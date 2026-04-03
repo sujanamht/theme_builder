@@ -137,6 +137,34 @@
 
 ---
 
+## Data layer
+
+### Source of truth
+
+`src/data/theme.json` is the live working file for the entire theme. It is committed to git, so whatever is on disk is what every collaborator — and every fresh app start — will see. There is no localStorage fallback; that approach was removed entirely to keep the source of truth unambiguous.
+
+### How data flows
+
+On mount, `ThemeProvider` calls `themeService.load()`, which fetches `/src/data/theme.json` and hydrates the store with the result. If the fetch fails (e.g. first run before the file exists), the store stays on its `initialState` defaults and a warning is logged to the console.
+
+On every state change, the store's second `useEffect` calls `themeService.save(theme)`. Saves are debounced by 1 second inside the service, so rapid edits coalesce into a single write. When the timer fires, the service POSTs the serialised JSON to `/write-theme`, which a small Vite plugin intercepts and writes back to `src/data/theme.json` on disk.
+
+The `SaveButton` in the toolbar exposes a manual path: clicking it calls `triggerSave(theme)` from the `useSaveStatus` hook, which in turn calls `themeService.saveNow()`. That function cancels any pending debounce and writes immediately, bypassing the 1-second wait.
+
+### Save status
+
+The `SaveButton` (`src/components/ui/SaveButton.jsx`) reflects the current write state at all times. When nothing is pending it shows a quiet grey "Saved" label. While a write is in flight it shows a pulsing "Saving…". On success it shows green "Saved ✓" for two seconds before returning to idle. On failure it becomes a red "Save failed — retry" button; clicking it re-invokes `triggerSave` with the current theme so the user can attempt the write again without reloading.
+
+### Swapping to a real API (production)
+
+Open `src/services/themeService.js` and find the `--- API SWAP POINT ---` comment in `_doSave`. Replace the `fetch('/write-theme', …)` line with your own API call — for example `fetch('/api/theme', { method: 'PUT', body })`. The rest of the service (debounce, `saveNow`, the `load` function, the store hooks, and the `SaveButton`) all stay exactly as they are. `theme.json` becomes your seed or initial-data file for the backend; no other files need to change.
+
+### Adding a new section type
+
+Add the section's default `data` and `template` objects to `src/data/theme.json` under a new key. Register the key in the `BUILDERS` and `PREVIEWS` maps in `App.jsx`, pointing to the new builder and preview component files. The store, save pipeline, and drag-and-drop canvas will pick up the new section automatically.
+
+---
+
 ## 🧩 Reusable Components & Utilities
 
 > Check here first before building anything new.
