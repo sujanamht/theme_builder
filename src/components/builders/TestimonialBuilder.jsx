@@ -9,6 +9,7 @@ const textTemplateFields = [
   { key: 'padding',      label: 'Section Padding',  min: 0,  max: 120, step: 8 },
 ]
 
+// single source of truth — preview must not invent fallbacks
 export default function TestimonialBuilder({ activeTab = 'content' }) {
   const { theme, updateSection } = useTheme()
   const { data, template } = theme.testimonial

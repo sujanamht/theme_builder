@@ -11,6 +11,7 @@ const FIELD_LABELS = {
   consent: 'Consent checkbox',
 }
 
+// single source of truth — preview must not invent fallbacks
 export default function FormBuilder({ activeTab = 'content' }) {
   const { theme, updateSection } = useTheme()
   const { data, template } = theme.form

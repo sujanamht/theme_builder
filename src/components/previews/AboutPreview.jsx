@@ -3,6 +3,7 @@ import { useSelection } from '../../store/selectionContext.jsx'
 import CanvasUpload from '../ui/CanvasUpload.jsx'
 import { useContainerWidth } from '../../hooks/useContainerWidth.js'
 import { CONTENT_MAX_WIDTH } from '../../constants/layout.js'
+import { parsePx } from '../../utils/style.js'
 
 export default function AboutPreview() {
   const { theme, updateSection } = useTheme()
@@ -17,6 +18,7 @@ export default function AboutPreview() {
 
   const innerStyle = { maxWidth: CONTENT_MAX_WIDTH, margin: '0 auto', width: '100%', boxSizing: 'border-box' }
 
+  const fontSize      = parsePx(template.fontSize) || 16
   const textColor     = template.textColor     || (darkMode ? '#f4f4f5' : '#0a0a0a')
   const imagePosition = template.imagePosition || 'left'
   const hasImage      = Boolean(data.image)
@@ -62,7 +64,7 @@ export default function AboutPreview() {
 
   const bodyStyle = {
     color:      darkMode ? '#a1a1aa' : '#374151',
-    fontSize:   isMobile ? '14px' : (template.fontSize ?? '16px'),
+    fontSize:   isMobile ? '14px' : `${fontSize}px`,
     lineHeight: '1.75',
     margin:     '0 0 28px',
   }

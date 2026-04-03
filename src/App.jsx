@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, cloneElement } from 'react'
 import { SelectionContext } from './store/selectionContext.jsx'
 import { exportJSON } from './exports/exportJSON.js'
 import { useTheme } from './store/themeStore.jsx'
+import SectionErrorBoundary from './components/shared/SectionErrorBoundary.jsx'
 import {
   DndContext, DragOverlay,
   PointerSensor, useSensor, useSensors,
@@ -310,6 +311,22 @@ function DragHandle({ side, onMouseDown, t, active }) {
   )
 }
 
+/* ─── fallback for unknown section types ─── */
+function UnknownSection({ type }) {
+  return (
+    <div style={{
+      padding:    '14px 20px',
+      background: '#fef3c7',
+      border:     '1px dashed #f59e0b',
+      color:      '#92400e',
+      fontFamily: 'monospace',
+      fontSize:   '13px',
+    }}>
+      ⚠ Unknown section type: &quot;{type}&quot;
+    </div>
+  )
+}
+
 /* ─── non-sortable wrapper for global sections (announcement/navbar/footer) ─── */
 function GlobalCanvasItem({ id, selectedComponent, onSelect, editable, children }) {
   const [hovered, setHovered] = useState(false)
@@ -376,6 +393,17 @@ function Shell({
   }, [])
 
   useEffect(() => { setConfirmingRemove(false) }, [selectedComponent])
+
+  useEffect(() => {
+    theme.pages?.list?.forEach(page => {
+      page.sections?.forEach(key => {
+        const type = getType(key)
+        if (!(type in INITIAL_VISIBILITY)) {
+          console.warn(`[ThemeBuilder] Unknown section type "${type}" found in page "${page.id}"`)
+        }
+      })
+    })
+  }, [theme.pages])
 
   /* canvas width resizing (renamed from isDragging to avoid conflict with dnd-kit) */
   const [previewMode, setPreviewMode] = useState('desktop')
@@ -523,7 +551,9 @@ function Shell({
         editable={isHomePage}
       >
         <div style={selectionStyle(key)}>
-          {PREVIEWS[getType(key)]}
+          <SectionErrorBoundary type={getType(key)}>
+              {PREVIEWS[getType(key)] ?? <UnknownSection type={getType(key)} />}
+            </SectionErrorBoundary>
         </div>
       </GlobalCanvasItem>
     ))
@@ -544,7 +574,9 @@ function Shell({
             onDuplicate={() => duplicateItem(key)}
           >
             <div style={selectionStyle(key)}>
-              {PREVIEWS[getType(key)]}
+              <SectionErrorBoundary type={getType(key)}>
+              {PREVIEWS[getType(key)] ?? <UnknownSection type={getType(key)} />}
+            </SectionErrorBoundary>
             </div>
           </SortableCanvasItem>
         ))}

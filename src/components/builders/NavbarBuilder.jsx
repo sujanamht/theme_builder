@@ -37,6 +37,7 @@ function ToggleRow({ label, checked, onChange }) {
   )
 }
 
+// single source of truth — preview must not invent fallbacks
 export default function NavbarBuilder({ activeTab = 'content' }) {
   const { theme, updateSection } = useTheme()
   const { data, template } = theme.navbar

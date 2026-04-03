@@ -16,8 +16,9 @@
   Features
 
   Component Library
-  - 12 component types: Announcement, Navbar, Hero, About, Services,
-    Carousel, Testimonial, Gallery, CTA, Footer, Contact, Form
+  - 15 component types: Announcement, Navbar, Hero, About, Services,
+    Carousel, Testimonial, Gallery, CTA, Footer, Contact, Form,
+    Blog List, Blog Post, Social Media
   - Each section has a Builder (content editor) + Preview (live render) pair
   - Drag-and-drop canvas: reorder components with visual feedback
   - Component duplication: clone any component with its settings
@@ -37,7 +38,7 @@
     testimonials, gallery captions, footer columns, contact details, etc.)
 
   Responsive Previews
-  - All 12 preview components are container-width responsive
+  - All 15 preview components are container-width responsive
     (ResizeObserver / useContainerWidth hook — not viewport-based)
   - Navbar: hamburger menu with animated mobile dropdown at < 500px
   - Hero: reduced padding, font sizes at < 500px
@@ -48,6 +49,9 @@
   - Footer: ResponsiveGrid (1 / 2 / 4 cols)
   - Contact: ResponsiveGrid (1 col mobile, 2 col desktop)
   - CTA / Form / Announcement / Carousel: reduced padding + font at < 500px
+  - Blog List: grid → single-column at < 500px
+  - Blog Post: fluid max-width; title font scales at < 400px
+  - Social Media: embed grid adapts with ResponsiveGrid
   - Mobile block screen: fullscreen message shown when browser
     window < 768px wide (app is desktop-only by design)
 
@@ -85,8 +89,14 @@
   │   └── useContainerWidth.js   # ResizeObserver hook — returns { ref, width }
   │                              #   for container-based responsive logic
   ├── components/
-  │   ├── builders/              # 12 content + style editors
-  │   ├── previews/              # 12 live preview renderers (all responsive)
+  │   ├── builders/              # 15 content + style editors
+  │   │   ├── BlogListBuilder.jsx    # Blog list grid + post card management
+  │   │   ├── BlogPostBuilder.jsx    # Blog post read view + post selection
+  │   │   └── SocialMediaBuilder.jsx # Embedded social feed (YT/IG/TT/FB)
+  │   ├── previews/              # 15 live preview renderers (all responsive)
+  │   │   ├── BlogListPreview.jsx    # src/components/previews/BlogListPreview.jsx
+  │   │   ├── BlogPostPreview.jsx    # src/components/previews/BlogPostPreview.jsx
+  │   │   └── SocialMediaPreview.jsx # src/components/previews/SocialMediaPreview.jsx
   │   └── ui/
   │       ├── ColorInput.jsx         # Hex color picker + text input
   │       ├── RangeField.jsx         # Slider with live value label
@@ -139,7 +149,7 @@
 **File:** `src/components/ui/ColorInput.jsx`
 **Purpose:** Hex color picker — native `<input type="color">` paired with a validated text field.
 **Props:** `label: string`, `value: string` (hex), `onChange: (hex) => void`
-**Used in:** All 13 builders, GlobalThemePanel
+**Used in:** All 15 builders, GlobalThemePanel
 
 ---
 
@@ -147,7 +157,7 @@
 **File:** `src/components/ui/RangeField.jsx`
 **Purpose:** Range slider with a live `{value}{unit}` readout. Outputs a px string (e.g. `"16px"`).
 **Props:** `label`, `value`, `onChange`, `min`, `max`, `step` (default `1`), `unit` (default `"px"`)
-**Used in:** All 13 builders (font size, padding, border radius, gap, height, link spacing, etc.)
+**Used in:** All 15 builders (font size, padding, border radius, gap, height, link spacing, etc.)
 
 ---
 
@@ -261,7 +271,7 @@ useTheme() => {
 }
 ```
 **Section shape:** `theme[sectionKey] = { data: {…}, template: {…} }`
-**Used in:** All 13 builders, all 13 previews, GlobalThemePanel, App.jsx
+**Used in:** All 15 builders, all 15 previews, GlobalThemePanel, App.jsx
 
 ---
 

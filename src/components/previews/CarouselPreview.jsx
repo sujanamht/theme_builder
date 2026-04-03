@@ -3,6 +3,7 @@ import { useTheme, useDarkMode } from '../../store/themeStore.jsx'
 import { useSelection } from '../../store/selectionContext.jsx'
 import CanvasUpload from '../ui/CanvasUpload.jsx'
 import { useContainerWidth } from '../../hooks/useContainerWidth.js'
+import { parsePx } from '../../utils/style.js'
 
 function ArrowLeft({ color, size }) {
   return (
@@ -42,6 +43,7 @@ export default function CarouselPreview() {
     updateSection('carousel', 'data', { ...data, slides: updated })
   }
 
+  const fontSize    = parsePx(template.fontSize) || 16
   const arrowColor  = template.arrowColor || '#ffffff'
   const dotColor    = template.dotColor   || '#ffffff'
   const height      = template.height     || '560px'
@@ -112,7 +114,7 @@ export default function CarouselPreview() {
 
   const subtitleStyle = {
     color:      template.textColor || '#ffffff',
-    fontSize:   isMobile ? '13px' : (template.fontSize || '16px'),
+    fontSize:   isMobile ? '13px' : `${fontSize}px`,
     opacity:    0.85,
     textShadow: '0 1px 6px rgba(0,0,0,0.4)',
     maxWidth:   '600px',

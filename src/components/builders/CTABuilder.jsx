@@ -16,6 +16,7 @@ const textTemplateFields = [
   { key: 'padding',  label: 'Padding',   min: 0,  max: 120, step: 8 },
 ]
 
+// single source of truth — preview must not invent fallbacks
 export default function CTABuilder({ activeTab = 'content' }) {
   const { theme, updateSection } = useTheme()
   const { data, template } = theme.cta

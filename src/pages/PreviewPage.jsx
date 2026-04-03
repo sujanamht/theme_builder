@@ -39,6 +39,21 @@ const GLOBAL_TYPES = new Set(['announcement', 'navbar', 'footer'])
 
 function getType(id) { return id.replace(/-\d+$/, '') }
 
+function UnknownSection({ type }) {
+  return (
+    <div style={{
+      padding:    '14px 20px',
+      background: '#fef3c7',
+      border:     '1px dashed #f59e0b',
+      color:      '#92400e',
+      fontFamily: 'monospace',
+      fontSize:   '13px',
+    }}>
+      ⚠ Unknown section type: &quot;{type}&quot;
+    </div>
+  )
+}
+
 export default function PreviewPage() {
   const { theme } = useTheme()
 
@@ -55,11 +70,15 @@ export default function PreviewPage() {
   const allKeys = [...announcementKeys, ...navbarKeys, ...pageKeys, ...footerKeys]
 
   return (
-    <SelectionContext.Provider value={null}>
+    <SelectionContext.Provider value={''}>
       <div style={{ minHeight: '100vh', background: '#fff' }}>
         {allKeys.map(key => {
-          const component = PREVIEWS[getType(key)]
-          if (!component) return null
+          const type = getType(key)
+          const component = PREVIEWS[type]
+          if (!component) {
+            console.warn(`[ThemeBuilder] Unknown section type "${type}" in PreviewPage`)
+            return <UnknownSection key={key} type={type} />
+          }
           return <div key={key}>{component}</div>
         })}
       </div>

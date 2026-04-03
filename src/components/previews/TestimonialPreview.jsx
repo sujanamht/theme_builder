@@ -5,6 +5,7 @@ import CanvasUpload from '../ui/CanvasUpload.jsx'
 import { useContainerWidth } from '../../hooks/useContainerWidth.js'
 import { CONTENT_MAX_WIDTH } from '../../constants/layout.js'
 import DotIndicators from '../ui/DotIndicators.jsx'
+import { parsePx } from '../../utils/style.js'
 
 function getInitials(name) {
   if (!name) return '?'
@@ -85,6 +86,7 @@ export default function TestimonialPreview() {
     updateSection('testimonial', 'data', { ...data, items: updated })
   }
 
+  const fontSize  = parsePx(template.fontSize) || 14
   const textColor = template.textColor || (darkMode ? '#f4f4f5' : '#111827')
 
   const innerStyle = { maxWidth: CONTENT_MAX_WIDTH, margin: '0 auto', width: '100%', boxSizing: 'border-box' }
@@ -92,7 +94,7 @@ export default function TestimonialPreview() {
   const sectionStyle = {
     backgroundColor: template.bgColor  || (darkMode ? '#18181b' : '#f9fafb'),
     color:           textColor,
-    fontSize:        template.fontSize  || '14px',
+    fontSize:        `${fontSize}px`,
     padding:         template.padding   || '48px 24px',
     width:           '100%',
     boxSizing:       'border-box',
@@ -101,7 +103,7 @@ export default function TestimonialPreview() {
 
   const headingStyle = {
     color:        textColor,
-    fontSize:     `calc(${template.fontSize || '14px'} * 1.6)`,
+    fontSize:     `${Math.round(fontSize * 1.6)}px`,
     fontWeight:   '700',
     marginBottom: '28px',
     textAlign:    'center',
@@ -119,21 +121,21 @@ export default function TestimonialPreview() {
 
   const quoteStyle = {
     color:      textColor,
-    fontSize:   template.fontSize || '14px',
+    fontSize:   `${fontSize}px`,
     lineHeight: '1.6',
     flex:       1,
   }
 
   const nameStyle = {
     color:      textColor,
-    fontSize:   `calc(${template.fontSize || '14px'} * 0.95)`,
+    fontSize:   `${Math.round(fontSize * 0.95)}px`,
     fontWeight: '600',
     margin:     0,
   }
 
   const roleStyle = {
     color:    textColor,
-    fontSize: `calc(${template.fontSize || '14px'} * 0.85)`,
+    fontSize: `${Math.round(fontSize * 0.85)}px`,
     opacity:  0.6,
     margin:   0,
   }

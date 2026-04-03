@@ -9,6 +9,7 @@ const textTemplateFields = [
   { key: 'gap',          label: 'Grid Gap',     min: 4,  max: 48, step: 4 },
 ]
 
+// single source of truth — preview must not invent fallbacks
 export default function GalleryBuilder({ activeTab = 'content' }) {
   const { theme, updateSection } = useTheme()
   const { data, template } = theme.gallery

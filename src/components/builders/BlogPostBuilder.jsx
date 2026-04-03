@@ -4,7 +4,7 @@ import ColorInput from "../ui/ColorInput.jsx";
 import RangeField from "../ui/RangeField.jsx";
 import ImageUploader from "../ui/ImageUploader.jsx";
 
-function PostCard({ post, index, isOpen, onToggle, onRemove, onChange }) {
+function PostCard({ post, index, isOpen, onToggle, onRemove, onChange, isActive, onSelect }) {
   const [tagInput, setTagInput] = useState((post.tags ?? []).join(', '))
 
   function handleTagKey(e) {
@@ -15,8 +15,8 @@ function PostCard({ post, index, isOpen, onToggle, onRemove, onChange }) {
   }
 
   return (
-    <div style={{ borderRadius: '8px', border: '1px solid #3a3a3a', overflow: 'hidden' }}>
-      <div onClick={onToggle} style={{ display:'flex', alignItems:'center', justifyContent:'space-between', padding:'10px 12px', cursor:'pointer', userSelect:'none' }}>
+    <div style={{ borderRadius: '8px', border: `1px solid ${isActive ? '#6366f1' : '#3a3a3a'}`, overflow: 'hidden', background: isActive ? 'rgba(99,102,241,0.06)' : undefined }}>
+      <div onClick={() => { onSelect(); onToggle(); }} style={{ display:'flex', alignItems:'center', justifyContent:'space-between', padding:'10px 12px', cursor:'pointer', userSelect:'none' }}>
         <span style={{ fontSize:'13px', fontWeight:'600', flex:1, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>
           {post.title || '(Untitled)'}
         </span>
@@ -70,9 +70,11 @@ function PostCard({ post, index, isOpen, onToggle, onRemove, onChange }) {
   )
 }
 
+// single source of truth — preview must not invent fallbacks
 export default function BlogPostBuilder({ activeTab = "content" }) {
-  const { theme, updateSection } = useTheme();
+  const { theme, updateSection, setActivePostId } = useTheme();
   const { template } = theme.blogpost;
+  const { activePostId } = theme.blogpost.data;
   const { data: bloglistData } = theme.bloglist;
   const posts = bloglistData.posts ?? [];
 
@@ -137,6 +139,8 @@ export default function BlogPostBuilder({ activeTab = "content" }) {
                 onToggle={() => setOpenIndex(openIndex === i ? null : i)}
                 onRemove={removePost}
                 onChange={handlePostChange}
+                isActive={post.id === activePostId}
+                onSelect={() => setActivePostId(post.id)}
               />
             ))}
 

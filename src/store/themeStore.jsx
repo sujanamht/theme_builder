@@ -4,6 +4,10 @@ const HOME_SECTIONS = ['announcement', 'navbar', 'carousel', 'about', 'services'
 
 const INITIAL_PAGES = [
   { id: 'home',    label: 'Home',    sections: HOME_SECTIONS },
+  /* 'about' below intentionally reuses the same store key as in HOME_SECTIONS.
+     Both the Home page and the About page render from theme.about — single source
+     of truth for the "About" content block. If they ever need independent content,
+     add a separate 'about2' (or similar) key and split the initial state. */
   { id: 'about',   label: 'About',   sections: ['about', 'cta'] },
   { id: 'contact', label: 'Contact', sections: ['contact', 'form'] },
   { id: 'blog',    label: 'Blog',    sections: ['bloglist', 'blogpost'] },
@@ -57,7 +61,7 @@ const initialState = {
       linkText: 'Claim your spot',
       linkUrl:  '#',
     },
-    template: { marquee: true, marqueeSpeed: 30 },
+    template: { marquee: true, marqueeSpeed: 30, bgColor: '', textColor: '', fontSize: 14, padding: 8 },
   },
 
   navbar: {
@@ -65,7 +69,20 @@ const initialState = {
       logoText: '',
       links: INITIAL_PAGES.map(p => ({ label: p.label, url: '#', pageId: p.id })),
     },
-    template: {},
+    template: {
+      bgColor:         '',
+      textColor:       '',
+      accentColor:     '',
+      fontSize:        16,
+      padding:         '12px 24px',
+      linkSpacing:     '24px',
+      logoSize:        '28px',
+      navbarHeight:    '',
+      logoPosition:    'left',
+      sticky:          false,
+      borderBottom:    false,
+      borderBottomColor: '',
+    },
   },
 
   hero: {
@@ -76,7 +93,17 @@ const initialState = {
       ctaUrl:      '#',
       bgImage:     'https://placehold.co/1200x600',
     },
-    template: {},
+    template: {
+      bgColor:       '',
+      textColor:     '',
+      btnBg:         '',
+      btnText:       '',
+      eyebrowText:   '',
+      headingSize:   56,
+      imagePosition: 'right',
+      padding:       64,
+      minHeight:     480,
+    },
   },
 
   carousel: {
@@ -99,7 +126,14 @@ const initialState = {
         },
       ],
     },
-    template: {},
+    template: {
+      bgColor:    '',
+      textColor:  '#ffffff',
+      arrowColor: '#ffffff',
+      dotColor:   '#ffffff',
+      fontSize:   16,
+      height:     560,
+    },
   },
 
   about: {
@@ -110,11 +144,29 @@ const initialState = {
       buttonText: 'Meet the team',
       buttonUrl:  '#',
     },
-    template: {},
+    template: {
+      bgColor:       '',
+      textColor:     '',
+      buttonBg:      '',
+      buttonText:    '',
+      fontSize:      16,
+      padding:       64,
+      imagePosition: 'left',
+    },
   },
 
   services: {
-    template: {},
+    template: {
+      bgColor:      '',
+      textColor:    '',
+      cardBg:       '',
+      accentColor:  '',
+      fontSize:     15,
+      borderRadius: 12,
+      padding:      64,
+      displayMode:  'grid',
+      columns:      '3',
+    },
     data: {
       heading:    'Everything your team needs',
       subheading: 'One platform to replace the fragmented stack slowing you down.',
@@ -145,7 +197,15 @@ const initialState = {
   },
 
   testimonial: {
-    template: {},
+    template: {
+      bgColor:      '',
+      textColor:    '',
+      cardBg:       '',
+      fontSize:     14,
+      borderRadius: 12,
+      padding:      48,
+      visibleCount: 1,
+    },
     data: {
       heading: 'Trusted by teams at fast-growing companies',
       items: [
@@ -172,7 +232,16 @@ const initialState = {
   },
 
   gallery: {
-    template: {},
+    template: {
+      bgColor:      '',
+      textColor:    '',
+      captionBg:    '#000000',
+      fontSize:     14,
+      borderRadius: 8,
+      gap:          16,
+      columns:      '3',
+      padding:      '64px 32px',
+    },
     data: {
       heading:    'Product in action',
       subheading: 'A look at what your team\'s workspace could look like.',
@@ -194,7 +263,17 @@ const initialState = {
       secondaryButtonText: 'Book a demo',
       secondaryButtonUrl:  '#',
     },
-    template: {},
+    template: {
+      bgColor:            '',
+      textColor:          '',
+      primaryBtnBg:       '',
+      primaryBtnText:     '',
+      secondaryBtnBg:     '',
+      secondaryBtnText:   '',
+      fontSize:           16,
+      padding:            64,
+      textAlign:          'center',
+    },
   },
 
   footer: {
@@ -218,7 +297,13 @@ const initialState = {
       copyright: `© ${new Date().getFullYear()} Arcova, Inc. All rights reserved.`,
       ...SHARED_CONTACT,
     },
-    template: {},
+    template: {
+      bgColor:   '',
+      textColor: '',
+      linkColor: '',
+      fontSize:  14,
+      padding:   64,
+    },
   },
 
   socialmedia: {
@@ -304,9 +389,9 @@ const initialState = {
       accentColor: '',
       cardBg: '',
       columns: '3',
-      padding: '64',
-      borderRadius: '12',
-      fontSize: '15',
+      padding: 64,
+      borderRadius: 12,
+      fontSize: 15,
     },
   },
 
@@ -319,9 +404,9 @@ const initialState = {
       bgColor: '',
       textColor: '',
       accentColor: '',
-      fontSize: '16',
-      padding: '64',
-      maxWidth: '720',
+      fontSize: 16,
+      padding: 64,
+      maxWidth: 720,
     },
   },
 
@@ -465,6 +550,16 @@ function loadState() {
     }))
   }
 
+  function setActivePostId(id) {
+    setTheme(prev => ({
+      ...prev,
+      blogpost: {
+        ...prev.blogpost,
+        data: { ...prev.blogpost.data, activePostId: id },
+      },
+    }))
+  }
+
   function renamePage(id, label) {
     setTheme(prev => {
       const newList = prev.pages.list.map(p => p.id === id ? { ...p, label } : p)
@@ -516,7 +611,7 @@ function loadState() {
       theme, setTheme,
       updateSection, updateGlobalTheme,
       updatePageOrder, setPageSections,
-      addPage, addCustomPage, deletePage, setActivePage, renamePage, removeSectionFromAllPages,
+      addPage, addCustomPage, deletePage, setActivePage, renamePage, removeSectionFromAllPages, setActivePostId,
       addSection, removeSection,
     }}>
       {children}

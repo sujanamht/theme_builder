@@ -18,6 +18,7 @@ const PLATFORM_PLACEHOLDER = {
   youtube:   'https://www.youtube.com/watch?v=...',
 }
 
+// single source of truth — preview must not invent fallbacks
 export default function SocialMediaBuilder({ activeTab = 'content' }) {
   const { theme, updateSection } = useTheme()
   const { data, template } = theme.socialmedia

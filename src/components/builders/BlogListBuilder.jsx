@@ -70,6 +70,7 @@ function PostCard({ post, index, isOpen, onToggle, onRemove, onChange }) {
   )
 }
 
+// single source of truth — preview must not invent fallbacks
 export default function BlogListBuilder({ activeTab = 'content' }) {
   const { theme, updateSection } = useTheme()
   const { data, template } = theme.bloglist

@@ -14,6 +14,7 @@ const textTemplateFields = [
   { key: 'minHeight', label: 'Min Height', min: 200, max: 800, step: 20 },
 ]
 
+// single source of truth — preview must not invent fallbacks
 export default function HeroBuilder({ activeTab = 'content' }) {
   const { theme, updateSection } = useTheme()
   const { data, template } = theme.hero

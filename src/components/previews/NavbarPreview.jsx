@@ -4,6 +4,7 @@ import { useSelection } from '../../store/selectionContext.jsx'
 import CanvasUpload from '../ui/CanvasUpload.jsx'
 import { useContainerWidth } from '../../hooks/useContainerWidth.js'
 import { CONTENT_MAX_WIDTH } from '../../constants/layout.js'
+import { parsePx } from '../../utils/style.js'
 
 function DropdownLink({ link, linkStyle, textColor, fontSize, darkMode, onInternalNav, isActivePage, accentColor }) {
   const [open, setOpen] = useState(false)
@@ -151,6 +152,7 @@ export default function NavbarPreview() {
   const logoRight   = (template.logoPosition ?? 'left') === 'right'
   const isSticky    = !!template.sticky
   const hasBorder   = !!template.borderBottom
+  const fontSize    = parsePx(template.fontSize) || 16
   const borderColor = template.borderBottomColor || (darkMode ? '#3f3f46' : '#e5e7eb')
 
   const navStyle = {
@@ -198,7 +200,7 @@ export default function NavbarPreview() {
 
   const linkStyle = {
     color:          template.textColor || (darkMode ? '#f4f4f5' : '#111827'),
-    fontSize:       template.fontSize  || '16px',
+    fontSize:       `${fontSize}px`,
     textDecoration: 'none',
     cursor:         'pointer',
     whiteSpace:     'nowrap',
@@ -283,7 +285,7 @@ export default function NavbarPreview() {
                     link={link}
                     linkStyle={linkStyle}
                     textColor={template.textColor}
-                    fontSize={template.fontSize}
+                    fontSize={`${fontSize}px`}
                     darkMode={darkMode}
                     onInternalNav={setActivePage}
                     isActivePage={link.pageId === activePage}
@@ -319,7 +321,7 @@ export default function NavbarPreview() {
                 : (template.textColor || (darkMode ? '#f4f4f5' : '#111827')),
               fontWeight:     isActive ? '700' : undefined,
               textDecoration: isActive ? 'underline' : 'none',
-              fontSize:       template.fontSize  || '16px',
+              fontSize:       `${fontSize}px`,
               textDecoration: 'none',
               textAlign:      'left',
               background:     'none',

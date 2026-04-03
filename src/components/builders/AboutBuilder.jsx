@@ -2,6 +2,7 @@ import { useTheme } from '../../store/themeStore.jsx'
 import ColorInput from '../ui/ColorInput.jsx'
 import RangeField from '../ui/RangeField.jsx'
 
+// single source of truth — preview must not invent fallbacks
 export default function AboutBuilder({ activeTab = 'content' }) {
   const { theme, updateSection } = useTheme()
   const { data, template } = theme.about

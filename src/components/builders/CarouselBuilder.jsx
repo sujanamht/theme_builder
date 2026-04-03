@@ -8,6 +8,7 @@ const textTemplateFields = [
   { key: 'height',   label: 'Slide Height', min: 200, max: 700, step: 20 },
 ]
 
+// single source of truth — preview must not invent fallbacks
 export default function CarouselBuilder({ activeTab = 'content' }) {
   const { theme, updateSection } = useTheme()
   const { data, template } = theme.carousel

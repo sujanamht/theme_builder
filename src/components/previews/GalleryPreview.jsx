@@ -4,6 +4,7 @@ import CanvasUpload from '../ui/CanvasUpload.jsx'
 import ResponsiveGrid from '../ui/ResponsiveGrid.jsx'
 import { hexToRgba } from '../../utils/colorUtils.js'
 import { CONTENT_MAX_WIDTH } from '../../constants/layout.js'
+import { parsePx } from '../../utils/style.js'
 
 export default function GalleryPreview() {
   const { theme, updateSection } = useTheme()
@@ -24,7 +25,7 @@ export default function GalleryPreview() {
   const innerStyle = { maxWidth: CONTENT_MAX_WIDTH, margin: '0 auto', width: '100%', boxSizing: 'border-box' }
 
   const textColor  = template.textColor    || '#111827'
-  const fontSize   = template.fontSize     || '14px'
+  const fontSize   = parsePx(template.fontSize) || 14
   const radius     = template.borderRadius || '8px'
   const captionBg  = template.captionBg    || '#000000'
 
@@ -38,7 +39,7 @@ export default function GalleryPreview() {
 
   const headingStyle = {
     color:      textColor,
-    fontSize:   `calc(${fontSize} * 1.9)`,
+    fontSize:   `${Math.round(fontSize * 1.9)}px`,
     fontWeight: '800',
     margin:     '0 0 10px',
     textAlign:  'center',
@@ -47,7 +48,7 @@ export default function GalleryPreview() {
 
   const subheadingStyle = {
     color:      textColor,
-    fontSize:   `calc(${fontSize} * 1.05)`,
+    fontSize:   `${Math.round(fontSize * 1.05)}px`,
     opacity:    0.6,
     margin:     '0 0 32px',
     textAlign:  'center',
@@ -74,7 +75,7 @@ export default function GalleryPreview() {
   const emptyStyle = {
     color:     textColor,
     opacity:   0.3,
-    fontSize,
+    fontSize:  `${fontSize}px`,
     textAlign: 'center',
     padding:   '24px 0',
   }
@@ -108,7 +109,7 @@ export default function GalleryPreview() {
                   right:           0,
                   background:      hexToRgba(captionBg, 0.72),
                   color:           textColor,
-                  fontSize:        `calc(${fontSize} * 0.85)`,
+                  fontSize:        `${Math.round(fontSize * 0.85)}px`,
                   padding:         '6px 10px',
                   backdropFilter:  'blur(4px)',
                 }}>

@@ -1,4 +1,5 @@
 import { useTheme, useDarkMode } from '../../store/themeStore.jsx'
+import { useSelection } from '../../store/selectionContext.jsx'
 import CanvasUpload from '../ui/CanvasUpload.jsx'
 import { useContainerWidth } from '../../hooks/useContainerWidth.js'
 import { hexToRgba } from '../../utils/colorUtils.js'
@@ -8,6 +9,8 @@ export default function BlogPostPreview() {
   const { theme, updateSection } = useTheme()
   const { template } = theme.blogpost
   const { globalTheme } = theme
+  const selectedId = useSelection()
+  const isActive = selectedId === 'blogpost'
   const darkMode = useDarkMode()
   const { ref, width } = useContainerWidth()
 
@@ -69,7 +72,7 @@ export default function BlogPostPreview() {
             <div style={{ maxWidth: `${maxWidth}px`, margin: '0 auto', width: '100%', boxSizing: 'border-box' }}>
               <CanvasUpload
                 hasImage={!!activePost.coverImage}
-                isActive={true}
+                isActive={isActive}
                 aspectRatio="16/9"
                 onUpload={v => {
                   const updated = posts.map(p => p.id === activePost.id ? { ...p, coverImage: v } : p)
