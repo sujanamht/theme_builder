@@ -84,7 +84,7 @@ export default function AboutBuilder({ activeTab = 'content' }) {
               label="Padding"
               value={template.padding ?? ''}
               onChange={v => handleTemplate('padding', v)}
-              min={0} max={120} step={8}
+              min={30} max={150} step={10}
             />
 
             <label className="flex flex-col gap-1">

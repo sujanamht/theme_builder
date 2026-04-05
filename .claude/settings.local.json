@@ -8,7 +8,11 @@
       "Bash(find \"C:\\\\Users\\\\Suuzz\\\\Documents\\\\github\\\\theme_builder\\\\src\\\\components\\\\previews\" -name \"*.jsx\" -exec grep \"^import\" {})",
       "Bash(find \"C:\\\\Users\\\\Suuzz\\\\Documents\\\\github\\\\theme_builder\\\\src\\\\components\\\\builders\" -name \"*.jsx\" -exec grep \"^import\" {})",
       "Bash(node:*)",
-      "Bash(node -e \":*)"
+      "Bash(node -e \":*)",
+      "Bash(for dir:*)",
+      "Bash(do echo:*)",
+      "Read(//c/Users/Suuzz/Documents/github/theme_builder/**)",
+      "Bash(done)"
     ]
   }
 }

@@ -68,7 +68,7 @@ const COMPONENT_LABELS = {
   form:         'Form',
   socialmedia:  'Social Media',
   bloglist:     'Blog List',
-  blogpost:     'Blog Post',
+  blogPost:     'Blog Post',
   aboutDetail:  'About Detail',
   pageBanner:   'Page Banner',
   team:         'Team',
@@ -90,13 +90,13 @@ const TYPE_COLORS = {
   form:         '#a855f7',
   socialmedia:  '#0ea5e9',
   bloglist:     '#f43f5e',
-  blogpost:     '#fb7185',
+  blogPost:     '#ec4899',
   aboutDetail:  '#14b8a6',
   pageBanner:   '#0ea5e9',
   team:         '#f59e0b',
 }
 
-const ALL_TYPES = ['announcement', 'navbar', 'about', 'aboutDetail', 'pageBanner', 'team', 'services', 'carousel', 'testimonial', 'gallery', 'cta', 'footer', 'hero', 'contact', 'form', 'socialmedia', 'bloglist', 'blogpost']
+const ALL_TYPES = ['announcement', 'navbar', 'about', 'aboutDetail', 'pageBanner', 'team', 'services', 'carousel', 'testimonial', 'gallery', 'cta', 'footer', 'hero', 'contact', 'form', 'socialmedia', 'bloglist', 'blogPost']
 
 const GLOBAL_TYPES = new Set(['announcement', 'navbar', 'footer'])
 
@@ -115,7 +115,7 @@ const BUILDERS = {
   form:         <FormBuilder />,
   socialmedia:  <SocialMediaBuilder />,
   bloglist:     <BlogListBuilder />,
-  blogpost:     <BlogPostBuilder />,
+  blogPost:     <BlogPostBuilder />,
   aboutDetail:  <AboutDetailBuilder />,
   pageBanner:   <PageBannerBuilder />,
   team:         <TeamBuilder />,
@@ -136,13 +136,13 @@ const PREVIEWS = {
   form:         <FormPreview />,
   socialmedia:  <SocialMediaPreview />,
   bloglist:     <BlogListPreview />,
-  blogpost:     <BlogPostPreview />,
+  blogPost:     <BlogPostPreview />,
   aboutDetail:  <AboutDetailPreview />,
   pageBanner:   <PageBannerPreview />,
   team:         <TeamPreview />,
 }
 
-const INITIAL_VISIBILITY = { announcement: true, navbar: true, carousel: true, about: true, aboutDetail: true, pageBanner: true, team: true, services: true, testimonial: true, gallery: true, cta: true, footer: true, hero: true, contact: true, form: true, socialmedia: true, bloglist: true, blogpost: true }
+const INITIAL_VISIBILITY = { announcement: true, navbar: true, carousel: true, about: true, aboutDetail: true, pageBanner: true, team: true, services: true, testimonial: true, gallery: true, cta: true, footer: true, hero: true, contact: true, form: true, socialmedia: true, bloglist: true, blogPost: true }
 
 /* ─── id helpers ─── */
 function getType(id)  { return id.replace(/-\d+$/, '') }
@@ -540,11 +540,8 @@ function Shell({
   }
 
   const dotPattern      = `radial-gradient(circle, ${t.dotColor} 1px, transparent 1px)`
-  const blogView = theme.blogpost?.data?.blogView
   const visiblePageKeys = order.filter(key => {
     if (!visibility[key] || GLOBAL_TYPES.has(getType(key))) return false
-    if (key === 'bloglist' && blogView === 'post') return false
-    if (key === 'blogpost' && blogView !== 'post') return false
     return true
   })
 

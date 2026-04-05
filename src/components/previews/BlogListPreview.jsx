@@ -1,16 +1,20 @@
 import { useTheme, useDarkMode } from '../../store/themeStore.jsx'
 import { useContainerWidth } from '../../hooks/useContainerWidth.js'
+import { useLocation, Link } from 'react-router-dom'
 import ResponsiveGrid from '../ui/ResponsiveGrid.jsx'
 import { hexToRgba } from '../../utils/colorUtils.js'
 import { CONTENT_MAX_WIDTH } from '../../constants/layout.js'
 import { parsePx } from '../../utils/style.js'
 
 export default function BlogListPreview() {
-  const { theme, updateSection } = useTheme()
+  const { theme } = useTheme()
   const { data, template } = theme.bloglist
   const { globalTheme } = theme
   const darkMode = useDarkMode()
   const { ref, width } = useContainerWidth()
+  const location = useLocation()
+
+  const isPreview = location.pathname.startsWith('/preview')
 
   const heading    = data.heading    || ''
   const subheading = data.subheading || ''
@@ -57,7 +61,29 @@ export default function BlogListPreview() {
     lineHeight: '1.6',
   }
 
+  const cardStyle = {
+    backgroundColor: cardBg,
+    borderRadius:    `${radius}px`,
+    border:          darkMode ? '1px solid #3f3f46' : '1px solid #e5e7eb',
+    overflow:        'hidden',
+    display:         'flex',
+    flexDirection:   'column',
+    textDecoration:  'none',
+    color:           'inherit',
+  }
+
   const tabletCols = Math.min(2, columns)
+
+  function CardWrapper({ post, children }) {
+    if (isPreview) {
+      return (
+        <Link to={`/preview/blogpost?postId=${post.id}`} style={cardStyle}>
+          {children}
+        </Link>
+      )
+    }
+    return <div style={{ ...cardStyle, cursor: 'default' }}>{children}</div>
+  }
 
   return (
     <section ref={ref} style={sectionStyle}>
@@ -74,18 +100,7 @@ export default function BlogListPreview() {
         {posts.length > 0 && (
           <ResponsiveGrid cols={{ mobile: 1, tablet: tabletCols, desktop: columns }} gap={24}>
             {posts.map(post => (
-              <div
-                key={post.id}
-                onClick={() => updateSection('blogpost', 'data', { ...theme.blogpost.data, activePostId: post.id, blogView: 'post' })}
-                style={{
-                  backgroundColor: cardBg,
-                  borderRadius:    `${radius}px`,
-                  border:          darkMode ? '1px solid #3f3f46' : '1px solid #e5e7eb',
-                  overflow:        'hidden',
-                  display:         'flex',
-                  flexDirection:   'column',
-                  cursor:          'pointer',
-                }}>
+              <CardWrapper key={post.id} post={post}>
                 {post.coverImage && (
                   <img
                     src={post.coverImage}
@@ -156,7 +171,7 @@ export default function BlogListPreview() {
                     {post.date && new Date(post.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                   </p>
                 </div>
-              </div>
+              </CardWrapper>
             ))}
           </ResponsiveGrid>
         )}

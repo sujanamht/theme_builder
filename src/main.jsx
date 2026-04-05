@@ -13,6 +13,7 @@ createRoot(document.getElementById('root')).render(
         <Routes>
           <Route path="/" element={<App />} />
           <Route path="/preview" element={<PreviewPage />} />
+          <Route path="/preview/:pageId" element={<PreviewPage />} />
         </Routes>
       </ThemeProvider>
     </BrowserRouter>

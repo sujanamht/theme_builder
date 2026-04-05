@@ -5,7 +5,7 @@ import RangeField from '../ui/RangeField.jsx'
 
 const textTemplateFields = [
   { key: 'fontSize', label: 'Font Size',    min: 10,  max: 32,  step: 1  },
-  { key: 'height',   label: 'Slide Height', min: 200, max: 700, step: 20 },
+  { key: 'height',   label: 'Slide Height', min: 350, max: 800, step: 20 },
 ]
 
 // single source of truth — preview must not invent fallbacks

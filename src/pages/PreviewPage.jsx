@@ -1,5 +1,6 @@
+import { useParams } from 'react-router-dom'
 import { useTheme } from '../store/themeStore.jsx'
-import { SelectionContext } from '../store/selectionContext.jsx'
+import { SelectionContext, PreviewPageContext } from '../store/selectionContext.jsx'
 
 import AnnouncementPreview  from '../components/previews/AnnouncementPreview.jsx'
 import NavbarPreview        from '../components/previews/NavbarPreview.jsx'
@@ -35,7 +36,7 @@ const PREVIEWS = {
   form:         <FormPreview />,
   socialmedia:  <SocialMediaPreview />,
   bloglist:    <BlogListPreview />,
-  blogpost:    <BlogPostPreview />,
+  blogPost:    <BlogPostPreview />,
   aboutDetail:  <AboutDetailPreview />,
   pageBanner:   <PageBannerPreview />,
   team:         <TeamPreview />,
@@ -62,8 +63,11 @@ function UnknownSection({ type }) {
 
 export default function PreviewPage() {
   const { theme } = useTheme()
+  const { pageId: paramPageId } = useParams()
 
-  const activePageId   = theme.pages?.activePage
+  // Use the URL param when navigating directly (e.g. /preview/blogpost),
+  // otherwise fall back to the builder's active page.
+  const activePageId   = paramPageId ?? theme.pages?.activePage
   const activePage     = theme.pages?.list?.find(p => p.id === activePageId)
   const activeSections = activePage?.sections ?? []
 
@@ -77,6 +81,7 @@ export default function PreviewPage() {
 
   return (
     <SelectionContext.Provider value={''}>
+    <PreviewPageContext.Provider value={activePageId}>
       <div style={{ minHeight: '100vh', background: '#fff' }}>
         {allKeys.map(key => {
           const type = getType(key)
@@ -88,6 +93,7 @@ export default function PreviewPage() {
           return <div key={key}>{component}</div>
         })}
       </div>
+    </PreviewPageContext.Provider>
     </SelectionContext.Provider>
   )
 }

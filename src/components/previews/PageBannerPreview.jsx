@@ -1,8 +1,10 @@
 import { useTheme } from '../../store/themeStore.jsx'
+import { usePreviewPageId } from '../../store/selectionContext.jsx'
 
 export default function PageBannerPreview() {
   const { theme } = useTheme()
-  const activePage   = theme.pages?.activePage ?? 'home'
+  const previewPageId = usePreviewPageId()
+  const activePage    = previewPageId ?? theme.pages?.activePage ?? 'home'
   const pageData     = theme.pageBanner?.pages?.[activePage] ?? {}
   const template     = theme.pageBanner?.template ?? {}
   const { globalTheme } = theme

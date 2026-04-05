@@ -13,8 +13,9 @@ const INITIAL_PAGES = [
   { id: 'about',    label: 'About',    sections: ['pageBanner', 'about', 'cta'] },
   { id: 'services', label: 'Services', sections: ['pageBanner', 'services'] },
   { id: 'contact', label: 'Contact', sections: ['contact', 'form'] },
-  { id: 'blog',    label: 'Blog',    sections: ['pageBanner', 'bloglist', 'blogpost'] },
-  { id: 'custom',  label: 'Custom',  sections: [] },
+  { id: 'blog',     label: 'Blog',      sections: ['pageBanner', 'bloglist'] },
+  { id: 'blogpost', label: 'Blog Post', sections: ['pageBanner', 'blogPost'] },
+  { id: 'custom',   label: 'Custom',    sections: [] },
 ]
 
 /* Syncs navbar links with a pages list.
@@ -415,6 +416,28 @@ const initialState = {
     },
   },
 
+  blogPost: {
+    data: {
+      title:       'How We Built a Product People Actually Love',
+      author:      'Jane Doe',
+      date:        '2024-11-01',
+      tags:        ['Design', 'Product'],
+      coverImage:  'https://placehold.co/1200x480',
+      paragraphs:  [
+        'Great products are built on empathy — a deep understanding of the people who use them every day.',
+        'We started by listening. Hundreds of user interviews, support tickets, and feedback sessions shaped every decision we made.',
+        'The result is something we are genuinely proud of: a tool that feels intuitive from the first click and powerful as your needs grow.',
+      ],
+    },
+    template: {
+      bgColor:      '',
+      textColor:    '',
+      accentColor:  '',
+      fontSize:     16,
+      padding:      64,
+    },
+  },
+
   team: {
     data: {
       heading:     'Meet Our Team',
@@ -513,9 +536,10 @@ const initialState = {
     pages: {
       home:     { heading: 'Welcome',       subheading: '', backgroundImage: '' },
       about:    { heading: 'About Us',      subheading: '', backgroundImage: '' },
-      services: { heading: 'Our Services',  subheading: '', backgroundImage: '' },
-      contact:  { heading: 'Contact Us',    subheading: '', backgroundImage: '' },
       blog:     { heading: 'Blog',          subheading: '', backgroundImage: '' },
+      contact:  { heading: 'Contact Us',    subheading: '', backgroundImage: '' },
+     
+     
     },
   },
 
