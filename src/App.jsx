@@ -31,6 +31,7 @@ import BlogListBuilder      from './components/builders/BlogListBuilder.jsx'
 import BlogPostBuilder      from './components/builders/BlogPostBuilder.jsx'
 import AboutDetailBuilder  from './components/builders/AboutDetailBuilder.jsx'
 import PageBannerBuilder   from './components/builders/PageBannerBuilder.jsx'
+import TeamBuilder         from './components/builders/TeamBuilder.jsx'
 
 import AnnouncementPreview  from './components/previews/AnnouncementPreview.jsx'
 import NavbarPreview        from './components/previews/NavbarPreview.jsx'
@@ -49,6 +50,7 @@ import BlogListPreview      from './components/previews/BlogListPreview.jsx'
 import BlogPostPreview      from './components/previews/BlogPostPreview.jsx'
 import AboutDetailPreview  from './components/previews/AboutDetailPreview.jsx'
 import PageBannerPreview   from './components/previews/PageBannerPreview.jsx'
+import TeamPreview         from './components/previews/TeamPreview.jsx'
 
 /* ─── registries (keyed by type, not instance id) ─── */
 const COMPONENT_LABELS = {
@@ -69,6 +71,7 @@ const COMPONENT_LABELS = {
   blogpost:     'Blog Post',
   aboutDetail:  'About Detail',
   pageBanner:   'Page Banner',
+  team:         'Team',
 }
 
 /* Per-type accent colors for the library badge */
@@ -90,9 +93,10 @@ const TYPE_COLORS = {
   blogpost:     '#fb7185',
   aboutDetail:  '#14b8a6',
   pageBanner:   '#0ea5e9',
+  team:         '#f59e0b',
 }
 
-const ALL_TYPES = ['announcement', 'navbar', 'about', 'aboutDetail', 'pageBanner', 'services', 'carousel', 'testimonial', 'gallery', 'cta', 'footer', 'hero', 'contact', 'form', 'socialmedia', 'bloglist', 'blogpost']
+const ALL_TYPES = ['announcement', 'navbar', 'about', 'aboutDetail', 'pageBanner', 'team', 'services', 'carousel', 'testimonial', 'gallery', 'cta', 'footer', 'hero', 'contact', 'form', 'socialmedia', 'bloglist', 'blogpost']
 
 const GLOBAL_TYPES = new Set(['announcement', 'navbar', 'footer'])
 
@@ -114,6 +118,7 @@ const BUILDERS = {
   blogpost:     <BlogPostBuilder />,
   aboutDetail:  <AboutDetailBuilder />,
   pageBanner:   <PageBannerBuilder />,
+  team:         <TeamBuilder />,
 }
 
 const PREVIEWS = {
@@ -134,9 +139,10 @@ const PREVIEWS = {
   blogpost:     <BlogPostPreview />,
   aboutDetail:  <AboutDetailPreview />,
   pageBanner:   <PageBannerPreview />,
+  team:         <TeamPreview />,
 }
 
-const INITIAL_VISIBILITY = { announcement: true, navbar: true, carousel: true, about: true, aboutDetail: true, pageBanner: true, services: true, testimonial: true, gallery: true, cta: true, footer: true, hero: true, contact: true, form: true, socialmedia: true, bloglist: true, blogpost: true }
+const INITIAL_VISIBILITY = { announcement: true, navbar: true, carousel: true, about: true, aboutDetail: true, pageBanner: true, team: true, services: true, testimonial: true, gallery: true, cta: true, footer: true, hero: true, contact: true, form: true, socialmedia: true, bloglist: true, blogpost: true }
 
 /* ─── id helpers ─── */
 function getType(id)  { return id.replace(/-\d+$/, '') }

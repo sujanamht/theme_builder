@@ -18,6 +18,7 @@ import BlogListPreview      from '../components/previews/BlogListPreview.jsx'
 import BlogPostPreview      from '../components/previews/BlogPostPreview.jsx'
 import AboutDetailPreview  from '../components/previews/AboutDetailPreview.jsx'
 import PageBannerPreview   from '../components/previews/PageBannerPreview.jsx'
+import TeamPreview         from '../components/previews/TeamPreview.jsx'
 
 const PREVIEWS = {
   announcement: <AnnouncementPreview />,
@@ -37,6 +38,7 @@ const PREVIEWS = {
   blogpost:    <BlogPostPreview />,
   aboutDetail:  <AboutDetailPreview />,
   pageBanner:   <PageBannerPreview />,
+  team:         <TeamPreview />,
 }
 
 const GLOBAL_TYPES = new Set(['announcement', 'navbar', 'footer'])

@@ -40,15 +40,40 @@ export default function AboutDetailBuilder({ activeTab = 'content' }) {
                 onChange={e => handleData('heading', e.target.value)}
               />
             </label>
-            <label className="flex flex-col gap-1">
-              Description
-              <textarea
-                value={data.description ?? ''}
-                placeholder="A short description of your company..."
-                rows={4}
-                onChange={e => handleData('description', e.target.value)}
-              />
-            </label>
+            <div className="flex flex-col gap-2">
+              <span className="text-sm font-medium" style={{ color: '#374151' }}>Description Paragraphs</span>
+              {(data.descriptions ?? ['']).map((para, i, arr) => (
+                <div key={i} style={{ position: 'relative' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+                    <span style={{ fontSize: '11px', color: '#9ca3af' }}>Paragraph {i + 1}</span>
+                    {arr.length > 1 && (
+                      <button
+                        type="button"
+                        onClick={() => handleData('descriptions', arr.filter((_, j) => j !== i))}
+                        style={{ background: 'none', border: 'none', color: '#9ca3af', fontSize: '12px', cursor: 'pointer', padding: '0 2px', lineHeight: 1 }}
+                      >
+                        ✕ Remove
+                      </button>
+                    )}
+                  </div>
+                  <textarea
+                    value={para}
+                    rows={4}
+                    onChange={e => {
+                      const next = arr.map((p, j) => j === i ? e.target.value : p)
+                      handleData('descriptions', next)
+                    }}
+                  />
+                </div>
+              ))}
+              <button
+                type="button"
+                onClick={() => handleData('descriptions', [...(data.descriptions ?? ['']), ''])}
+                style={{ alignSelf: 'flex-start', background: 'none', border: '1px dashed #d1d5db', borderRadius: '6px', color: '#6b7280', fontSize: '12px', cursor: 'pointer', padding: '4px 10px' }}
+              >
+                + Add Paragraph
+              </button>
+            </div>
           </div>
         </section>
 

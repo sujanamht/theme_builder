@@ -44,7 +44,7 @@ export default function AboutDetailPreview() {
         }}
       >
         {/* Heading + Description */}
-        <div style={{ textAlign: 'center', marginBottom: '56px' }}>
+        <div style={{ maxWidth: '720px', margin: '0 auto', textAlign: 'center', marginBottom: '56px' }}>
           <h2
             style={{
               color:      headingColor,
@@ -56,17 +56,21 @@ export default function AboutDetailPreview() {
           >
             {data.heading || 'About Us'}
           </h2>
-          <p
-            style={{
-              color:     descColor,
-              fontSize:  descSize,
-              lineHeight: 1.75,
-              maxWidth:  '640px',
-              margin:    '0 auto',
-            }}
-          >
-            {data.description || 'We build tools that help teams collaborate, move faster, and do their best work.'}
-          </p>
+          <div style={{ margin: '0 auto', textAlign: 'center' }}>
+            {(data.descriptions?.length ? data.descriptions : data.description ? [data.description] : ['We build tools that help teams collaborate, move faster, and do their best work.']).map((para, i, arr) => (
+              <p
+                key={i}
+                style={{
+                  color:      descColor,
+                  fontSize:   descSize,
+                  lineHeight: 1.75,
+                  margin:     i < arr.length - 1 ? '0 0 1em' : 0,
+                }}
+              >
+                {para}
+              </p>
+            ))}
+          </div>
         </div>
 
         {/* Cards */}

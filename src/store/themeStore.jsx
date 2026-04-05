@@ -413,10 +413,44 @@ const initialState = {
     },
   },
 
+  team: {
+    data: {
+      heading:     'Meet Our Team',
+      description: 'Together we create the future with focus on sustainability and innovation.',
+      members: [
+        { image: '', name: 'John Doe',   role: 'Director & Partner',  email: 'john@company.com', phone: '+1 234 567 890' },
+        { image: '', name: 'Jane Smith', role: 'Architect & Partner', email: 'jane@company.com', phone: '+1 234 567 891' },
+        { image: '', name: 'Mark Lee',   role: 'Project Manager',     email: 'mark@company.com', phone: '+1 234 567 892' },
+        { image: '', name: 'Sara Jones', role: 'Communications',      email: 'sara@company.com', phone: '+1 234 567 893' },
+        { image: '', name: 'Tom Brown',  role: 'Interior Architect',  email: 'tom@company.com',  phone: '+1 234 567 894' },
+        { image: '', name: 'Lisa Wang',  role: 'Architect',           email: 'lisa@company.com', phone: '+1 234 567 895' },
+      ],
+    },
+    template: {
+      sectionBackground: '#ffffff',
+      paddingY:          '80',
+      displayMode:       'grid',
+      columns:           '3',
+      imageHeight:          '280px',
+      imageBorderRadius:    '8px',
+      headingColor:         '#111111',
+      headingSize:          '2rem',
+      descColor:            '#888888',
+      descSize:             '0.95rem',
+      nameColor:            '#111111',
+      nameSize:             '1rem',
+      roleColor:            '#888888',
+      roleSize:             '0.875rem',
+      contactColor:         '#555555',
+      contactSize:          '0.8rem',
+      cardGap:              '32px',
+    },
+  },
+
   aboutDetail: {
     data: {
-      heading:     'About Us',
-      description: 'We build tools that help teams collaborate, move faster, and do their best work.',
+      heading:      'About Us',
+      descriptions: ['We build tools that help teams collaborate, move faster, and do their best work.'],
       cards: [
         {
           iconClass: 'fa-solid fa-layer-group',
