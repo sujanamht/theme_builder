@@ -63,6 +63,37 @@ function PostCard({ post, index, isOpen, onToggle, onRemove, onChange }) {
             onChange={v => onChange(index, 'coverImage', v)}
           />
 
+          <div>
+            <label style={{ fontSize: '12px', fontWeight: 500 }}>Content Paragraphs</label>
+            {(post.paragraphs ?? ['']).map((para, pi) => (
+              <div key={pi} style={{ position: 'relative', marginBottom: '8px' }}>
+                <textarea
+                  value={para}
+                  rows={4}
+                  placeholder="Paragraph text..."
+                  style={{ width: '100%', boxSizing: 'border-box' }}
+                  onChange={e => {
+                    const newParas = [...(post.paragraphs ?? [''])]
+                    newParas[pi] = e.target.value
+                    onChange(index, 'paragraphs', newParas)
+                  }}
+                />
+                {(post.paragraphs ?? ['']).length > 1 && (
+                  <button
+                    onClick={() => {
+                      const newParas = (post.paragraphs ?? ['']).filter((_, idx) => idx !== pi)
+                      onChange(index, 'paragraphs', newParas)
+                    }}
+                    style={{ position: 'absolute', top: '4px', right: '4px', background: 'none', border: 'none', cursor: 'pointer', fontSize: '12px', lineHeight: 1 }}
+                  >✕</button>
+                )}
+              </div>
+            ))}
+            <button onClick={() => onChange(index, 'paragraphs', [...(post.paragraphs ?? ['']), ''])}>
+              + Add Paragraph
+            </button>
+          </div>
+
 
         </div>
       )}
@@ -109,6 +140,7 @@ export default function BlogListBuilder({ activeTab = 'content' }) {
         author: '',
         date: '',
         tags: [],
+        paragraphs: [''],
       }],
     })
   }

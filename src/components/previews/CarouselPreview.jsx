@@ -197,7 +197,7 @@ export default function CarouselPreview() {
                   {slide.subtitle && <p style={subtitleStyle}>{slide.subtitle}</p>}
                   <button style={{
                     background:   template.dotColor || '#1e3a8a',
-                    color:        '#ffffff',
+                    color:        '#050404',
                     padding:      '10px 28px',
                     borderRadius: '6px',
                     border:       'none',

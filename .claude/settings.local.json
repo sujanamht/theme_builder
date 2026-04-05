@@ -12,7 +12,8 @@
       "Bash(for dir:*)",
       "Bash(do echo:*)",
       "Read(//c/Users/Suuzz/Documents/github/theme_builder/**)",
-      "Bash(done)"
+      "Bash(done)",
+      "Bash(python3:*)"
     ]
   }
 }

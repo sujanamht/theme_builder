@@ -1,4 +1,4 @@
-import { useSearchParams } from 'react-router-dom'
+import { useSearchParams, useNavigate, useLocation } from 'react-router-dom'
 import { useTheme, useDarkMode } from '../../store/themeStore.jsx'
 import { hexToRgba } from '../../utils/colorUtils.js'
 import { CONTENT_MAX_WIDTH } from '../../constants/layout.js'
@@ -10,6 +10,9 @@ export default function BlogPostPreview() {
   const { globalTheme } = theme
   const darkMode = useDarkMode()
   const [searchParams] = useSearchParams()
+  const navigate = useNavigate()
+  const { pathname } = useLocation()
+  const isPreview = pathname.startsWith('/preview')
 
   const postId = searchParams.get('postId')
   const posts  = theme.bloglist?.data?.posts ?? []
@@ -38,12 +41,36 @@ export default function BlogPostPreview() {
     }}>
       {/* Featured image — full width, max-height 480px */}
       {post.coverImage && (
-        <div style={{ width: '100%', maxHeight: '480px', overflow: 'hidden' }}>
+        <div style={{ position: 'relative', width: '100%' }}>
           <img
             src={post.coverImage}
             alt={post.title}
-            style={{ width: '100%', height: '480px', objectFit: 'cover', display: 'block' }}
+            style={{ width: '100%', maxHeight: '380px', objectFit: 'cover', display: 'block' }}
           />
+          {isPreview && (
+            <button
+              onClick={() => navigate('/preview/blog')}
+              style={{
+                position:       'absolute',
+                top:            '20px',
+                left:           '24px',
+                background:     'rgba(0,0,0,0.45)',
+                border:         'none',
+                borderRadius:   '6px',
+                cursor:         'pointer',
+                color:          '#ffffff',
+                fontSize:       '13px',
+                fontWeight:     600,
+                padding:        '8px 16px',
+                display:        'flex',
+                alignItems:     'center',
+                gap:            '6px',
+                backdropFilter: 'blur(4px)',
+              }}
+            >
+              ← Back to Blog
+            </button>
+          )}
         </div>
       )}
 

@@ -1,4 +1,5 @@
 import { useState, useRef } from 'react'
+import { Link, useLocation } from 'react-router-dom'
 import { useTheme, useDarkMode } from '../../store/themeStore.jsx'
 import { useSelection } from '../../store/selectionContext.jsx'
 import CanvasUpload from '../ui/CanvasUpload.jsx'
@@ -6,7 +7,16 @@ import { useContainerWidth } from '../../hooks/useContainerWidth.js'
 import { CONTENT_MAX_WIDTH } from '../../constants/layout.js'
 import { parsePx } from '../../utils/style.js'
 
-function DropdownLink({ link, linkStyle, textColor, fontSize, darkMode, onInternalNav, isActivePage, accentColor }) {
+const PAGE_MAP = {
+  'home':     '/preview/home',
+  'about':    '/preview/about',
+  'contact':  '/preview/contact',
+  'blog':     '/preview/blog',
+  'services': '/preview/services',
+  'custom':   '/preview/custom',
+}
+
+function DropdownLink({ link, linkStyle, textColor, fontSize, darkMode, onInternalNav, isActivePage, accentColor, isPreview }) {
   const [open, setOpen] = useState(false)
   const dropdown = link.dropdown ?? []
   const hasDropdown = dropdown.length > 0
@@ -42,27 +52,31 @@ function DropdownLink({ link, linkStyle, textColor, fontSize, darkMode, onIntern
     transition:     'background 0.1s',
   }
 
+  const previewHref = PAGE_MAP[link.url?.toLowerCase()] ?? PAGE_MAP[link.label?.toLowerCase()] ?? '#'
+  const sharedStyle = { ...linkStyle, ...activeStyle, display: 'flex', alignItems: 'center', gap: '4px', userSelect: 'none' }
+  const linkContent = (
+    <>
+      {link.label || 'Link'}
+      {hasDropdown && <span style={{ fontSize: '10px', opacity: 0.6, lineHeight: 1 }}>▾</span>}
+    </>
+  )
+
   return (
     <li style={{ position: 'relative' }}
       onMouseEnter={() => hasDropdown && setOpen(true)}
       onMouseLeave={() => setOpen(false)}
     >
-      {link.pageId != null ? (
+      {isPreview ? (
+        <Link to={previewHref} style={sharedStyle}>{linkContent}</Link>
+      ) : link.pageId != null ? (
         <button
           onClick={() => onInternalNav?.(link.pageId)}
-          style={{ ...linkStyle, ...activeStyle, display: 'flex', alignItems: 'center', gap: '4px', userSelect: 'none', background: 'none', border: 'none', padding: 0 }}
+          style={{ ...sharedStyle, background: 'none', border: 'none', padding: 0 }}
         >
-          {link.label || 'Link'}
-          {hasDropdown && <span style={{ fontSize: '10px', opacity: 0.6, lineHeight: 1 }}>▾</span>}
+          {linkContent}
         </button>
       ) : (
-        <a
-          href={link.url || '#'}
-          style={{ ...linkStyle, ...activeStyle, display: 'flex', alignItems: 'center', gap: '4px', userSelect: 'none' }}
-        >
-          {link.label || 'Link'}
-          {hasDropdown && <span style={{ fontSize: '10px', opacity: 0.6, lineHeight: 1 }}>▾</span>}
-        </a>
+        <a href={link.url || '#'} style={sharedStyle}>{linkContent}</a>
       )}
 
       {hasDropdown && open && (
@@ -121,6 +135,8 @@ export default function NavbarPreview() {
   const selectedId = useSelection()
   const isActive = selectedId === 'navbar' || selectedId?.startsWith('navbar-')
   const darkMode = useDarkMode()
+  const { pathname } = useLocation()
+  const isPreview = pathname.startsWith('/preview')
 
   const activePage = theme.pages?.activePage
 
@@ -290,6 +306,7 @@ export default function NavbarPreview() {
                     onInternalNav={setActivePage}
                     isActivePage={link.pageId === activePage}
                     accentColor={template.accentColor || globalTheme.primaryColor}
+                    isPreview={isPreview}
                   />
                 ))}
               </ul>
@@ -311,18 +328,17 @@ export default function NavbarPreview() {
           boxSizing:        'border-box',
         }}>
           {links.map((link, i) => {
-            const isActive = link.pageId === activePage
+            const isActiveMobile = link.pageId === activePage
             const mobileItemStyle = {
               display:        'block',
               width:          '100%',
               padding:        '12px 24px',
-              color:          isActive
+              color:          isActiveMobile
                 ? (template.accentColor || globalTheme.primaryColor || '#6366f1')
                 : (template.textColor || (darkMode ? '#f4f4f5' : '#111827')),
-              fontWeight:     isActive ? '700' : undefined,
-              textDecoration: isActive ? 'underline' : 'none',
-              fontSize:       `${fontSize}px`,
+              fontWeight:     isActiveMobile ? '700' : undefined,
               textDecoration: 'none',
+              fontSize:       `${fontSize}px`,
               textAlign:      'left',
               background:     'none',
               border:         'none',
@@ -330,7 +346,17 @@ export default function NavbarPreview() {
               cursor:         'pointer',
               boxSizing:      'border-box',
             }
-            return link.pageId != null ? (
+            const previewHref = PAGE_MAP[link.url?.toLowerCase()] ?? PAGE_MAP[link.label?.toLowerCase()] ?? '#'
+            return isPreview ? (
+              <Link
+                key={i}
+                to={previewHref}
+                onClick={() => setMenuOpen(false)}
+                style={mobileItemStyle}
+              >
+                {link.label || 'Link'}
+              </Link>
+            ) : link.pageId != null ? (
               <button
                 key={i}
                 onClick={() => { setActivePage(link.pageId); setMenuOpen(false) }}
