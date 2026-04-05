@@ -33,7 +33,7 @@ export default function ServicesPreview() {
 
   const headingStyle = {
     color:        textColor,
-    fontSize:     `${Math.round(fontSize * 1.9)}px`,
+    fontSize:     template.headingSize || globalTheme.headingSize || `${Math.round(fontSize * 1.9)}px`,
     fontWeight:   '800',
     margin:       '0 0 10px',
     textAlign:    'center',
@@ -81,7 +81,7 @@ export default function ServicesPreview() {
 
   const descStyle = {
     color:      textColor,
-    fontSize:   `${fontSize}px`,
+    fontSize:   template.bodySize || globalTheme.bodySize || `${fontSize}px`,
     opacity:    0.65,
     margin:     0,
     lineHeight: '1.6',

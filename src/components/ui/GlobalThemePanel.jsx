@@ -57,6 +57,35 @@ export default function GlobalThemePanel() {
             ))}
           </select>
         </div>
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+          <span style={{ fontSize: '12px', fontWeight: '500', color: labelColor }}>Heading Size</span>
+          <select
+            value={globalTheme.headingSize ?? '2rem'}
+            onChange={e => updateGlobalTheme('headingSize', e.target.value)}
+            style={selectStyle}
+          >
+            <option value="1.5rem">Small (1.5rem)</option>
+            <option value="2rem">Medium (2rem)</option>
+            <option value="2.5rem">Large (2.5rem)</option>
+            <option value="3rem">X-Large (3rem)</option>
+            <option value="3.5rem">XX-Large (3.5rem)</option>
+          </select>
+        </div>
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+          <span style={{ fontSize: '12px', fontWeight: '500', color: labelColor }}>Body Font Size</span>
+          <select
+            value={globalTheme.bodySize ?? '1rem'}
+            onChange={e => updateGlobalTheme('bodySize', e.target.value)}
+            style={selectStyle}
+          >
+            <option value="0.8rem">Small (0.8rem)</option>
+            <option value="0.875rem">Medium-Small (0.875rem)</option>
+            <option value="1rem">Medium (1rem)</option>
+            <option value="1.125rem">Large (1.125rem)</option>
+          </select>
+        </div>
       </div>
     </div>
   )

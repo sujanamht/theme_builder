@@ -1,6 +1,7 @@
 import { useTheme } from '../../store/themeStore.jsx'
 import ColorInput from '../ui/ColorInput.jsx'
 import RangeField from '../ui/RangeField.jsx'
+import ImageUploader from '../ui/ImageUploader.jsx'
 
 export default function PageBannerBuilder({ activeTab = 'content' }) {
   const { theme, updateSection, updatePageBannerData } = useTheme()
@@ -14,14 +15,6 @@ export default function PageBannerBuilder({ activeTab = 'content' }) {
 
   function handleTemplate(key, value) {
     updateSection('pageBanner', 'template', { ...template, [key]: value })
-  }
-
-  function handleImageUpload(e) {
-    const file = e.target.files[0]
-    if (!file) return
-    const reader = new FileReader()
-    reader.onload = ev => handleData('backgroundImage', ev.target.result)
-    reader.readAsDataURL(file)
   }
 
   const pageLabel = activePage.charAt(0).toUpperCase() + activePage.slice(1)
@@ -55,33 +48,11 @@ export default function PageBannerBuilder({ activeTab = 'content' }) {
             />
           </label>
 
-          <label className="flex flex-col gap-1">
-            Background Image URL
-            <input
-              type="text"
-              value={typeof pageData.backgroundImage === 'string' && !pageData.backgroundImage.startsWith('data:') ? pageData.backgroundImage : ''}
-              placeholder="https://example.com/image.jpg"
-              onChange={e => handleData('backgroundImage', e.target.value)}
-            />
-          </label>
-
-          <label className="flex flex-col gap-1">
-            Upload Background Image
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleImageUpload}
-            />
-          </label>
-
-          {pageData.backgroundImage && (
-            <button
-              onClick={() => handleData('backgroundImage', '')}
-              style={{ background: 'none', border: 'none', color: '#ef4444', fontSize: '12px', cursor: 'pointer', padding: '4px 0', textDecoration: 'underline' }}
-            >
-              ✕ Remove image
-            </button>
-          )}
+          <ImageUploader
+            label="Background Image"
+            value={pageData.backgroundImage ?? ''}
+            onChange={v => updatePageBannerData(activePage, 'backgroundImage', v)}
+          />
         </div>
       </div>
     )
@@ -132,9 +103,10 @@ export default function PageBannerBuilder({ activeTab = 'content' }) {
           />
           <RangeField
             label="Overlay Opacity"
-            value={template.overlayOpacity ?? 0.45}
+            value={parseFloat(template.overlayOpacity) || 0.45}
             onChange={v => handleTemplate('overlayOpacity', v)}
             min={0} max={1} step={0.05}
+            unit=""
           />
         </div>
       </section>

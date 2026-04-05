@@ -5,7 +5,7 @@
  * in arithmetic or CSS calc() expressions.
  */
 export default function RangeField({ label, value, onChange, min, max, step = 1, unit = 'px' }) {
-  const numeric = parseInt(value, 10)
+  const numeric = parseFloat(value)
   const current = isNaN(numeric) ? min : Math.min(Math.max(numeric, min), max)
 
   return (

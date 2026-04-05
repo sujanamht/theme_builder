@@ -12,9 +12,9 @@ export default function AboutDetailPreview() {
 
   const sectionBackground = template.sectionBackground || '#f8f8f8'
   const headingColor      = template.headingColor      || '#111111'
-  const headingSize       = template.headingSize       || '2.2rem'
+  const headingSize       = template.headingSize       || globalTheme.headingSize || '2.2rem'
   const descColor         = template.descColor         || '#666666'
-  const descSize          = template.descSize          || '1rem'
+  const descSize          = template.descSize          || globalTheme.bodySize   || '1rem'
   const cardBackground    = template.cardBackground    || '#ffffff'
   const cardShadow        = template.cardShadow        || '0 4px 24px rgba(0,0,0,0.08)'
   const cardPadding       = template.cardPadding       || '40px 32px'
@@ -23,7 +23,7 @@ export default function AboutDetailPreview() {
   const titleColor        = template.titleColor        || '#111111'
   const titleSize         = template.titleSize         || '0.82rem'
   const bodyColor         = template.bodyColor         || '#888888'
-  const bodySize          = template.bodySize          || '0.92rem'
+  const bodySize          = template.bodySize          || globalTheme.bodySize   || '0.92rem'
 
   return (
     <section

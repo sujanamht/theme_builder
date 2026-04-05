@@ -5,6 +5,7 @@ import { parsePx } from '../../utils/style.js'
 export default function TeamPreview() {
   const { theme } = useTheme()
   const { data, template } = theme.team
+  const { globalTheme } = theme
 
   const paddingY = parsePx(template.paddingY) ?? parsePx(template.sectionPaddingTop) ?? 80
 
@@ -14,9 +15,9 @@ export default function TeamPreview() {
   const imageHeight       = template.imageHeight       || '280px'
   const imageBorderRadius = template.imageBorderRadius || '8px'
   const headingColor      = template.headingColor      || '#111111'
-  const headingSize       = template.headingSize       || '2rem'
+  const headingSize       = template.headingSize       || globalTheme.headingSize || '2rem'
   const descColor         = template.descColor         || '#888888'
-  const descSize          = template.descSize          || '0.95rem'
+  const descSize          = template.descSize          || globalTheme.bodySize    || '0.95rem'
   const nameColor         = template.nameColor         || '#111111'
   const nameSize          = template.nameSize          || '1rem'
   const roleColor         = template.roleColor         || '#888888'

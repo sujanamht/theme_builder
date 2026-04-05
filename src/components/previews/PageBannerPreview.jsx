@@ -2,9 +2,10 @@ import { useTheme } from '../../store/themeStore.jsx'
 
 export default function PageBannerPreview() {
   const { theme } = useTheme()
-  const activePage = theme.pages?.activePage ?? 'home'
-  const pageData   = theme.pageBanner?.pages?.[activePage] ?? {}
-  const template   = theme.pageBanner?.template ?? {}
+  const activePage   = theme.pages?.activePage ?? 'home'
+  const pageData     = theme.pageBanner?.pages?.[activePage] ?? {}
+  const template     = theme.pageBanner?.template ?? {}
+  const { globalTheme } = theme
 
   return (
     <section
@@ -27,7 +28,7 @@ export default function PageBannerPreview() {
           inset:           0,
           zIndex:          1,
           backgroundColor: template.overlayColor ?? '#000000',
-          opacity:         template.overlayOpacity ?? 0.45,
+          opacity:         parseFloat(template.overlayOpacity) || 0.45,
           pointerEvents:   'none',
         }}
       />
@@ -51,7 +52,7 @@ export default function PageBannerPreview() {
         <h1
           style={{
             color:      template.headingColor  || '#ffffff',
-            fontSize:   template.headingSize   || '2.8rem',
+            fontSize:   template.headingSize   || globalTheme.headingSize || '2.8rem',
             fontWeight: template.headingWeight || '700',
             margin:     0,
             lineHeight: 1.2,
@@ -64,7 +65,7 @@ export default function PageBannerPreview() {
           <p
             style={{
               color:      template.subheadingColor || '#eeeeee',
-              fontSize:   template.subheadingSize  || '1rem',
+              fontSize:   template.subheadingSize  || globalTheme.bodySize || '1rem',
               margin:     '12px 0 0',
               lineHeight: 1.6,
             }}

@@ -51,6 +51,8 @@ const initialState = {
     accentColor:     '#06b6d4',
     spacingScale:    '4',
     darkMode:        false,
+    headingSize:     '2rem',
+    bodySize:        '1rem',
   },
 
   pages: {

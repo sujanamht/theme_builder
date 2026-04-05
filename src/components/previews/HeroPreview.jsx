@@ -86,7 +86,7 @@ export default function HeroPreview() {
               {data.headline ? (
                 <h1 style={{
                   fontFamily:    "'Syne', Georgia, serif",
-                  fontSize:      isMobile ? '2rem' : `${Number(template.headingSize ?? 56)}px`,
+                  fontSize:      isMobile ? '2rem' : (template.headingSize ? `${Number(template.headingSize)}px` : (globalTheme.headingSize || '3.5rem')),
                   fontWeight:    500,
                   lineHeight:    '1.08',
                   letterSpacing: '-0.03em',

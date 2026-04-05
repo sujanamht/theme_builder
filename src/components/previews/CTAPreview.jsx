@@ -29,7 +29,7 @@ export default function CTAPreview() {
 
   const headingStyle = {
     color:         textColor,
-    fontSize:      isMobile ? '24px' : `${Math.round(fontSize * 2)}px`,
+    fontSize:      isMobile ? '24px' : (template.headingSize || globalTheme.headingSize || `${Math.round(fontSize * 2)}px`),
     fontWeight:    '800',
     margin:        '0 0 12px',
     lineHeight:    '1.2',
@@ -38,7 +38,7 @@ export default function CTAPreview() {
 
   const subheadingStyle = {
     color:      textColor,
-    fontSize:   isMobile ? '14px' : `${Math.round(fontSize * 1.1)}px`,
+    fontSize:   isMobile ? '14px' : (template.bodySize || globalTheme.bodySize || `${Math.round(fontSize * 1.1)}px`),
     opacity:    0.7,
     margin:     '0 0 32px',
     lineHeight: '1.6',

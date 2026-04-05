@@ -26,6 +26,7 @@ function ArrowRight({ color, size }) {
 export default function CarouselPreview() {
   const { theme, updateSection } = useTheme()
   const { data, template } = theme.carousel
+  const { globalTheme } = theme
   const selectedId = useSelection()
   const isActive = selectedId === 'carousel' || selectedId?.startsWith('carousel-')
 
@@ -105,7 +106,7 @@ export default function CarouselPreview() {
 
   const titleStyle = {
     color:        template.textColor || '#ffffff',
-    fontSize:     isMobile ? '1.6rem' : '2.8rem',
+    fontSize:     template.headingSize || globalTheme.headingSize || (isMobile ? '1.6rem' : '2.8rem'),
     fontWeight:   800,
     margin:       '0 0 12px',
     lineHeight:   '1.15',
@@ -114,7 +115,7 @@ export default function CarouselPreview() {
 
   const subtitleStyle = {
     color:      template.textColor || '#ffffff',
-    fontSize:   isMobile ? '13px' : `${fontSize}px`,
+    fontSize:   isMobile ? '13px' : (template.bodySize || globalTheme.bodySize || `${fontSize}px`),
     opacity:    0.85,
     textShadow: '0 1px 6px rgba(0,0,0,0.4)',
     maxWidth:   '600px',
