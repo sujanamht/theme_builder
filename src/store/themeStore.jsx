@@ -10,9 +10,10 @@ const INITIAL_PAGES = [
      Both the Home page and the About page render from theme.about — single source
      of truth for the "About" content block. If they ever need independent content,
      add a separate 'about2' (or similar) key and split the initial state. */
-  { id: 'about',   label: 'About',   sections: ['about', 'cta'] },
+  { id: 'about',    label: 'About',    sections: ['pageBanner', 'about', 'cta'] },
+  { id: 'services', label: 'Services', sections: ['pageBanner', 'services'] },
   { id: 'contact', label: 'Contact', sections: ['contact', 'form'] },
-  { id: 'blog',    label: 'Blog',    sections: ['bloglist', 'blogpost'] },
+  { id: 'blog',    label: 'Blog',    sections: ['pageBanner', 'bloglist', 'blogpost'] },
   { id: 'custom',  label: 'Custom',  sections: [] },
 ]
 
@@ -412,6 +413,76 @@ const initialState = {
     },
   },
 
+  aboutDetail: {
+    data: {
+      heading:     'About Us',
+      description: 'We build tools that help teams collaborate, move faster, and do their best work.',
+      cards: [
+        {
+          iconClass: 'fa-solid fa-layer-group',
+          title:     'OUR MISSION',
+          body:      'We are driven by a mission to simplify complex workflows and empower teams to do their best work every single day.',
+        },
+        {
+          iconClass: 'fa-solid fa-drafting-compass',
+          title:     'OUR VISION',
+          body:      'Our vision is a world where every team — regardless of size — has access to tools that help them collaborate, ship, and grow.',
+        },
+        {
+          iconClass: 'fa-solid fa-bullseye',
+          title:     'OUR GOAL',
+          body:      'Our goal is to build the most intuitive and powerful workspace platform that teams actually enjoy using every day.',
+        },
+      ],
+    },
+    template: {
+      overlapAmount:    '80px',
+      cardBackground:   '#ffffff',
+      cardShadow:       '0 4px 24px rgba(0,0,0,0.10)',
+      iconColor:        '',
+      iconSize:         '2rem',
+      titleColor:       '#111111',
+      titleSize:        '0.85rem',
+      bodyColor:        '#555555',
+      bodySize:         '0.95rem',
+      buttonBg:         '',
+      buttonTextColor:  '#ffffff',
+      cardPadding:      '2.5rem 2rem',
+      sectionBackground:  '#ffffff',
+      backgroundImage:    '',
+      backgroundSize:     'cover',
+      backgroundPosition: 'center',
+      backgroundRepeat:   'no-repeat',
+      overlayColor:          '',
+      overlayOpacity:        0,
+      contentTopSpacing:     '40px',
+      contentBottomSpacing:  '100px',
+    },
+  },
+
+  pageBanner: {
+    template: {
+      backgroundSize:     'cover',
+      backgroundPosition: 'center',
+      overlayColor:       '#000000',
+      overlayOpacity:     0.45,
+      bannerHeight:       '400px',
+      headingColor:       '#ffffff',
+      headingSize:        '2.8rem',
+      headingWeight:      '700',
+      subheadingColor:    '#eeeeee',
+      subheadingSize:     '1rem',
+      textAlign:          'center',
+    },
+    pages: {
+      home:     { heading: 'Welcome',       subheading: '', backgroundImage: '' },
+      about:    { heading: 'About Us',      subheading: '', backgroundImage: '' },
+      services: { heading: 'Our Services',  subheading: '', backgroundImage: '' },
+      contact:  { heading: 'Contact Us',    subheading: '', backgroundImage: '' },
+      blog:     { heading: 'Blog',          subheading: '', backgroundImage: '' },
+    },
+  },
+
   form: {
     data: {
       heading:     'Request a demo',
@@ -454,6 +525,22 @@ export function ThemeProvider({ children }) {
   useEffect(() => {
     themeService.save(theme)
   }, [theme])
+
+  function updatePageBannerData(page, key, value) {
+    setTheme(prev => ({
+      ...prev,
+      pageBanner: {
+        ...prev.pageBanner,
+        pages: {
+          ...prev.pageBanner.pages,
+          [page]: {
+            ...(prev.pageBanner.pages?.[page] ?? {}),
+            [key]: value,
+          },
+        },
+      },
+    }))
+  }
 
   function updateSection(section, field, value) {
     setTheme(prev => ({
@@ -593,7 +680,7 @@ export function ThemeProvider({ children }) {
   return (
     <ThemeContext.Provider value={{
       theme, setTheme,
-      updateSection, updateGlobalTheme,
+      updateSection, updatePageBannerData, updateGlobalTheme,
       updatePageOrder, setPageSections,
       addPage, addCustomPage, deletePage, setActivePage, renamePage, removeSectionFromAllPages, setActivePostId,
       addSection, removeSection,

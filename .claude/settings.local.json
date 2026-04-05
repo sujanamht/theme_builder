@@ -6,7 +6,9 @@
       "Bash(grep -n \"const.*Ref.*useRef\\\\|const.*\\\\[.*Width.*\\\\].*useState.*9999\\\\|useContainerWidth\\\\|containerRef\\\\|navRef\" /c/Users/Suuzz/Documents/github/theme_builder/src/components/previews/*.jsx)",
       "Bash(xargs grep:*)",
       "Bash(find \"C:\\\\Users\\\\Suuzz\\\\Documents\\\\github\\\\theme_builder\\\\src\\\\components\\\\previews\" -name \"*.jsx\" -exec grep \"^import\" {})",
-      "Bash(find \"C:\\\\Users\\\\Suuzz\\\\Documents\\\\github\\\\theme_builder\\\\src\\\\components\\\\builders\" -name \"*.jsx\" -exec grep \"^import\" {})"
+      "Bash(find \"C:\\\\Users\\\\Suuzz\\\\Documents\\\\github\\\\theme_builder\\\\src\\\\components\\\\builders\" -name \"*.jsx\" -exec grep \"^import\" {})",
+      "Bash(node:*)",
+      "Bash(node -e \":*)"
     ]
   }
 }

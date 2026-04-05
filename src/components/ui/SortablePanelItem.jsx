@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 
@@ -21,6 +22,7 @@ export default function SortablePanelItem({
   t,
   onSelect, onToggleVisibility,
 }) {
+  const [hovered, setHovered] = useState(false)
   const {
     attributes,
     listeners,
@@ -40,13 +42,17 @@ export default function SortablePanelItem({
         opacity: isDragging ? 0.4 : 1,
       }}
     >
-      <div style={{
-        display: 'flex', alignItems: 'center', gap: '6px',
-        padding: '5px 6px 5px 4px', borderRadius: '6px',
-        borderLeft: isActive ? `3px solid ${typeColor ?? '#6366f1'}` : '3px solid transparent',
-        background: isActive ? t.activeItemBg : 'transparent',
-        transition: 'all 0.2s ease',
-      }}>
+      <div
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+        style={{
+          display: 'flex', alignItems: 'center', gap: '6px',
+          padding: '5px 6px 5px 4px', borderRadius: '6px',
+          borderLeft: isActive ? `3px solid ${typeColor ?? '#6366f1'}` : '3px solid transparent',
+          background: isActive ? t.activeItemBg : 'transparent',
+          transition: 'all 0.2s ease',
+        }}
+      >
 
         {/* Drag handle */}
         <div
@@ -99,6 +105,7 @@ export default function SortablePanelItem({
         >
           <IconEye color={isVis ? t.textMuted : t.textLabel} crossed={!isVis} />
         </button>
+
       </div>
     </li>
   )
