@@ -5,6 +5,7 @@ import { hexToRgba } from '../../utils/colorUtils.js'
 import { CONTENT_MAX_WIDTH } from '../../constants/layout.js'
 import DotIndicators from '../ui/DotIndicators.jsx'
 import { parsePx } from '../../utils/style.js'
+import { headingStyle, subheadingStyle } from '../../utils/typography.js'
 
 export default function ServicesPreview() {
   const { theme } = useTheme()
@@ -21,7 +22,7 @@ export default function ServicesPreview() {
 
   const textColor   = template.textColor   || (darkMode ? '#f4f4f5' : '#111827')
   const accentColor = template.accentColor || globalTheme.primaryColor || '#6366f1'
-  const fontSize    = parsePx(template.fontSize    || '15px')
+  const fontSize    = parsePx(template.fontSize    || globalTheme.bodySize || '15px')
 
   const sectionStyle = {
     backgroundColor: template.bgColor  || (darkMode ? '#18181b' : '#f9fafb'),
@@ -31,23 +32,8 @@ export default function ServicesPreview() {
     fontFamily:      template.fontFamily || globalTheme.fontFamily || 'inherit',
   }
 
-  const headingStyle = {
-    color:        textColor,
-    fontSize:     template.headingSize || globalTheme.headingSize || `${Math.round(fontSize * 1.9)}px`,
-    fontWeight:   '800',
-    margin:       '0 0 10px',
-    textAlign:    'center',
-    lineHeight:   '1.2',
-  }
-
-  const subheadingStyle = {
-    color:      textColor,
-    fontSize:   `${Math.round(fontSize * 1.05)}px`,
-    opacity:    0.6,
-    margin:     '0 0 32px',
-    textAlign:  'center',
-    lineHeight: '1.6',
-  }
+  const hStyle = headingStyle({ template, globalTheme, textColor })
+  const sStyle = subheadingStyle({ template, globalTheme, textColor, fontSize })
 
   const cardStyle = {
     backgroundColor: template.cardBg       || (darkMode ? '#27272a' : '#ffffff'),
@@ -133,8 +119,8 @@ export default function ServicesPreview() {
   return (
     <section style={sectionStyle}>
       <div style={innerStyle}>
-        {heading    && <h2 style={headingStyle}>{heading}</h2>}
-        {subheading && <p style={subheadingStyle}>{subheading}</p>}
+        {heading    && <h2 style={hStyle}>{heading}</h2>}
+        {subheading && <p style={sStyle}>{subheading}</p>}
         {items.length === 0 && <p style={emptyStyle}>No services yet — add some in the editor.</p>}
       </div>
 

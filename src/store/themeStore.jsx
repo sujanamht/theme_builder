@@ -566,6 +566,26 @@ const initialState = {
       padding:    48,
     },
   },
+
+  partners: {
+    data: {
+      heading: 'Our Partners',
+      items: [
+        { image: '', name: 'Partner 1' },
+        { image: '', name: 'Partner 2' },
+        { image: '', name: 'Partner 3' },
+        { image: '', name: 'Partner 4' },
+      ],
+    },
+    template: {
+      bgColor:      '',
+      headingColor: '',
+      padding:      48,
+      logoHeight:   '60px',
+      autoScroll:   true,
+      speed:        30,
+    },
+  },
 }
 
 const ThemeContext = createContext(null)

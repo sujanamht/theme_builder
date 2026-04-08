@@ -19,7 +19,7 @@ export default function FooterPreview() {
 
   const bg          = template.bgColor   || '#0f1117'
   const accentColor = template.linkColor || globalTheme.primaryColor || '#6366f1'
-  const fontSize    = `${parsePx(template.fontSize  || '14px')}px`
+  const fontSize    = `${parsePx(template.fontSize  || globalTheme.bodySize || '14px')}px`
 
   const footerStyle = {
     backgroundColor: bg,

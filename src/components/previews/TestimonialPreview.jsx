@@ -6,6 +6,7 @@ import { useContainerWidth } from '../../hooks/useContainerWidth.js'
 import { CONTENT_MAX_WIDTH } from '../../constants/layout.js'
 import DotIndicators from '../ui/DotIndicators.jsx'
 import { parsePx } from '../../utils/style.js'
+import { headingStyle } from '../../utils/typography.js'
 
 function getInitials(name) {
   if (!name) return '?'
@@ -86,7 +87,7 @@ export default function TestimonialPreview() {
     updateSection('testimonial', 'data', { ...data, items: updated })
   }
 
-  const fontSize  = parsePx(template.fontSize) || 14
+  const fontSize  = parsePx(template.fontSize) || parsePx(globalTheme.bodySize) || 14
   const textColor = template.textColor || (darkMode ? '#f4f4f5' : '#111827')
 
   const innerStyle = { maxWidth: CONTENT_MAX_WIDTH, margin: '0 auto', width: '100%', boxSizing: 'border-box' }
@@ -101,13 +102,7 @@ export default function TestimonialPreview() {
     fontFamily:      template.fontFamily || globalTheme.fontFamily || 'inherit',
   }
 
-  const headingStyle = {
-    color:        textColor,
-    fontSize:     `${Math.round(fontSize * 1.6)}px`,
-    fontWeight:   '700',
-    marginBottom: '28px',
-    textAlign:    'center',
-  }
+  const hStyle = headingStyle({ template, globalTheme, textColor })
 
   const cardStyle = {
     backgroundColor: template.cardBg      || (darkMode ? '#27272a' : '#ffffff'),
@@ -213,7 +208,7 @@ export default function TestimonialPreview() {
     <section ref={ref} style={sectionStyle}>
       <div style={innerStyle}>
       {heading
-        ? <h2 style={headingStyle}>{heading}</h2>
+        ? <h2 style={hStyle}>{heading}</h2>
         : <div style={{ width: '280px', height: '28px', borderRadius: '6px', backgroundColor: darkMode ? '#3f3f46' : '#d1d5db', margin: '0 auto 28px' }} />
       }
 

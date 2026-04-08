@@ -32,6 +32,7 @@ import BlogPostBuilder      from './components/builders/BlogPostBuilder.jsx'
 import AboutDetailBuilder  from './components/builders/AboutDetailBuilder.jsx'
 import PageBannerBuilder   from './components/builders/PageBannerBuilder.jsx'
 import TeamBuilder         from './components/builders/TeamBuilder.jsx'
+import PartnersBuilder    from './components/builders/PartnersBuilder.jsx'
 
 import AnnouncementPreview  from './components/previews/AnnouncementPreview.jsx'
 import NavbarPreview        from './components/previews/NavbarPreview.jsx'
@@ -51,6 +52,7 @@ import BlogPostPreview      from './components/previews/BlogPostPreview.jsx'
 import AboutDetailPreview  from './components/previews/AboutDetailPreview.jsx'
 import PageBannerPreview   from './components/previews/PageBannerPreview.jsx'
 import TeamPreview         from './components/previews/TeamPreview.jsx'
+import PartnersPreview    from './components/previews/PartnersPreview.jsx'
 
 /* ─── registries (keyed by type, not instance id) ─── */
 const COMPONENT_LABELS = {
@@ -72,6 +74,7 @@ const COMPONENT_LABELS = {
   aboutDetail:  'About Detail',
   pageBanner:   'Page Banner',
   team:         'Team',
+  partners:     'Partners',
 }
 
 /* Per-type accent colors for the library badge */
@@ -94,9 +97,10 @@ const TYPE_COLORS = {
   aboutDetail:  '#14b8a6',
   pageBanner:   '#0ea5e9',
   team:         '#f59e0b',
+  partners:     '#0ea5e9',
 }
 
-const ALL_TYPES = ['announcement', 'navbar', 'about', 'aboutDetail', 'pageBanner', 'team', 'services', 'carousel', 'testimonial', 'gallery', 'cta', 'footer', 'hero', 'contact', 'form', 'socialmedia', 'bloglist', 'blogPost']
+const ALL_TYPES = ['announcement', 'navbar', 'about', 'aboutDetail', 'pageBanner', 'team', 'partners', 'services', 'carousel', 'testimonial', 'gallery', 'cta', 'footer', 'hero', 'contact', 'form', 'socialmedia', 'bloglist', 'blogPost']
 
 const GLOBAL_TYPES = new Set(['announcement', 'navbar', 'footer'])
 
@@ -119,6 +123,7 @@ const BUILDERS = {
   aboutDetail:  <AboutDetailBuilder />,
   pageBanner:   <PageBannerBuilder />,
   team:         <TeamBuilder />,
+  partners:     <PartnersBuilder />,
 }
 
 const PREVIEWS = {
@@ -140,9 +145,10 @@ const PREVIEWS = {
   aboutDetail:  <AboutDetailPreview />,
   pageBanner:   <PageBannerPreview />,
   team:         <TeamPreview />,
+  partners:     <PartnersPreview />,
 }
 
-const INITIAL_VISIBILITY = { announcement: true, navbar: true, carousel: true, about: true, aboutDetail: true, pageBanner: true, team: true, services: true, testimonial: true, gallery: true, cta: true, footer: true, hero: true, contact: true, form: true, socialmedia: true, bloglist: true, blogPost: true }
+const INITIAL_VISIBILITY = { announcement: true, navbar: true, carousel: true, about: true, aboutDetail: true, pageBanner: true, team: true, partners: true, services: true, testimonial: true, gallery: true, cta: true, footer: true, hero: true, contact: true, form: true, socialmedia: true, bloglist: true, blogPost: true }
 
 /* ─── id helpers ─── */
 function getType(id)  { return id.replace(/-\d+$/, '') }
@@ -412,6 +418,14 @@ function Shell({
   }, [])
 
   useEffect(() => { setConfirmingRemove(false) }, [selectedComponent])
+
+  useEffect(() => {
+    const font = theme.globalTheme?.fontFamily || 'Inter'
+    const id   = 'global-font-link'
+    let el = document.getElementById(id)
+    if (!el) { el = document.createElement('link'); el.id = id; el.rel = 'stylesheet'; document.head.appendChild(el) }
+    el.href = `https://fonts.googleapis.com/css2?family=${font.replace(/ /g, '+')}:wght@400;500;600;700;800&display=swap`
+  }, [theme.globalTheme?.fontFamily])
 
   useEffect(() => {
     theme.pages?.list?.forEach(page => {

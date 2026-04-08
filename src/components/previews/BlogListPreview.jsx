@@ -5,6 +5,7 @@ import ResponsiveGrid from '../ui/ResponsiveGrid.jsx'
 import { hexToRgba } from '../../utils/colorUtils.js'
 import { CONTENT_MAX_WIDTH } from '../../constants/layout.js'
 import { parsePx } from '../../utils/style.js'
+import { headingStyle, subheadingStyle } from '../../utils/typography.js'
 
 export default function BlogListPreview() {
   const { theme } = useTheme()
@@ -43,23 +44,8 @@ export default function BlogListPreview() {
     boxSizing: 'border-box',
   }
 
-  const headingStyle = {
-    color:      textColor,
-    fontSize:   `${Math.round(fontSize * 1.9)}px`,
-    fontWeight: '800',
-    margin:     '0 0 10px',
-    textAlign:  'center',
-    lineHeight: '1.2',
-  }
-
-  const subheadingStyle = {
-    color:      textColor,
-    fontSize:   `${Math.round(fontSize * 1.05)}px`,
-    opacity:    0.6,
-    margin:     '0 0 32px',
-    textAlign:  'center',
-    lineHeight: '1.6',
-  }
+  const hStyle = headingStyle({ template, globalTheme, textColor })
+  const sStyle = subheadingStyle({ template, globalTheme, textColor, fontSize })
 
   const cardStyle = {
     backgroundColor: cardBg,
@@ -88,8 +74,8 @@ export default function BlogListPreview() {
   return (
     <section ref={ref} style={sectionStyle}>
       <div style={innerStyle}>
-        {heading    && <h2 style={headingStyle}>{heading}</h2>}
-        {subheading && <p  style={subheadingStyle}>{subheading}</p>}
+        {heading    && <h2 style={hStyle}>{heading}</h2>}
+        {subheading && <p  style={sStyle}>{subheading}</p>}
 
         {posts.length === 0 && (
           <p style={{ color: textColor, opacity: 0.3, fontSize: `${fontSize}px`, textAlign: 'center', padding: '24px 0' }}>

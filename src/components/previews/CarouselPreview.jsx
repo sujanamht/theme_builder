@@ -65,6 +65,7 @@ export default function CarouselPreview() {
     overflow:        'hidden',
     backgroundColor: template.bgColor || (darkMode ? '#18181b' : '#e5e7eb'),
     boxSizing:       'border-box',
+    fontFamily:      template.fontFamily || globalTheme.fontFamily || 'inherit',
   }
 
   const trackStyle = {
@@ -196,16 +197,16 @@ export default function CarouselPreview() {
                   {slide.title    && <p style={titleStyle}>{slide.title}</p>}
                   {slide.subtitle && <p style={subtitleStyle}>{slide.subtitle}</p>}
                   <button style={{
-                    background:   template.dotColor || '#1e3a8a',
-                    color:        '#050404',
+                    background:   template.btnBg      || globalTheme.primaryColor || '#1e3a8a',
+                    color:        template.btnColor   || '#ffffff',
                     padding:      '10px 28px',
-                    borderRadius: '6px',
+                    borderRadius: template.btnBorderRadius ? `${parsePx(template.btnBorderRadius)}px` : '6px',
                     border:       'none',
-                    fontSize:     '14px',
+                    fontSize:     template.btnFontSize ? `${parsePx(template.btnFontSize)}px` : '14px',
                     fontWeight:   600,
                     cursor:       'pointer',
                   }}>
-                    Learn More
+                    {slide.btnText || 'Learn More'}
                   </button>
                 </div>
               )}

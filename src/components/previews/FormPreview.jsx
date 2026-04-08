@@ -2,6 +2,8 @@ import { useTheme, useDarkMode } from '../../store/themeStore.jsx'
 import { useSelection } from '../../store/selectionContext.jsx'
 import { useContainerWidth } from '../../hooks/useContainerWidth.js'
 import { CONTENT_MAX_WIDTH } from '../../constants/layout.js'
+import { parsePx } from '../../utils/style.js'
+import { headingStyle, subheadingStyle } from '../../utils/typography.js'
 
 const FIELD_PLACEHOLDERS = {
   name:    'Your name',
@@ -29,6 +31,10 @@ export default function FormPreview() {
   const padding   = isMobile
     ? `24px 20px`
     : `${template.padding ?? 48}px 32px`
+
+  const fontSize = parsePx(template.fontSize || globalTheme.bodySize || '15px')
+  const hStyle   = { ...headingStyle({ template, globalTheme, textColor }), fontSize: isMobile ? '20px' : (template.headingSize || globalTheme.headingSize || '2rem'), margin: '0 0 8px', textAlign: undefined }
+  const sStyle   = { ...subheadingStyle({ template, globalTheme, textColor, fontSize }), opacity: 0.7, margin: '0 0 28px', textAlign: undefined }
 
   const enabledFields = Object.entries(data.fields ?? {}).filter(([, on]) => on)
   const isEmpty = !data.heading && !data.subheading && enabledFields.length === 0
@@ -73,14 +79,10 @@ export default function FormPreview() {
         ) : (
           <>
             {data.heading && (
-              <h2 style={{ color: textColor, fontSize: isMobile ? '20px' : '26px', fontWeight: '700', margin: '0 0 8px', lineHeight: '1.2' }}>
-                {data.heading}
-              </h2>
+              <h2 style={hStyle}>{data.heading}</h2>
             )}
             {data.subheading && (
-              <p style={{ color: textColor, fontSize: '15px', opacity: 0.7, margin: '0 0 28px', lineHeight: '1.6' }}>
-                {data.subheading}
-              </p>
+              <p style={sStyle}>{data.subheading}</p>
             )}
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>

@@ -118,22 +118,17 @@
   ---
   Recent Work (last session)
 
-  - Added Form and About section types (builder + preview)
-  - Pre-filled all sections with realistic dummy data (Acme Co)
-  - Full responsive pass across all 12 previews using ResizeObserver
-  - Created useContainerWidth hook (src/hooks/useContainerWidth.js)
-  - Created ResponsiveGrid component; refactored Services, Gallery,
-    Testimonial, Footer, Contact to use it
-  - Navbar: mobile hamburger with functional dropdown menu
-  - Testimonial: replaced scroll row with carousel (arrows + dots);
-    desktop supports 1/2/3 visible cards via style panel button toggle;
-    mobile always shows 1 card
-  - GlobalThemePanel: stripped to heading + placeholder text (theme
-    system not yet wired)
-  - Mobile block screen added (< 768px window width)
-  - Code cleanup: removed unused imports (useSelection from App.jsx,
-    RangeField from GlobalThemePanel, GRID_COLS maps from previews,
-    isMobile boilerplate replaced by hook)
+  - Centralised heading/subheading typography: created
+    src/utils/typography.js with headingStyle() and subheadingStyle()
+    utility functions — one source of truth for section heading styles
+    across all previews
+  - Applied to 10 previews: ServicesPreview, TestimonialPreview,
+    GalleryPreview, BlogListPreview, CtaPreview, AboutPreview,
+    ContactPreview, FormPreview, SocialMediaPreview, TeamPreview
+  - Each preview now calls headingStyle({ template, globalTheme, textColor })
+    and subheadingStyle({ template, globalTheme, textColor, fontSize })
+    instead of defining local style objects; section-specific overrides
+    (isMobile sizes, letterSpacing, textAlign) are spread on top
 
 ---
 
@@ -334,6 +329,21 @@ useTheme() => {
 **Purpose:** Converts a `#RRGGBB` hex string to an `rgba(r, g, b, alpha)` string. Falls back to `rgba(0,0,0,alpha)` on bad input.
 **API:** `hexToRgba(hex: string, alpha: number) => string`
 **Used in:** ServicesPreview, GalleryPreview, TestimonialPreview, FooterPreview, ContactPreview
+
+---
+
+#### `headingStyle` / `subheadingStyle`
+**File:** `src/utils/typography.js`
+**Purpose:** Single source of truth for section heading and subheading inline styles. Change once, all previews update.
+**API:**
+```
+headingStyle({ template, globalTheme, textColor }) => CSSProperties
+subheadingStyle({ template, globalTheme, textColor, fontSize }) => CSSProperties
+```
+- `headingStyle` resolves fontSize via `template.headingSize → globalTheme.headingSize → '2rem'`
+- `subheadingStyle` resolves fontSize via `template.subheadingSize → globalTheme.bodySize → \`${fontSize}px\``
+- Both default to `textAlign: 'center'`; spread + override for left-aligned layouts
+**Used in:** ServicesPreview, TestimonialPreview, GalleryPreview, BlogListPreview, CtaPreview, AboutPreview, ContactPreview, FormPreview, SocialMediaPreview, TeamPreview
 
 ---
 

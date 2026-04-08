@@ -20,6 +20,14 @@ import BlogPostPreview      from '../components/previews/BlogPostPreview.jsx'
 import AboutDetailPreview  from '../components/previews/AboutDetailPreview.jsx'
 import PageBannerPreview   from '../components/previews/PageBannerPreview.jsx'
 import TeamPreview         from '../components/previews/TeamPreview.jsx'
+import PartnersPreview     from '../components/previews/PartnersPreview.jsx'
+
+/* ─── registry of preview components by type ───
+ * The builder and preview registries are separate because they have different concerns:
+ * - Builder: how to edit each section type (form fields, image uploads, etc.)
+ * - Preview: how to render each section type based on the theme data
+ * Keeping them separate allows for more flexibility and avoids coupling the editing UI with the rendering logic.
+ */
 
 const PREVIEWS = {
   announcement: <AnnouncementPreview />,
@@ -40,6 +48,7 @@ const PREVIEWS = {
   aboutDetail:  <AboutDetailPreview />,
   pageBanner:   <PageBannerPreview />,
   team:         <TeamPreview />,
+  partners:     <PartnersPreview />,
 }
 
 const GLOBAL_TYPES = new Set(['announcement', 'navbar', 'footer'])

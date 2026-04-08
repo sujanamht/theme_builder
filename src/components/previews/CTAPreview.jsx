@@ -2,6 +2,7 @@ import { useTheme, useDarkMode } from '../../store/themeStore.jsx'
 import { useContainerWidth } from '../../hooks/useContainerWidth.js'
 import { CONTENT_MAX_WIDTH } from '../../constants/layout.js'
 import { parsePx } from '../../utils/style.js'
+import { headingStyle, subheadingStyle } from '../../utils/typography.js'
 
 export default function CTAPreview() {
   const { theme } = useTheme()
@@ -13,7 +14,7 @@ export default function CTAPreview() {
   const isMobile = width < 500
 
   const textAlign  = template.textAlign   || 'center'
-  const fontSize   = parsePx(template.fontSize    || '16px')
+  const fontSize   = parsePx(template.fontSize    || globalTheme.bodySize || '16px')
   const textColor  = template.textColor   || (darkMode ? '#f4f4f5' : '#111827')
 
   const innerStyle = { maxWidth: CONTENT_MAX_WIDTH, margin: '0 auto', width: '100%', boxSizing: 'border-box' }
@@ -27,21 +28,18 @@ export default function CTAPreview() {
     fontFamily:      template.fontFamily || globalTheme.fontFamily || 'inherit',
   }
 
-  const headingStyle = {
-    color:         textColor,
+  const hStyle = {
+    ...headingStyle({ template, globalTheme, textColor }),
     fontSize:      isMobile ? '24px' : (template.headingSize || globalTheme.headingSize || `${Math.round(fontSize * 2)}px`),
-    fontWeight:    '800',
-    margin:        '0 0 12px',
-    lineHeight:    '1.2',
     letterSpacing: '-0.02em',
+    margin:        '0 0 12px',
+    textAlign,
   }
-
-  const subheadingStyle = {
-    color:      textColor,
-    fontSize:   isMobile ? '14px' : (template.bodySize || globalTheme.bodySize || `${Math.round(fontSize * 1.1)}px`),
-    opacity:    0.7,
-    margin:     '0 0 32px',
-    lineHeight: '1.6',
+  const sStyle = {
+    ...subheadingStyle({ template, globalTheme, textColor, fontSize }),
+    fontSize:  isMobile ? '14px' : (template.bodySize || globalTheme.bodySize || `${Math.round(fontSize * 1.1)}px`),
+    opacity:   0.7,
+    textAlign,
   }
 
   const btnRowStyle = {
@@ -86,10 +84,10 @@ export default function CTAPreview() {
     <section ref={ref} style={sectionStyle}>
       <div style={innerStyle}>
         {data.heading && (
-          <h2 style={headingStyle}>{data.heading}</h2>
+          <h2 style={hStyle}>{data.heading}</h2>
         )}
         {data.subheading && (
-          <p style={subheadingStyle}>{data.subheading}</p>
+          <p style={sStyle}>{data.subheading}</p>
         )}
         {(hasPrimary || hasSecondary) && (
           <div style={btnRowStyle}>

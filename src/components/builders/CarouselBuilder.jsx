@@ -4,8 +4,10 @@ import ImageUploader from '../ui/ImageUploader.jsx'
 import RangeField from '../ui/RangeField.jsx'
 
 const textTemplateFields = [
-  { key: 'fontSize', label: 'Font Size',    min: 10,  max: 32,  step: 1  },
-  { key: 'height',   label: 'Slide Height', min: 350, max: 800, step: 20 },
+  { key: 'fontSize',       label: 'Font Size',       min: 10,  max: 32,  step: 1  },
+  { key: 'height',         label: 'Slide Height',    min: 350, max: 800, step: 20 },
+  { key: 'btnBorderRadius', label: 'Button Radius',  min: 0,   max: 50,  step: 1  },
+  { key: 'btnFontSize',    label: 'Button Font Size', min: 10,  max: 24,  step: 1  },
 ]
 
 // single source of truth — preview must not invent fallbacks
@@ -73,6 +75,11 @@ export default function CarouselBuilder({ activeTab = 'content' }) {
                     <input type="text" value={slide.subtitle} placeholder="e.g. Supporting copy"
                       onChange={e => handleSlideChange(i, 'subtitle', e.target.value)} />
                   </label>
+                  <label className="flex flex-col gap-1">
+                    Button Text
+                    <input type="text" value={slide.btnText ?? ''} placeholder="e.g. Learn More"
+                      onChange={e => handleSlideChange(i, 'btnText', e.target.value)} />
+                  </label>
                 </div>
               </div>
             ))}
@@ -104,6 +111,8 @@ export default function CarouselBuilder({ activeTab = 'content' }) {
               value={template.dotColor ?? '#000000'}
               onChange={v => handleTemplate('dotColor', v)}
             />
+            <ColorInput label="Button BG Color"   value={template.btnBg    ?? '#1e3a8a'} onChange={v => handleTemplate('btnBg', v)} />
+            <ColorInput label="Button Text Color" value={template.btnColor ?? '#ffffff'} onChange={v => handleTemplate('btnColor', v)} />
             {textTemplateFields.map(({ key, label, min, max, step }) => (
               <RangeField
                 key={key}

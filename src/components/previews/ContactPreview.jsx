@@ -1,6 +1,8 @@
 import { useTheme, useDarkMode } from '../../store/themeStore.jsx'
 import ResponsiveGrid from '../ui/ResponsiveGrid.jsx'
 import { CONTENT_MAX_WIDTH } from '../../constants/layout.js'
+import { parsePx } from '../../utils/style.js'
+import { headingStyle, subheadingStyle } from '../../utils/typography.js'
 
 /* ── Inline SVG icons ──────────────────────────────────────────────── */
 function IconInstagram({ size = 18, color }) {
@@ -75,6 +77,10 @@ export default function ContactPreview() {
   const accentColor = template.accentColor || globalTheme.primaryColor || '#6366f1'
   const padding     = `${template.padding ?? 64}px 32px`
 
+  const fontSize = parsePx(template.fontSize || globalTheme.bodySize || '15px')
+  const hStyle   = { ...headingStyle({ template, globalTheme, textColor }), textAlign: 'left', margin: '0 0 8px' }
+  const sStyle   = { ...subheadingStyle({ template, globalTheme, textColor, fontSize }), textAlign: 'left', opacity: 0.7, margin: '0 0 28px' }
+
   const hasMap     = Boolean(data.mapsUrl)
   const activeSocials = Object.entries(data.socials ?? {}).filter(([, url]) => Boolean(url))
 
@@ -116,14 +122,10 @@ export default function ContactPreview() {
             ) : (
               <>
                 {data.heading && (
-                  <h2 style={{ color: textColor, fontSize: '26px', fontWeight: '700', margin: '0 0 8px', lineHeight: '1.2' }}>
-                    {data.heading}
-                  </h2>
+                  <h2 style={hStyle}>{data.heading}</h2>
                 )}
                 {data.subheading && (
-                  <p style={{ color: textColor, fontSize: '15px', opacity: 0.7, margin: '0 0 28px', lineHeight: '1.6' }}>
-                    {data.subheading}
-                  </p>
+                  <p style={sStyle}>{data.subheading}</p>
                 )}
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>

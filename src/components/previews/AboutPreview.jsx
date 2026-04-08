@@ -4,6 +4,7 @@ import CanvasUpload from '../ui/CanvasUpload.jsx'
 import { useContainerWidth } from '../../hooks/useContainerWidth.js'
 import { CONTENT_MAX_WIDTH } from '../../constants/layout.js'
 import { parsePx } from '../../utils/style.js'
+import { headingStyle } from '../../utils/typography.js'
 
 export default function AboutPreview() {
   const { theme, updateSection } = useTheme()
@@ -18,7 +19,7 @@ export default function AboutPreview() {
 
   const innerStyle = { maxWidth: CONTENT_MAX_WIDTH, margin: '0 auto', width: '100%', boxSizing: 'border-box' }
 
-  const fontSize      = parsePx(template.fontSize) || 16
+  const fontSize      = parsePx(template.fontSize) || parsePx(globalTheme.bodySize) || 16
   const textColor     = template.textColor     || (darkMode ? '#f4f4f5' : '#0a0a0a')
   const imagePosition = template.imagePosition || 'left'
   const hasImage      = Boolean(data.image)
@@ -54,12 +55,11 @@ export default function AboutPreview() {
     width:    isMobile ? '100%' : undefined,
   }
 
-  const headingStyle = {
-    color:         textColor,
-    fontSize:      isMobile ? '1.5rem' : '2rem',
-    fontWeight:    800,
-    margin:        '0 0 16px',
-    lineHeight:    '1.2',
+  const hStyle = {
+    ...headingStyle({ template, globalTheme, textColor }),
+    fontSize:  isMobile ? '1.5rem' : (template.headingSize || globalTheme.headingSize || '2rem'),
+    margin:    '0 0 16px',
+    textAlign: undefined,
   }
 
   const bodyStyle = {
@@ -132,7 +132,7 @@ const btnStyle = {
               </>
             ) : (
               <>
-                {data.heading && <h2 style={headingStyle}>{data.heading}</h2>}
+                {data.heading && <h2 style={hStyle}>{data.heading}</h2>}
                 {data.body    && <p  style={bodyStyle}>{data.body}</p>}
                 {data.buttonText && (
                   <a

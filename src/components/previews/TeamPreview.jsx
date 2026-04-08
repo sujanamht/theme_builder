@@ -1,6 +1,7 @@
 import { useTheme } from '../../store/themeStore.jsx'
 import { CONTENT_MAX_WIDTH } from '../../constants/layout.js'
 import { parsePx } from '../../utils/style.js'
+import { headingStyle, subheadingStyle } from '../../utils/typography.js'
 
 export default function TeamPreview() {
   const { theme } = useTheme()
@@ -25,6 +26,9 @@ export default function TeamPreview() {
   const contactColor      = template.contactColor      || '#555555'
   const contactSize       = template.contactSize       || '0.8rem'
   const cardGap           = template.cardGap           || '32px'
+
+  const hStyle = { ...headingStyle({ template, globalTheme, textColor: headingColor }), margin: '0 0 16px' }
+  const sStyle = { ...subheadingStyle({ template, globalTheme, textColor: descColor, fontSize: parsePx(descSize) }), margin: 0, lineHeight: '1.75' }
 
   function renderMember(member) {
     return (
@@ -89,27 +93,8 @@ export default function TeamPreview() {
       >
         {/* Heading + Description */}
         <div style={{ textAlign: 'center', marginBottom: '48px' }}>
-          <h2
-            style={{
-              color:      headingColor,
-              fontSize:   headingSize,
-              fontWeight: 700,
-              margin:     '0 0 16px',
-              lineHeight: 1.2,
-            }}
-          >
-            {data.heading || 'Meet Our Team'}
-          </h2>
-          <p
-            style={{
-              color:      descColor,
-              fontSize:   descSize,
-              lineHeight: 1.75,
-              margin:     0,
-            }}
-          >
-            {data.description || ''}
-          </p>
+          <h2 style={hStyle}>{data.heading || 'Meet Our Team'}</h2>
+          <p style={sStyle}>{data.description || ''}</p>
         </div>
 
         {/* Member Grid / Single Row / Carousel */}

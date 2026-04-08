@@ -2,6 +2,8 @@ import { useState } from 'react'
 import { useTheme, useDarkMode } from '../../store/themeStore.jsx'
 import { useContainerWidth } from '../../hooks/useContainerWidth.js'
 import { CONTENT_MAX_WIDTH } from '../../constants/layout.js'
+import { parsePx } from '../../utils/style.js'
+import { headingStyle, subheadingStyle } from '../../utils/typography.js'
 
 const PLATFORM_LABELS = {
   facebook:  'Facebook',
@@ -87,6 +89,7 @@ export default function SocialMediaPreview() {
   const [activeIndex, setActiveIndex] = useState(0)
   const darkMode = useDarkMode()
 
+  const fontSize  = parsePx(template.fontSize || globalTheme.bodySize || '15px')
   const bg        = template.bgColor   || (darkMode ? '#18181b' : '#ffffff')
   const textColor = template.textColor || (darkMode ? '#f4f4f5' : '#111827')
   const padding   = isMobile ? '32px 20px' : `${template.padding ?? 64}px 32px`
@@ -107,6 +110,9 @@ export default function SocialMediaPreview() {
         embed: embeds[(safeIndex + j) % count],
         index: (safeIndex + j) % count,
       }))
+
+  const hStyle  = { ...headingStyle({ template, globalTheme, textColor }), fontSize: isMobile ? '22px' : (template.headingSize || globalTheme.headingSize || '2rem'), margin: '0 0 8px', textAlign: template.textAlign || 'center' }
+  const sStyle  = { ...subheadingStyle({ template, globalTheme, textColor, fontSize }), opacity: 0.65, margin: 0, textAlign: template.textAlign || 'center' }
 
   const isEmpty = !data.heading && !data.subheading && count === 0
 
@@ -159,14 +165,10 @@ export default function SocialMediaPreview() {
         ) : (
           <div style={{ marginBottom: '32px', textAlign: template.textAlign || 'center' }}>
             {data.heading && (
-              <h2 style={{ color: textColor, fontSize: isMobile ? '22px' : '28px', fontWeight: '700', margin: '0 0 8px', lineHeight: '1.2' }}>
-                {data.heading}
-              </h2>
+              <h2 style={hStyle}>{data.heading}</h2>
             )}
             {data.subheading && (
-              <p style={{ color: textColor, fontSize: '15px', opacity: 0.65, margin: 0, lineHeight: '1.6' }}>
-                {data.subheading}
-              </p>
+              <p style={sStyle}>{data.subheading}</p>
             )}
           </div>
         )}
