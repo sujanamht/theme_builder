@@ -15,7 +15,9 @@ export function useContainerWidth(initial = 9999) {
     const el = ref.current
     if (!el) return
     const ro = new ResizeObserver(([entry]) => {
-      setWidth(entry.contentRect.width)
+      const declared = entry.target.closest('[data-canvas-width]')?.dataset?.canvasWidth
+      if (declared) setWidth(Number(declared))
+      else setWidth(Math.round(entry.contentRect.width))
     })
     ro.observe(el)
     return () => ro.disconnect()

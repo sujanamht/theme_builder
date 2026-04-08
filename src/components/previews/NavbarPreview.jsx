@@ -304,7 +304,9 @@ export default function NavbarPreview() {
                     fontSize={`${fontSize}px`}
                     darkMode={darkMode}
                     onInternalNav={setActivePage}
-                    isActivePage={link.pageId === activePage}
+                    isActivePage={isPreview
+                      ? pathname === (PAGE_MAP[link.url?.toLowerCase()] ?? PAGE_MAP[link.label?.toLowerCase()])
+                      : link.pageId === activePage}
                     accentColor={template.accentColor || globalTheme.primaryColor}
                     isPreview={isPreview}
                   />
@@ -328,7 +330,9 @@ export default function NavbarPreview() {
           boxSizing:        'border-box',
         }}>
           {links.map((link, i) => {
-            const isActiveMobile = link.pageId === activePage
+            const isActiveMobile = isPreview
+              ? pathname === (PAGE_MAP[link.url?.toLowerCase()] ?? PAGE_MAP[link.label?.toLowerCase()])
+              : link.pageId === activePage
             const mobileItemStyle = {
               display:        'block',
               width:          '100%',

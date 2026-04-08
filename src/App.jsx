@@ -947,7 +947,7 @@ function Shell({
               <DragHandle side="left"  onMouseDown={e => startResize(e, 'left')}  t={t} active={isResizing} />
 
               {/* Card wrapper */}
-              <div style={{ width: `${currentWidth}px`, maxWidth: '100%', transition: widthTransition, flexShrink: 0 }}>
+              <div style={{ width: `${currentWidth}px`, maxWidth: '100%', transition: widthTransition, flexShrink: 0 }} data-canvas-width={currentWidth}>
                 {isMobileView ? (
                   <div style={{
                     background: t.phoneShell, borderRadius: '44px', padding: '16px 10px',
