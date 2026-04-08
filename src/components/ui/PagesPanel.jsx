@@ -1,15 +1,45 @@
 import { useState, useEffect, useRef } from 'react'
 import { useTheme } from '../../store/themeStore.jsx'
 
-const FIXED_IDS = new Set(['home', 'about', 'contact', 'blog', 'custom'])
+const FIXED_IDS = new Set(['home'])
 
-const ALL_PAGES = [
-  { id: 'home',    label: 'Home'    },
-  { id: 'about',   label: 'About'   },
-  { id: 'contact', label: 'Contact' },
-  { id: 'blog',    label: 'Blog'    },
-  { id: 'custom',  label: 'Custom'  },
-]
+
+function DeletePageFooter({ activePage, deletePage, t }) {
+  const [confirming, setConfirming] = useState(false)
+  useEffect(() => { setConfirming(false) }, [activePage])
+
+  if (!confirming) return (
+    <div style={{ padding: '6px 12px 0', flexShrink: 0 }}>
+      <button
+        onClick={() => setConfirming(true)}
+        style={{
+          width: '100%', padding: '6px 0', background: 'transparent',
+          border: `1px solid ${t.border}`, borderRadius: '6px',
+          color: t.textMuted, fontSize: '11px', cursor: 'pointer',
+          fontFamily: 'Inter, sans-serif', transition: 'border-color 0.15s, color 0.15s',
+        }}
+        onMouseEnter={e => { e.currentTarget.style.borderColor = '#ef4444'; e.currentTarget.style.color = '#ef4444' }}
+        onMouseLeave={e => { e.currentTarget.style.borderColor = t.border; e.currentTarget.style.color = t.textMuted }}
+      >
+        Delete Page
+      </button>
+    </div>
+  )
+
+  return (
+    <div style={{ padding: '6px 12px 0', flexShrink: 0 }}>
+      <div style={{ background: '#fff5f5', border: '1px solid #fecaca', borderRadius: '6px', padding: '10px' }}>
+        <p style={{ margin: '0 0 8px', fontSize: '11px', color: '#991b1b', fontFamily: 'Inter, sans-serif' }}>
+          Delete this page? This cannot be undone.
+        </p>
+        <div style={{ display: 'flex', gap: '6px' }}>
+          <button onClick={() => deletePage(activePage)} style={{ flex: 1, padding: '5px 0', background: '#dc2626', border: 'none', borderRadius: '4px', color: '#fff', fontSize: '11px', cursor: 'pointer' }}>Confirm</button>
+          <button onClick={() => setConfirming(false)} style={{ flex: 1, padding: '5px 0', background: 'transparent', border: `1px solid ${t.border}`, borderRadius: '4px', color: t.textMuted, fontSize: '11px', cursor: 'pointer' }}>Cancel</button>
+        </div>
+      </div>
+    </div>
+  )
+}
 
 export default function PagesPanel({ t }) {
   const { theme, deletePage, setActivePage, renamePage, addCustomPage } = useTheme()
@@ -19,13 +49,11 @@ export default function PagesPanel({ t }) {
   const [editingId,   setEditingId]   = useState(null)
   const [editingName, setEditingName] = useState('')
   const [popupOpen,   setPopupOpen]   = useState(false)
+  const [newPageName, setNewPageName] = useState('')
+  const [nameError,   setNameError]   = useState('')
 
   const popupRef  = useRef(null)
   const btnRef    = useRef(null)
-
-  const existingIds   = new Set(pages.map(p => p.id))
-  const availablePages = ALL_PAGES.filter(p => !existingIds.has(p.id))
-  const allAdded       = availablePages.length === 0
 
   useEffect(() => {
     if (!popupOpen) return
@@ -58,8 +86,15 @@ export default function PagesPanel({ t }) {
     if (e.key === 'Escape') setEditingId(null)
   }
 
-  function handleAddPage(page) {
-    addCustomPage(page.label)
+  function handleAddPage() {
+    const name = newPageName.trim()
+    if (!name) { setNameError('Page name is required'); return }
+    if (pages.some(p => p.label.toLowerCase() === name.toLowerCase())) {
+      setNameError('A page with this name already exists'); return
+    }
+    addCustomPage(name)
+    setNewPageName('')
+    setNameError('')
     setPopupOpen(false)
   }
 
@@ -84,9 +119,8 @@ export default function PagesPanel({ t }) {
 
       <ul style={{ flex: 1, margin: 0, padding: '0 8px', listStyle: 'none', overflowY: 'auto', overflowX: 'hidden' }}>
         {pages.map(page => {
-          const isActive    = page.id === activePage
-          const isEditing   = editingId === page.id
-          const isDeletable = !FIXED_IDS.has(page.id)
+          const isActive  = page.id === activePage
+          const isEditing = editingId === page.id
 
           return (
             <li key={page.id} style={{ marginBottom: '2px' }}>
@@ -137,7 +171,7 @@ export default function PagesPanel({ t }) {
                   <span
                     onDoubleClick={e => {
                       e.stopPropagation()
-                      if (isDeletable) startRename(page)
+                      startRename(page)
                     }}
                     style={{
                       flex:         1,
@@ -149,14 +183,14 @@ export default function PagesPanel({ t }) {
                       whiteSpace:   'nowrap',
                       minWidth:     0,
                     }}
-                    title={isDeletable ? 'Double-click to rename' : page.label}
+                    title="Double-click to rename"
                   >
                     {page.label}
                   </span>
                 )}
 
-                {/* Edit icon for custom (non-fixed) pages */}
-                {isDeletable && !isEditing && (
+                {/* Edit icon for all pages */}
+                {!isEditing && (
                   <button
                     onClick={e => { e.stopPropagation(); startRename(page) }}
                     title="Rename page"
@@ -186,45 +220,15 @@ export default function PagesPanel({ t }) {
                   </button>
                 )}
 
-                {/* Delete button — only for non-fixed pages */}
-                {isDeletable && (
-                  <button
-                    onClick={e => { e.stopPropagation(); deletePage(page.id) }}
-                    title="Delete page"
-                    style={{
-                      flexShrink:     0,
-                      width:          '18px',
-                      height:         '18px',
-                      borderRadius:   '4px',
-                      border:         'none',
-                      background:     'transparent',
-                      color:          t.textMuted,
-                      cursor:         'pointer',
-                      opacity:        0.55,
-                      fontSize:       '13px',
-                      lineHeight:     1,
-                      display:        'flex',
-                      alignItems:     'center',
-                      justifyContent: 'center',
-                      padding:        0,
-                      fontFamily:     'Inter, sans-serif',
-                      transition:     'opacity 0.1s',
-                    }}
-                    onMouseEnter={e => { e.currentTarget.style.opacity = '1' }}
-                    onMouseLeave={e => { e.currentTarget.style.opacity = '0.55' }}
-                  >
-                    ×
-                  </button>
-                )}
               </div>
             </li>
           )
         })}
       </ul>
 
+
       {/* Add Page footer */}
-      {!allAdded && (
-        <div style={{ padding: '10px 12px', flexShrink: 0, borderTop: `1px solid ${t.border}`, position: 'relative' }}>
+      <div style={{ padding: '10px 12px', flexShrink: 0, borderTop: `1px solid ${t.border}`, position: 'relative' }}>
           <button
             ref={btnRef}
             onClick={() => setPopupOpen(o => !o)}
@@ -268,38 +272,40 @@ export default function PagesPanel({ t }) {
                 zIndex:       50,
               }}
             >
-              {availablePages.map((page, i) => (
-                <button
-                  key={page.id}
-                  onClick={() => handleAddPage(page)}
+              <div style={{ padding: '10px' }}>
+                <input
+                  autoFocus
+                  value={newPageName}
+                  onChange={e => { setNewPageName(e.target.value); setNameError('') }}
+                  onKeyDown={e => { if (e.key === 'Enter') handleAddPage(); if (e.key === 'Escape') setPopupOpen(false) }}
+                  placeholder="Page name…"
                   style={{
-                    display:    'flex',
-                    alignItems: 'center',
-                    gap:        '8px',
-                    width:      '100%',
-                    padding:    '8px 12px',
-                    background: 'transparent',
-                    border:     'none',
-                    borderTop:  i === 0 ? 'none' : `1px solid ${t.border}`,
-                    color:      t.textMuted,
-                    fontSize:   '12px',
-                    fontWeight: '400',
-                    cursor:     'pointer',
-                    fontFamily: 'Inter, sans-serif',
-                    textAlign:  'left',
-                    transition: 'background 0.1s, color 0.1s',
+                    width: '100%', boxSizing: 'border-box', padding: '6px 8px',
+                    border: `1px solid ${nameError ? '#ef4444' : t.border}`, borderRadius: '5px',
+                    background: t.canvasBg, color: t.textActive, fontSize: '12px',
+                    outline: 'none', fontFamily: 'Inter, sans-serif', marginBottom: nameError ? '4px' : '8px',
                   }}
-                  onMouseEnter={e => { e.currentTarget.style.background = t.hoverBg; e.currentTarget.style.color = t.textActive }}
-                  onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = t.textMuted }}
+                />
+                {nameError && <p style={{ margin: '0 0 6px', fontSize: '11px', color: '#ef4444' }}>{nameError}</p>}
+                <button
+                  onClick={handleAddPage}
+                  style={{
+                    width: '100%', padding: '6px 0', background: '#6366f1', border: 'none',
+                    borderRadius: '5px', color: '#fff', fontSize: '12px', cursor: 'pointer',
+                  }}
                 >
-                  <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: t.textMuted, opacity: 0.35, flexShrink: 0 }} />
-                  {page.label}
+                  Add
                 </button>
-              ))}
+              </div>
             </div>
           )}
-        </div>
+
+                {/* Delete page — bottom, confirmation */}
+      {pages.find(p => p.id === activePage) && !FIXED_IDS.has(activePage) && (
+        <DeletePageFooter activePage={activePage} deletePage={deletePage} t={t} />
       )}
+
+        </div>
     </div>
   )
 }
