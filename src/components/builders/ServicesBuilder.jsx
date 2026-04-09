@@ -5,7 +5,6 @@ import RangeField from '../ui/RangeField.jsx'
 const textTemplateFields = [
   { key: 'fontSize',     label: 'Font Size',       min: 10, max: 32,  step: 1 },
   { key: 'borderRadius', label: 'Card Radius',      min: 0,  max: 32,  step: 2 },
-  { key: 'padding',      label: 'Section Padding',  min: 0,  max: 120, step: 8 },
 ]
 
 // single source of truth — preview must not invent fallbacks
@@ -118,6 +117,13 @@ export default function ServicesBuilder({ activeTab = 'content' }) {
             <ColorInput label="Card Background"   value={template.cardBg       ?? '#000000'} onChange={v => handleTemplate('cardBg', v)} />
             <ColorInput label="Accent Color"      value={template.accentColor  ?? '#000000'} onChange={v => handleTemplate('accentColor', v)} />
 
+            <RangeField
+              label="Vertical Padding"
+              value={parseInt(template.padding ?? 48)}
+              onChange={v => handleTemplate('padding', parseInt(v))}
+              min={30} max={180} step={10}
+              unit="px"
+            />
             {textTemplateFields.map(({ key, label, min, max, step }) => (
               <RangeField
                 key={key}

@@ -130,7 +130,7 @@ export default function BlogPostBuilder({ activeTab = 'content' }) {
           <ColorInput label="Text Color"        value={template.textColor  ?? '#000000'} onChange={v => handleTemplate('textColor', v)} />
           <ColorInput label="Accent Color"      value={template.accentColor ?? '#000000'} onChange={v => handleTemplate('accentColor', v)} />
           <RangeField label="Body Font Size"    value={template.fontSize   ?? ''} onChange={v => handleTemplate('fontSize', v)}  min={12} max={24} step={1} />
-          <RangeField label="Section Padding"   value={template.padding    ?? ''} onChange={v => handleTemplate('padding', v)}   min={0}  max={120} step={8} />
+          <RangeField label="Vertical Padding" value={parseInt(template.padding ?? 48)} onChange={v => handleTemplate('padding', parseInt(v))} min={30} max={180} step={10} unit="px" />
         </div>
       </section>
     </div>

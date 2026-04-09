@@ -4,7 +4,6 @@ import RangeField from '../ui/RangeField.jsx'
 
 const textTemplateFields = [
   { key: 'fontSize', label: 'Font Size', min: 10, max: 32, step: 1 },
-  { key: 'padding',  label: 'Padding',   min: 0,  max: 96, step: 8 },
 ]
 
 // single source of truth — preview must not invent fallbacks
@@ -167,6 +166,13 @@ export default function FooterBuilder({ activeTab = 'content' }) {
             <ColorInput label="Background Color" value={template.bgColor    ?? '#000000'} onChange={v => handleTemplate('bgColor', v)} />
             <ColorInput label="Text Color"        value={template.textColor  ?? '#000000'} onChange={v => handleTemplate('textColor', v)} />
             <ColorInput label="Link Color"        value={template.linkColor  ?? '#000000'} onChange={v => handleTemplate('linkColor', v)} />
+            <RangeField
+              label="Vertical Padding"
+              value={parseInt(template.padding ?? 48)}
+              onChange={v => handleTemplate('padding', parseInt(v))}
+              min={30} max={180} step={10}
+              unit="px"
+            />
             {textTemplateFields.map(({ key, label, min, max, step }) => (
               <RangeField
                 key={key}

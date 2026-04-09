@@ -1,14 +1,18 @@
 import { useTheme } from '../../store/themeStore.jsx'
 import { CONTENT_MAX_WIDTH } from '../../constants/layout.js'
+import { SECTION_PADDING_X, SECTION_PADDING_X_MOBILE } from '../../constants/design.js'
+import { useContainerWidth } from '../../hooks/useContainerWidth.js'
 import { parsePx } from '../../utils/style.js'
 
 export default function AboutDetailPreview() {
+  const { ref, width: containerWidth } = useContainerWidth()
+  const isMobile = containerWidth < 500
+
   const { theme } = useTheme()
   const { data, template } = theme.aboutDetail
   const { globalTheme } = theme
 
-  const sectionPaddingTop    = parsePx(template.sectionPaddingTop)    ?? 80
-  const sectionPaddingBottom = parsePx(template.sectionPaddingBottom) ?? 80
+  const paddingY = parseInt(template.padding ?? 48)
 
   const sectionBackground = template.sectionBackground || '#f8f8f8'
   const headingColor      = template.headingColor      || '#111111'
@@ -27,12 +31,15 @@ export default function AboutDetailPreview() {
 
   return (
     <section
+      ref={ref}
       style={{
         backgroundColor: sectionBackground,
         width:           '100%',
         boxSizing:       'border-box',
-        paddingTop:      `${sectionPaddingTop}px`,
-        paddingBottom:   `${sectionPaddingBottom}px`,
+        paddingTop:      `${paddingY}px`,
+        paddingBottom:   `${paddingY}px`,
+        paddingLeft:     isMobile ? `${SECTION_PADDING_X_MOBILE}px` : `${SECTION_PADDING_X}px`,
+        paddingRight:    isMobile ? `${SECTION_PADDING_X_MOBILE}px` : `${SECTION_PADDING_X}px`,
       }}
     >
       <div

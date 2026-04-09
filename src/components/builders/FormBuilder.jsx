@@ -106,10 +106,11 @@ export default function FormBuilder({ activeTab = 'content' }) {
             <ColorInput label="Button Color"       value={template.buttonBg   ?? '#6366f1'} onChange={v => handleTemplate('buttonBg', v)} />
             <ColorInput label="Button Text Color"  value={template.buttonText ?? '#ffffff'} onChange={v => handleTemplate('buttonText', v)} />
             <RangeField
-              label="Padding"
-              value={template.padding ?? 48}
-              onChange={v => handleTemplate('padding', v)}
-              min={0} max={120} step={8}
+              label="Vertical Padding"
+              value={parseInt(template.padding ?? 48)}
+              onChange={v => handleTemplate('padding', parseInt(v))}
+              min={30} max={180} step={10}
+              unit="px"
             />
 
             <button

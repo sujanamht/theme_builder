@@ -1,4 +1,4 @@
-import { useTheme, useDarkMode } from '../../store/themeStore.jsx'
+import { useTheme } from '../../store/themeStore.jsx'
 import ColorInput from './ColorInput.jsx'
 
 const FONT_OPTIONS = [
@@ -13,7 +13,7 @@ const FONT_OPTIONS = [
 export default function GlobalThemePanel() {
   const { theme, updateGlobalTheme } = useTheme()
   const { globalTheme } = theme
-  const darkMode = useDarkMode()
+  const darkMode = globalTheme.darkMode ?? false
 
   const labelColor  = darkMode ? '#aaaaaa' : '#52525b'
   const selectStyle = {

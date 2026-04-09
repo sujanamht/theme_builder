@@ -13,7 +13,6 @@ const dataFields = [
 
 const textTemplateFields = [
   { key: 'fontSize', label: 'Font Size', min: 10, max: 32,  step: 1 },
-  { key: 'padding',  label: 'Padding',   min: 0,  max: 120, step: 8 },
 ]
 
 // single source of truth — preview must not invent fallbacks
@@ -62,6 +61,13 @@ export default function CTABuilder({ activeTab = 'content' }) {
             <ColorInput label="Secondary Button Bg"   value={template.secondaryBtnBg   ?? '#000000'} onChange={v => handleTemplate('secondaryBtnBg', v)} />
             <ColorInput label="Secondary Button Text" value={template.secondaryBtnText ?? '#000000'} onChange={v => handleTemplate('secondaryBtnText', v)} />
 
+            <RangeField
+              label="Vertical Padding"
+              value={parseInt(template.padding ?? 48)}
+              onChange={v => handleTemplate('padding', parseInt(v))}
+              min={30} max={180} step={10}
+              unit="px"
+            />
             {textTemplateFields.map(({ key, label, min, max, step }) => (
               <RangeField
                 key={key}

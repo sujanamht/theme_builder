@@ -7,7 +7,6 @@ import { CSS } from '@dnd-kit/utilities'
 
 const textTemplateFields = [
   { key: 'fontSize',    label: 'Font Size',    min: 10, max: 32, step: 1 },
-  { key: 'padding',     label: 'Padding',      min: 0,  max: 64, step: 4 },
   { key: 'linkSpacing', label: 'Link Spacing', min: 8,  max: 48, step: 4 },
 ]
 
@@ -298,6 +297,13 @@ export default function NavbarBuilder({ activeTab = 'content' }) {
             </div>
 
             {/* Existing range fields */}
+            <RangeField
+              label="Vertical Padding"
+              value={parseInt(template.padding ?? 48)}
+              onChange={v => handleTemplate('padding', parseInt(v))}
+              min={30} max={180} step={10}
+              unit="px"
+            />
             {textTemplateFields.map(({ key, label, min, max, step }) => (
               <RangeField
                 key={key}

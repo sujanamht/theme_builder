@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useTheme, useDarkMode } from '../../store/themeStore.jsx'
+import { useTheme } from '../../store/themeStore.jsx'
 import { useSelection } from '../../store/selectionContext.jsx'
 import { useContainerWidth } from '../../hooks/useContainerWidth.js'
 import { CONTENT_MAX_WIDTH } from '../../constants/layout.js'
@@ -9,7 +9,6 @@ export default function AnnouncementPreview() {
   const { theme } = useTheme()
   const { data, template } = theme.announcement
   const { globalTheme } = theme
-  const darkMode = useDarkMode()
   const selectedId = useSelection()
   const isActive = selectedId === 'announcement'
 
@@ -23,8 +22,8 @@ export default function AnnouncementPreview() {
   if (dismissed) return null
 
   const barStyle = {
-    backgroundColor: template.bgColor   || (darkMode ? '#18181b' : '#1d4ed8'),
-    color:           template.textColor || (darkMode ? '#f4f4f5' : '#ffffff'),
+    backgroundColor: template.bgColor   || '#1d4ed8',
+    color:           template.textColor || '#ffffff',
     fontSize:        isMobile ? '12px' : `${fontSize}px`,
     padding:         isMobile ? '8px 16px' : (template.padding || '8px 16px'),
     display:         'flex',
@@ -38,7 +37,7 @@ export default function AnnouncementPreview() {
   }
 
   const linkStyle = {
-    color:          template.textColor || (darkMode ? '#f4f4f5' : '#ffffff'),
+    color:          template.textColor || '#ffffff',
     fontWeight:     '600',
     textDecoration: 'underline',
     fontSize:       isMobile ? '12px' : `${fontSize}px`,

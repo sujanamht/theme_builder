@@ -139,10 +139,11 @@ export default function ContactBuilder({ activeTab = 'content' }) {
             <ColorInput label="Text Color"        value={template.textColor   ?? '#111827'} onChange={v => handleTemplate('textColor', v)} />
             <ColorInput label="Accent Color"      value={template.accentColor ?? '#6366f1'} onChange={v => handleTemplate('accentColor', v)} />
             <RangeField
-              label="Padding"
-              value={template.padding ?? 64}
-              onChange={v => handleTemplate('padding', v)}
-              min={0} max={120} step={8}
+              label="Vertical Padding"
+              value={parseInt(template.padding ?? 48)}
+              onChange={v => handleTemplate('padding', parseInt(v))}
+              min={30} max={180} step={10}
+              unit="px"
             />
 
             <button

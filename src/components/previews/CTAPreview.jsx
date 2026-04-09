@@ -1,4 +1,4 @@
-import { useTheme, useDarkMode } from '../../store/themeStore.jsx'
+import { useTheme } from '../../store/themeStore.jsx'
 import { useContainerWidth } from '../../hooks/useContainerWidth.js'
 import { CONTENT_MAX_WIDTH } from '../../constants/layout.js'
 import { parsePx } from '../../utils/style.js'
@@ -8,19 +8,17 @@ export default function CTAPreview() {
   const { theme } = useTheme()
   const { data, template } = theme.cta
   const { globalTheme } = theme
-  const darkMode = useDarkMode()
-
   const { ref, width } = useContainerWidth()
   const isMobile = width < 500
 
   const textAlign  = template.textAlign   || 'center'
   const fontSize   = parsePx(template.fontSize    || globalTheme.bodySize || '16px')
-  const textColor  = template.textColor   || (darkMode ? '#f4f4f5' : '#111827')
+  const textColor  = template.textColor   || '#111827'
 
   const innerStyle = { maxWidth: CONTENT_MAX_WIDTH, margin: '0 auto', width: '100%', boxSizing: 'border-box' }
 
   const sectionStyle = {
-    backgroundColor: template.bgColor  || (darkMode ? '#18181b' : '#f9fafb'),
+    backgroundColor: template.bgColor  || '#f9fafb',
     padding:         isMobile ? '32px 20px' : (template.padding || '64px 32px'),
     width:           '100%',
     boxSizing:       'border-box',

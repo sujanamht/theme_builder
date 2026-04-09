@@ -4,10 +4,15 @@ import CanvasUpload from '../ui/CanvasUpload.jsx'
 import ResponsiveGrid from '../ui/ResponsiveGrid.jsx'
 import { hexToRgba } from '../../utils/colorUtils.js'
 import { CONTENT_MAX_WIDTH } from '../../constants/layout.js'
+import { SECTION_PADDING_X, SECTION_PADDING_X_MOBILE } from '../../constants/design.js'
+import { useContainerWidth } from '../../hooks/useContainerWidth.js'
 import { parsePx } from '../../utils/style.js'
 import { headingStyle, subheadingStyle } from '../../utils/typography.js'
 
 export default function GalleryPreview() {
+  const { ref, width: containerWidth } = useContainerWidth()
+  const isMobile = containerWidth < 500
+
   const { theme, updateSection } = useTheme()
   const { data, template } = theme.gallery
   const { globalTheme } = theme
@@ -32,7 +37,10 @@ export default function GalleryPreview() {
 
   const sectionStyle = {
     backgroundColor: template.bgColor || '#f9fafb',
-    padding:         template.padding || '64px 32px',
+    paddingTop:      `${parseInt(template.padding ?? 64)}px`,
+    paddingBottom:   `${parseInt(template.padding ?? 64)}px`,
+    paddingLeft:     isMobile ? `${SECTION_PADDING_X_MOBILE}px` : `${SECTION_PADDING_X}px`,
+    paddingRight:    isMobile ? `${SECTION_PADDING_X_MOBILE}px` : `${SECTION_PADDING_X}px`,
     width:           '100%',
     boxSizing:       'border-box',
     fontFamily:      template.fontFamily || globalTheme.fontFamily || 'inherit',
@@ -67,7 +75,7 @@ export default function GalleryPreview() {
   }
 
   return (
-    <section style={sectionStyle}>
+    <section ref={ref} style={sectionStyle}>
       <div style={innerStyle}>
       {heading    && <h2 style={hStyle}>{heading}</h2>}
       {subheading && <p style={sStyle}>{subheading}</p>}

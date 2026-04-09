@@ -1,9 +1,10 @@
 import { useState } from 'react'
-import { useTheme, useDarkMode } from '../../store/themeStore.jsx'
+import { useTheme } from '../../store/themeStore.jsx'
 import { useSelection } from '../../store/selectionContext.jsx'
 import CanvasUpload from '../ui/CanvasUpload.jsx'
 import { useContainerWidth } from '../../hooks/useContainerWidth.js'
 import { CONTENT_MAX_WIDTH } from '../../constants/layout.js'
+import { SECTION_PADDING_X, SECTION_PADDING_X_MOBILE } from '../../constants/design.js'
 import DotIndicators from '../ui/DotIndicators.jsx'
 import { parsePx } from '../../utils/style.js'
 import { headingStyle } from '../../utils/typography.js'
@@ -26,30 +27,7 @@ function avatarColor(name) {
   return colors[Math.abs(hash) % colors.length]
 }
 
-function ArrowBtn({ dir, onClick, color }) {
-  return (
-    <button
-      onClick={onClick}
-      style={{
-        background:     'none',
-        border:         `1.5px solid ${color}33`,
-        borderRadius:   '50%',
-        width:          '36px',
-        height:         '36px',
-        display:        'flex',
-        alignItems:     'center',
-        justifyContent: 'center',
-        cursor:         'pointer',
-        flexShrink:     0,
-        color,
-        fontSize:       '16px',
-        lineHeight:     1,
-      }}
-    >
-      {dir === 'prev' ? '‹' : '›'}
-    </button>
-  )
-}
+
 
 export default function TestimonialPreview() {
   const { theme, updateSection } = useTheme()
@@ -62,7 +40,6 @@ export default function TestimonialPreview() {
   const isMobile = width < 500
 
   const [activeIndex, setActiveIndex] = useState(0)
-  const darkMode = useDarkMode()
 
   const heading      = data.heading || ''
   const items        = data.items   || []
@@ -88,15 +65,18 @@ export default function TestimonialPreview() {
   }
 
   const fontSize  = parsePx(template.fontSize) || parsePx(globalTheme.bodySize) || 14
-  const textColor = template.textColor || (darkMode ? '#f4f4f5' : '#111827')
+  const textColor = template.textColor || '#111827'
 
   const innerStyle = { maxWidth: CONTENT_MAX_WIDTH, margin: '0 auto', width: '100%', boxSizing: 'border-box' }
 
   const sectionStyle = {
-    backgroundColor: template.bgColor  || (darkMode ? '#18181b' : '#f9fafb'),
+    backgroundColor: template.bgColor  || '#f9fafb',
     color:           textColor,
     fontSize:        `${fontSize}px`,
-    padding:         template.padding   || '48px 24px',
+    paddingTop:      `${parseInt(template.padding ?? 48)}px`,
+    paddingBottom:   `${parseInt(template.padding ?? 48)}px`,
+    paddingLeft:     isMobile ? `${SECTION_PADDING_X_MOBILE}px` : `${SECTION_PADDING_X}px`,
+    paddingRight:    isMobile ? `${SECTION_PADDING_X_MOBILE}px` : `${SECTION_PADDING_X}px`,
     width:           '100%',
     boxSizing:       'border-box',
     fontFamily:      template.fontFamily || globalTheme.fontFamily || 'inherit',
@@ -105,9 +85,9 @@ export default function TestimonialPreview() {
   const hStyle = headingStyle({ template, globalTheme, textColor })
 
   const cardStyle = {
-    backgroundColor: template.cardBg      || (darkMode ? '#27272a' : '#ffffff'),
+    backgroundColor: template.cardBg      || '#ffffff',
     borderRadius:    template.borderRadius || '12px',
-    border:          darkMode ? '1px solid #3f3f46' : '1px solid #e5e7eb',
+    border:          '1px solid #e5e7eb',
     padding:         '24px',
     display:         'flex',
     flexDirection:   'column',
@@ -150,7 +130,7 @@ export default function TestimonialPreview() {
           ? <p style={quoteStyle}>"{item.quote}"</p>
           : <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', flex: 1 }}>
               {['100%', '85%', '60%'].map((w, j) => (
-                <div key={j} style={{ width: w, height: '12px', borderRadius: '4px', backgroundColor: darkMode ? '#3f3f46' : '#e5e7eb' }} />
+                <div key={j} style={{ width: w, height: '12px', borderRadius: '4px', backgroundColor: '#e5e7eb' }} />
               ))}
             </div>
         }
@@ -175,11 +155,11 @@ export default function TestimonialPreview() {
           <div>
             {item.name
               ? <p style={nameStyle}>{item.name}</p>
-              : <div style={{ width: '90px', height: '10px', borderRadius: '4px', backgroundColor: darkMode ? '#3f3f46' : '#e5e7eb', marginBottom: '6px' }} />
+              : <div style={{ width: '90px', height: '10px', borderRadius: '4px', backgroundColor: '#e5e7eb', marginBottom: '6px' }} />
             }
             {item.role
               ? <p style={roleStyle}>{item.role}</p>
-              : <div style={{ width: '60px', height: '10px', borderRadius: '4px', backgroundColor: darkMode ? '#3f3f46' : '#e5e7eb' }} />
+              : <div style={{ width: '60px', height: '10px', borderRadius: '4px', backgroundColor: '#e5e7eb' }} />
             }
           </div>
         </div>
@@ -191,14 +171,14 @@ export default function TestimonialPreview() {
     <div style={cardStyle}>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', flex: 1 }}>
         {['100%', '85%', '60%'].map((w, j) => (
-          <div key={j} style={{ width: w, height: '12px', borderRadius: '4px', backgroundColor: darkMode ? '#3f3f46' : '#e5e7eb' }} />
+          <div key={j} style={{ width: w, height: '12px', borderRadius: '4px', backgroundColor: '#e5e7eb' }} />
         ))}
       </div>
       <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-        <div style={{ width: '36px', height: '36px', borderRadius: '50%', backgroundColor: darkMode ? '#3f3f46' : '#e5e7eb', flexShrink: 0 }} />
+        <div style={{ width: '36px', height: '36px', borderRadius: '50%', backgroundColor: '#e5e7eb', flexShrink: 0 }} />
         <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-          <div style={{ width: '90px', height: '10px', borderRadius: '4px', backgroundColor: darkMode ? '#3f3f46' : '#e5e7eb' }} />
-          <div style={{ width: '60px', height: '10px', borderRadius: '4px', backgroundColor: darkMode ? '#3f3f46' : '#e5e7eb' }} />
+          <div style={{ width: '90px', height: '10px', borderRadius: '4px', backgroundColor: '#e5e7eb' }} />
+          <div style={{ width: '60px', height: '10px', borderRadius: '4px', backgroundColor: '#e5e7eb' }} />
         </div>
       </div>
     </div>
@@ -209,7 +189,7 @@ export default function TestimonialPreview() {
       <div style={innerStyle}>
       {heading
         ? <h2 style={hStyle}>{heading}</h2>
-        : <div style={{ width: '280px', height: '28px', borderRadius: '6px', backgroundColor: darkMode ? '#3f3f46' : '#d1d5db', margin: '0 auto 28px' }} />
+        : <div style={{ width: '280px', height: '28px', borderRadius: '6px', backgroundColor: '#d1d5db', margin: '0 auto 28px' }} />
       }
 
       {count === 0 ? (
@@ -217,7 +197,7 @@ export default function TestimonialPreview() {
       ) : (
         <>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <ArrowBtn dir="prev" onClick={prev} color={textColor} />
+           
             <div style={{
               flex:                1,
               minWidth:            0,
@@ -227,7 +207,7 @@ export default function TestimonialPreview() {
             }}>
               {visibleItems.map(({ item, index }) => renderCard(item, index))}
             </div>
-            <ArrowBtn dir="next" onClick={next} color={textColor} />
+           
           </div>
 
           <DotIndicators
@@ -235,7 +215,6 @@ export default function TestimonialPreview() {
             activeIndex={safeIndex}
             onDotClick={i => setActiveIndex(i)}
             accentColor={globalTheme.primaryColor || '#6366f1'}
-            darkMode={darkMode}
           />
         </>
       )}

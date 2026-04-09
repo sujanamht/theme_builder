@@ -139,16 +139,11 @@ export default function AboutDetailBuilder({ activeTab = 'content' }) {
         <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wide mb-3">Layout</h3>
         <div className="space-y-3">
           <RangeField
-            label="Top Padding (px)"
-            value={template.sectionPaddingTop ?? '80'}
-            onChange={v => handleTemplate('sectionPaddingTop', v)}
-            min={0} max={200} step={8}
-          />
-          <RangeField
-            label="Bottom Padding (px)"
-            value={template.sectionPaddingBottom ?? '80'}
-            onChange={v => handleTemplate('sectionPaddingBottom', v)}
-            min={0} max={200} step={8}
+            label="Vertical Padding"
+            value={parseInt(template.padding ?? 48)}
+            onChange={v => handleTemplate('padding', parseInt(v))}
+            min={30} max={180} step={10}
+            unit="px"
           />
         </div>
       </section>

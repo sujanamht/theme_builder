@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { useTheme, useDarkMode } from '../../store/themeStore.jsx'
+import { useTheme } from '../../store/themeStore.jsx'
 import { useSelection } from '../../store/selectionContext.jsx'
 import CanvasUpload from '../ui/CanvasUpload.jsx'
 import { useContainerWidth } from '../../hooks/useContainerWidth.js'
@@ -16,7 +16,7 @@ const PAGE_MAP = {
   'custom':   '/preview/custom',
 }
 
-function DropdownLink({ link, linkStyle, textColor, fontSize, darkMode, onInternalNav, isActivePage, accentColor, isPreview }) {
+function DropdownLink({ link, linkStyle, textColor, fontSize, onInternalNav, isActivePage, accentColor, isPreview }) {
   const [open, setOpen] = useState(false)
   const dropdown = link.dropdown ?? []
   const hasDropdown = dropdown.length > 0
@@ -26,7 +26,7 @@ function DropdownLink({ link, linkStyle, textColor, fontSize, darkMode, onIntern
     top:             '100%',
     left:            0,
     marginTop:       '6px',
-    background:      darkMode ? '#27272a' : '#ffffff',
+    background:      '#ffffff',
     borderRadius:    '8px',
     boxShadow:       '0 4px 24px rgba(0,0,0,0.12), 0 0 0 1px rgba(0,0,0,0.06)',
     minWidth:        '160px',
@@ -45,7 +45,7 @@ function DropdownLink({ link, linkStyle, textColor, fontSize, darkMode, onIntern
   const subItemStyle = {
     display:        'block',
     padding:        '8px 16px',
-    color:          textColor || (darkMode ? '#f4f4f5' : '#111827'),
+    color:          textColor || '#111827',
     fontSize:       fontSize  || '14px',
     textDecoration: 'none',
     whiteSpace:     'nowrap',
@@ -86,7 +86,7 @@ function DropdownLink({ link, linkStyle, textColor, fontSize, darkMode, onIntern
               <a
                 href={sub.url || '#'}
                 style={subItemStyle}
-                onMouseEnter={e => e.currentTarget.style.background = darkMode ? '#3f3f46' : '#f4f4f5'}
+                onMouseEnter={e => e.currentTarget.style.background = '#f4f4f5'}
                 onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
               >
                 {sub.label || `Sub-link ${si + 1}`}
@@ -134,7 +134,6 @@ export default function NavbarPreview() {
   const { globalTheme } = theme
   const selectedId = useSelection()
   const isActive = selectedId === 'navbar' || selectedId?.startsWith('navbar-')
-  const darkMode = useDarkMode()
   const { pathname } = useLocation()
   const isPreview = pathname.startsWith('/preview')
 
@@ -169,10 +168,10 @@ export default function NavbarPreview() {
   const isSticky    = !!template.sticky
   const hasBorder   = !!template.borderBottom
   const fontSize    = parsePx(template.fontSize) || 16
-  const borderColor = template.borderBottomColor || (darkMode ? '#3f3f46' : '#e5e7eb')
+  const borderColor = template.borderBottomColor || '#e5e7eb'
 
   const navStyle = {
-    backgroundColor: template.bgColor  || (darkMode ? '#18181b' : '#ffffff'),
+    backgroundColor: template.bgColor  || '#ffffff',
     padding:         template.padding  || '12px 24px',
     minHeight:       navHeight         || undefined,
     width:           '100%',
@@ -180,7 +179,7 @@ export default function NavbarPreview() {
     fontFamily:      template.fontFamily || globalTheme.fontFamily || 'inherit',
     borderBottom:    hasBorder
       ? `1px solid ${borderColor}`
-      : `1px solid ${darkMode ? '#27272a' : '#e5e7eb'}`,
+      : '1px solid #e5e7eb',
     position:        isSticky ? 'sticky' : undefined,
     top:             isSticky ? 0        : undefined,
     zIndex:          isSticky ? 100      : undefined,
@@ -195,7 +194,7 @@ export default function NavbarPreview() {
   }
 
   const logoStyle = {
-    color:          template.textColor || (darkMode ? '#f4f4f5' : '#111827'),
+    color:          template.textColor || '#111827',
     fontSize:       logoSize,
     fontWeight:     '700',
     textDecoration: 'none',
@@ -215,7 +214,7 @@ export default function NavbarPreview() {
   }
 
   const linkStyle = {
-    color:          template.textColor || (darkMode ? '#f4f4f5' : '#111827'),
+    color:          template.textColor || '#111827',
     fontSize:       `${fontSize}px`,
     textDecoration: 'none',
     cursor:         'pointer',
@@ -279,7 +278,7 @@ export default function NavbarPreview() {
     </div>
   )
 
-  const bgColor = template.bgColor || (darkMode ? '#18181b' : '#ffffff')
+  const bgColor = template.bgColor || '#ffffff'
 
   return (
     <div ref={navRef} style={{ position: 'relative', width: '100%' }}>
@@ -289,7 +288,7 @@ export default function NavbarPreview() {
 
           {isMobile ? (
             <Hamburger
-              color={template.textColor || (darkMode ? '#f4f4f5' : '#111827')}
+              color={template.textColor || '#111827'}
               onClick={() => setMenuOpen(prev => !prev)}
             />
           ) : (
@@ -302,7 +301,6 @@ export default function NavbarPreview() {
                     linkStyle={linkStyle}
                     textColor={template.textColor}
                     fontSize={`${fontSize}px`}
-                    darkMode={darkMode}
                     onInternalNav={setActivePage}
                     isActivePage={isPreview
                       ? pathname === (PAGE_MAP[link.url?.toLowerCase()] ?? PAGE_MAP[link.label?.toLowerCase()])
@@ -324,7 +322,7 @@ export default function NavbarPreview() {
           left:             0,
           width:            '100%',
           backgroundColor:  bgColor,
-          borderTop:        `1px solid ${darkMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)'}`,
+          borderTop:        '1px solid rgba(0,0,0,0.08)',
           boxShadow:        '0 4px 12px rgba(0,0,0,0.08)',
           zIndex:           200,
           boxSizing:        'border-box',
@@ -339,14 +337,14 @@ export default function NavbarPreview() {
               padding:        '12px 24px',
               color:          isActiveMobile
                 ? (template.accentColor || globalTheme.primaryColor || '#6366f1')
-                : (template.textColor || (darkMode ? '#f4f4f5' : '#111827')),
+                : (template.textColor || '#111827'),
               fontWeight:     isActiveMobile ? '700' : undefined,
               textDecoration: 'none',
               fontSize:       `${fontSize}px`,
               textAlign:      'left',
               background:     'none',
               border:         'none',
-              borderBottom:   i < links.length - 1 ? `1px solid ${darkMode ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.05)'}` : 'none',
+              borderBottom:   i < links.length - 1 ? '1px solid rgba(0,0,0,0.05)' : 'none',
               cursor:         'pointer',
               boxSizing:      'border-box',
             }

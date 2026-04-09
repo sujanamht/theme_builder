@@ -10,7 +10,6 @@ const dataFields = [
 
 const textTemplateFields = [
   { key: 'fontSize', label: 'Font Size', min: 10, max: 32,  step: 1 },
-  { key: 'padding',  label: 'Padding',   min: 0,  max: 64,  step: 4 },
 ]
 
 // single source of truth — preview must not invent fallbacks
@@ -62,6 +61,13 @@ export default function AnnouncementBuilder({ activeTab = 'content' }) {
               label="Text Color"
               value={template.textColor ?? '#000000'}
               onChange={v => handleTemplate('textColor', v)}
+            />
+            <RangeField
+              label="Vertical Padding"
+              value={parseInt(template.padding ?? 48)}
+              onChange={v => handleTemplate('padding', parseInt(v))}
+              min={30} max={180} step={10}
+              unit="px"
             />
             {textTemplateFields.map(({ key, label, min, max, step }) => (
               <RangeField

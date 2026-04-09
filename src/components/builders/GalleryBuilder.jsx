@@ -102,7 +102,13 @@ export default function GalleryBuilder({ activeTab = 'content' }) {
             <ColorInput label="Background Color"  value={template.bgColor    ?? '#000000'} onChange={v => handleTemplate('bgColor', v)} />
             <ColorInput label="Text Color"         value={template.textColor  ?? '#000000'} onChange={v => handleTemplate('textColor', v)} />
             <ColorInput label="Caption Background" value={template.captionBg  ?? '#000000'} onChange={v => handleTemplate('captionBg', v)} />
-
+            <RangeField
+              label="Vertical Padding"
+              value={parseInt(template.padding ?? 48)}
+              onChange={v => handleTemplate('padding', parseInt(v))}
+              min={30} max={180} step={10}
+              unit="px"
+            />
             {textTemplateFields.map(({ key, label, min, max, step }) => (
               <RangeField
                 key={key}

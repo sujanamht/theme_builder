@@ -588,7 +588,8 @@ const initialState = {
   },
 }
 
-const ThemeContext = createContext(null)
+export const ThemeContext = createContext(null)
+
 
 export function ThemeProvider({ children }) {
   const [theme, setTheme] = useState(initialState)
@@ -777,7 +778,3 @@ export function useTheme() {
   return ctx
 }
 
-export function useDarkMode() {
-  const { theme } = useTheme()
-  return theme.globalTheme.darkMode ?? false
-}

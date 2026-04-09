@@ -13,7 +13,10 @@
       "Bash(do echo:*)",
       "Read(//c/Users/Suuzz/Documents/github/theme_builder/**)",
       "Bash(done)",
-      "Bash(python3:*)"
+      "Bash(python3:*)",
+      "Bash(grep -l \"label=\"\"Vertical Padding\"\"\" src/components/builders/*.jsx)",
+      "Bash(python -c \":*)",
+      "Bash(grep -n \"darkMode\\\\|useDarkMode\" src/components/previews/*.jsx)"
     ]
   }
 }

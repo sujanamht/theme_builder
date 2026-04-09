@@ -1,4 +1,4 @@
-import { useTheme, useDarkMode } from '../../store/themeStore.jsx'
+import { useTheme } from '../../store/themeStore.jsx'
 import { useSelection } from '../../store/selectionContext.jsx'
 import CanvasUpload from '../ui/CanvasUpload.jsx'
 import { useContainerWidth } from '../../hooks/useContainerWidth.js'
@@ -12,7 +12,6 @@ export default function AboutPreview() {
   const { globalTheme } = theme
   const selectedId = useSelection()
   const isActive = selectedId === 'about' || selectedId?.startsWith('about-')
-  const darkMode = useDarkMode()
 
   const { ref: containerRef, width: containerWidth } = useContainerWidth()
   const isMobile = containerWidth < 500
@@ -20,7 +19,7 @@ export default function AboutPreview() {
   const innerStyle = { maxWidth: CONTENT_MAX_WIDTH, margin: '0 auto', width: '100%', boxSizing: 'border-box' }
 
   const fontSize      = parsePx(template.fontSize) || parsePx(globalTheme.bodySize) || 16
-  const textColor     = template.textColor     || (darkMode ? '#f4f4f5' : '#0a0a0a')
+  const textColor     = template.textColor     || '#0a0a0a'
   const imagePosition = template.imagePosition || 'left'
   const hasImage      = Boolean(data.image)
   const isEmpty       = !data.heading && !data.body
@@ -29,7 +28,7 @@ export default function AboutPreview() {
   const padH = isMobile ? '16px' : '48px'
 
   const sectionStyle = {
-    backgroundColor: template.bgColor || (darkMode ? '#18181b' : '#ffffff'),
+    backgroundColor: template.bgColor || '#ffffff',
     paddingTop:      padV,
     paddingBottom:   padV,
     paddingLeft:     padH,
@@ -63,7 +62,7 @@ export default function AboutPreview() {
   }
 
   const bodyStyle = {
-    color:      darkMode ? '#a1a1aa' : '#374151',
+    color:      '#374151',
     fontSize:   isMobile ? '14px' : `${fontSize}px`,
     lineHeight: '1.75',
     margin:     '0 0 28px',
@@ -71,8 +70,8 @@ export default function AboutPreview() {
 
 const btnStyle = {
   display:         'inline-block',
-  backgroundColor: template.buttonBg   || globalTheme.primaryColor || (darkMode ? '#f4f4f5' : '#0a0a0a'),
-  color:           template.buttonText || (darkMode ? '#18181b' : '#ffffff'),
+  backgroundColor: template.buttonBg   || globalTheme.primaryColor || '#0a0a0a',
+  color:           template.buttonText || '#ffffff',
   fontSize:        '0.95rem',
   fontWeight:      600,
   padding:         '12px 28px',
@@ -97,7 +96,7 @@ const btnStyle = {
     width:           w,
     height:          h,
     borderRadius:    '6px',
-    backgroundColor: darkMode ? '#3f3f46' : '#d1d5db',
+    backgroundColor: '#d1d5db',
     marginBottom:    mb,
   })
 

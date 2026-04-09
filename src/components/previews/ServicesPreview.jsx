@@ -1,8 +1,10 @@
 import { useState, useRef } from 'react'
-import { useTheme, useDarkMode } from '../../store/themeStore.jsx'
+import { useTheme } from '../../store/themeStore.jsx'
 import ResponsiveGrid from '../ui/ResponsiveGrid.jsx'
 import { hexToRgba } from '../../utils/colorUtils.js'
 import { CONTENT_MAX_WIDTH } from '../../constants/layout.js'
+import { SECTION_PADDING_X, SECTION_PADDING_X_MOBILE } from '../../constants/design.js'
+import { useContainerWidth } from '../../hooks/useContainerWidth.js'
 import DotIndicators from '../ui/DotIndicators.jsx'
 import { parsePx } from '../../utils/style.js'
 import { headingStyle, subheadingStyle } from '../../utils/typography.js'
@@ -11,7 +13,9 @@ export default function ServicesPreview() {
   const { theme } = useTheme()
   const { data, template } = theme.services
   const { globalTheme } = theme
-  const darkMode = useDarkMode()
+
+  const { ref, width: containerWidth } = useContainerWidth()
+  const isMobile = containerWidth < 500
 
   const [activeIndex, setActiveIndex] = useState(0)
   const carouselRef = useRef(null)
@@ -20,13 +24,16 @@ export default function ServicesPreview() {
   const subheading  = data.subheading || ''
   const items       = data.items      || []
 
-  const textColor   = template.textColor   || (darkMode ? '#f4f4f5' : '#111827')
+  const textColor   = template.textColor   || '#111827'
   const accentColor = template.accentColor || globalTheme.primaryColor || '#6366f1'
   const fontSize    = parsePx(template.fontSize    || globalTheme.bodySize || '15px')
 
   const sectionStyle = {
-    backgroundColor: template.bgColor  || (darkMode ? '#18181b' : '#f9fafb'),
-    padding:         template.padding  || '64px 32px',
+    backgroundColor: template.bgColor  || '#f9fafb',
+    paddingTop:      `${parseInt(template.padding ?? 64)}px`,
+    paddingBottom:   `${parseInt(template.padding ?? 64)}px`,
+    paddingLeft:     isMobile ? `${SECTION_PADDING_X_MOBILE}px` : `${SECTION_PADDING_X}px`,
+    paddingRight:    isMobile ? `${SECTION_PADDING_X_MOBILE}px` : `${SECTION_PADDING_X}px`,
     width:           '100%',
     boxSizing:       'border-box',
     fontFamily:      template.fontFamily || globalTheme.fontFamily || 'inherit',
@@ -36,9 +43,9 @@ export default function ServicesPreview() {
   const sStyle = subheadingStyle({ template, globalTheme, textColor, fontSize })
 
   const cardStyle = {
-    backgroundColor: template.cardBg       || (darkMode ? '#27272a' : '#ffffff'),
+    backgroundColor: template.cardBg       || '#ffffff',
     borderRadius:    template.borderRadius  || '12px',
-    border:          darkMode ? '1px solid #3f3f46' : '1px solid #e5e7eb',
+    border:          '1px solid #e5e7eb',
     padding:         '24px',
     display:         'flex',
     flexDirection:   'column',
@@ -117,7 +124,7 @@ export default function ServicesPreview() {
   }
 
   return (
-    <section style={sectionStyle}>
+    <section ref={ref} style={sectionStyle}>
       <div style={innerStyle}>
         {heading    && <h2 style={hStyle}>{heading}</h2>}
         {subheading && <p style={sStyle}>{subheading}</p>}
@@ -166,7 +173,6 @@ export default function ServicesPreview() {
               setActiveIndex(i)
             }}
             accentColor={accentColor}
-            darkMode={darkMode}
           />
         </div>
       ) : (

@@ -69,6 +69,13 @@ export default function PageBannerBuilder({ activeTab = 'content' }) {
       <section>
         <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wide mb-3">Layout</h3>
         <div className="space-y-3">
+          <RangeField
+            label="Vertical Padding"
+            value={parseInt(template.padding ?? 48)}
+            onChange={v => handleTemplate('padding', parseInt(v))}
+            min={30} max={180} step={10}
+            unit="px"
+          />
           <label className="flex flex-col gap-1">
             Banner Height
             <input

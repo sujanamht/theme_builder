@@ -113,6 +113,13 @@ export default function CarouselBuilder({ activeTab = 'content' }) {
             />
             <ColorInput label="Button BG Color"   value={template.btnBg    ?? '#1e3a8a'} onChange={v => handleTemplate('btnBg', v)} />
             <ColorInput label="Button Text Color" value={template.btnColor ?? '#ffffff'} onChange={v => handleTemplate('btnColor', v)} />
+            <RangeField
+              label="Vertical Padding"
+              value={parseInt(template.padding ?? 48)}
+              onChange={v => handleTemplate('padding', parseInt(v))}
+              min={30} max={180} step={10}
+              unit="px"
+            />
             {textTemplateFields.map(({ key, label, min, max, step }) => (
               <RangeField
                 key={key}

@@ -1,14 +1,19 @@
 import { useTheme } from '../../store/themeStore.jsx'
 import { CONTENT_MAX_WIDTH } from '../../constants/layout.js'
+import { SECTION_PADDING_X, SECTION_PADDING_X_MOBILE } from '../../constants/design.js'
+import { useContainerWidth } from '../../hooks/useContainerWidth.js'
 import { parsePx } from '../../utils/style.js'
 import { headingStyle, subheadingStyle } from '../../utils/typography.js'
 
 export default function TeamPreview() {
+  const { ref, width: containerWidth } = useContainerWidth()
+  const isMobile = containerWidth < 500
+
   const { theme } = useTheme()
   const { data, template } = theme.team
   const { globalTheme } = theme
 
-  const paddingY = parsePx(template.paddingY) ?? parsePx(template.sectionPaddingTop) ?? 80
+  const paddingY = parseInt(template.padding ?? 48)
 
   const displayMode       = template.displayMode       || 'grid'
   const sectionBackground = template.sectionBackground || '#ffffff'
@@ -75,12 +80,15 @@ export default function TeamPreview() {
 
   return (
     <section
+      ref={ref}
       style={{
         backgroundColor: sectionBackground,
         width:           '100%',
         boxSizing:       'border-box',
         paddingTop:      `${paddingY}px`,
         paddingBottom:   `${paddingY}px`,
+        paddingLeft:     isMobile ? `${SECTION_PADDING_X_MOBILE}px` : `${SECTION_PADDING_X}px`,
+        paddingRight:    isMobile ? `${SECTION_PADDING_X_MOBILE}px` : `${SECTION_PADDING_X}px`,
       }}
     >
       <div

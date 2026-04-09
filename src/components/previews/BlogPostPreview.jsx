@@ -1,5 +1,5 @@
 import { useSearchParams, useNavigate, useLocation } from 'react-router-dom'
-import { useTheme, useDarkMode } from '../../store/themeStore.jsx'
+import { useTheme } from '../../store/themeStore.jsx'
 import { hexToRgba } from '../../utils/colorUtils.js'
 import { CONTENT_MAX_WIDTH } from '../../constants/layout.js'
 import { parsePx } from '../../utils/style.js'
@@ -8,7 +8,6 @@ export default function BlogPostPreview() {
   const { theme } = useTheme()
   const { data, template } = theme.blogPost
   const { globalTheme } = theme
-  const darkMode = useDarkMode()
   const [searchParams] = useSearchParams()
   const navigate = useNavigate()
   const { pathname } = useLocation()
@@ -18,9 +17,9 @@ export default function BlogPostPreview() {
   const posts  = theme.bloglist?.data?.posts ?? []
   const post   = (postId ? posts.find(p => p.id === postId) : null) ?? data
 
-  const textColor   = template.textColor   || (darkMode ? '#f4f4f5' : '#111827')
+  const textColor   = template.textColor   || '#111827'
   const accentColor = template.accentColor || globalTheme.primaryColor || '#6366f1'
-  const bgColor     = template.bgColor     || (darkMode ? '#18181b' : '#ffffff')
+  const bgColor     = template.bgColor     || '#ffffff'
   const fontSize    = parsePx(template.fontSize) || 16
   const padding     = parseInt(template.padding, 10) || 64
 

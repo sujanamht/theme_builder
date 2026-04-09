@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useTheme, useDarkMode } from '../../store/themeStore.jsx'
+import { useTheme } from '../../store/themeStore.jsx'
 import { useSelection } from '../../store/selectionContext.jsx'
 import CanvasUpload from '../ui/CanvasUpload.jsx'
 import { CONTENT_MAX_WIDTH } from '../../constants/layout.js'
@@ -25,7 +25,6 @@ export default function PartnersPreview() {
   const { theme, updateSection } = useTheme()
   const { data, template } = theme.partners
   const { globalTheme } = theme
-  const darkMode = useDarkMode()
   const selectedId = useSelection()
   const isActive = selectedId === 'partners' || selectedId?.startsWith('partners-')
 
@@ -40,8 +39,8 @@ export default function PartnersPreview() {
   const logoHeight = template.logoHeight ?? '60px'
   const padding = template.padding ?? 48
 
-  const bgColor = template.bgColor || (darkMode ? '#18181b' : '#f9fafb')
-  const headingColor = template.headingColor || (darkMode ? '#f4f4f5' : '#111827')
+  const bgColor = template.bgColor || '#f9fafb'
+  const headingColor = template.headingColor || '#111827'
 
   // Duplicate items for seamless infinite loop
   const displayItems = autoScroll && items.length > 0
@@ -96,12 +95,12 @@ export default function PartnersPreview() {
     height: logoHeight,
     width: '160px',
     borderRadius: '4px',
-    backgroundColor: darkMode ? '#2a2a2a' : '#e5e7eb',
+    backgroundColor: '#e5e7eb',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     fontSize: '11px',
-    color: darkMode ? '#6b7280' : '#9ca3af',
+    color: '#9ca3af',
     flexShrink: 0,
   }
 
@@ -139,7 +138,7 @@ export default function PartnersPreview() {
       )}
 
       {items.length === 0 ? (
-        <div style={{ textAlign: 'center', color: darkMode ? '#6b7280' : '#9ca3af', fontSize: '14px', padding: '32px 0' }}>
+        <div style={{ textAlign: 'center', color: '#9ca3af', fontSize: '14px', padding: '32px 0' }}>
           Add partner logos in the Content tab
         </div>
       ) : (

@@ -81,10 +81,11 @@ export default function AboutBuilder({ activeTab = 'content' }) {
               min={10} max={32} step={1}
             />
             <RangeField
-              label="Padding"
-              value={template.padding ?? ''}
-              onChange={v => handleTemplate('padding', v)}
-              min={30} max={150} step={10}
+              label="Vertical Padding"
+              value={parseInt(template.padding ?? 48)}
+              onChange={v => handleTemplate('padding', parseInt(v))}
+              min={30} max={180} step={10}
+              unit="px"
             />
 
             <label className="flex flex-col gap-1">

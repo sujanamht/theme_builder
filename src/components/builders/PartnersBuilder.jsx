@@ -112,7 +112,7 @@ export default function PartnersBuilder({ activeTab = 'content' }) {
               label="Vertical Padding"
               value={parseInt(template.padding ?? 48)}
               onChange={v => handleTemplate('padding', parseInt(v))}
-              min={0} max={120} step={4}
+              min={30} max={180} step={10}
               unit="px"
             />
             <RangeField

@@ -1,4 +1,4 @@
-import { useTheme, useDarkMode } from '../../store/themeStore.jsx'
+import { useTheme } from '../../store/themeStore.jsx'
 import { useContainerWidth } from '../../hooks/useContainerWidth.js'
 import { useLocation, Link } from 'react-router-dom'
 import ResponsiveGrid from '../ui/ResponsiveGrid.jsx'
@@ -11,7 +11,6 @@ export default function BlogListPreview() {
   const { theme } = useTheme()
   const { data, template } = theme.bloglist
   const { globalTheme } = theme
-  const darkMode = useDarkMode()
   const { ref, width } = useContainerWidth()
   const location = useLocation()
 
@@ -21,16 +20,16 @@ export default function BlogListPreview() {
   const subheading = data.subheading || ''
   const posts      = data.posts      || []
 
-  const textColor   = template.textColor   || (darkMode ? '#f4f4f5' : '#111827')
+  const textColor   = template.textColor   || '#111827'
   const accentColor = template.accentColor || globalTheme.primaryColor || '#6366f1'
-  const cardBg      = template.cardBg      || (darkMode ? '#27272a' : '#ffffff')
+  const cardBg      = template.cardBg      || '#ffffff'
   const fontSize    = parsePx(template.fontSize) || 15
   const padding     = parseInt(template.padding, 10)  || 64
   const radius      = parseInt(template.borderRadius, 10) ?? 12
   const columns     = parseInt(template.columns, 10) || 3
 
   const sectionStyle = {
-    backgroundColor: template.bgColor || (darkMode ? '#18181b' : '#f9fafb'),
+    backgroundColor: template.bgColor || '#f9fafb',
     padding:         `${padding}px 32px`,
     width:           '100%',
     boxSizing:       'border-box',
@@ -50,7 +49,7 @@ export default function BlogListPreview() {
   const cardStyle = {
     backgroundColor: cardBg,
     borderRadius:    `${radius}px`,
-    border:          darkMode ? '1px solid #3f3f46' : '1px solid #e5e7eb',
+    border:          '1px solid #e5e7eb',
     overflow:        'hidden',
     display:         'flex',
     flexDirection:   'column',
