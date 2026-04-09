@@ -3,6 +3,7 @@ import { useTheme, useDarkMode } from '../../store/themeStore.jsx'
 import { useSelection } from '../../store/selectionContext.jsx'
 import CanvasUpload from '../ui/CanvasUpload.jsx'
 import { useContainerWidth } from '../../hooks/useContainerWidth.js'
+import { headingStyle, subheadingStyle } from '../../utils/typography.js'
 
 const KEYFRAME_ID = 'partners-marquee-keyframes'
 
@@ -56,20 +57,15 @@ export default function PartnersPreview() {
 
   const sectionStyle = {
     backgroundColor: bgColor,
-    padding: `${padding}px 24px`,
+    paddingTop: `${padding}px`,
+    paddingBottom: `${padding}px`,
+    paddingLeft: '24px',
+    paddingRight: '24px',
     fontFamily: globalTheme.fontFamily || 'inherit',
     boxSizing: 'border-box',
     width: '100%',
     outline: isActive ? '2px solid #6366f1' : 'none',
     outlineOffset: '-2px',
-  }
-
-  const headingStyle = {
-    textAlign: 'center',
-    fontSize: '1.5rem',
-    fontWeight: '600',
-    color: headingColor,
-    marginBottom: '32px',
   }
 
   const trackStyle = {
@@ -88,10 +84,8 @@ export default function PartnersPreview() {
 
   const logoStyle = {
     height: logoHeight,
-    width: logoHeight,
-    maxWidth: '160px',
+    width: 'auto',
     objectFit: 'contain',
-    borderRadius: '18px', 
     transition: 'filter 0.2s ease, opacity 0.2s ease',
     flexShrink: 0,
     display: 'block',
@@ -99,8 +93,8 @@ export default function PartnersPreview() {
 
   const placeholderStyle = {
     height: logoHeight,
-    width: logoHeight,
-    borderRadius: '18px',
+    width: '160px',
+    borderRadius: '4px',
     backgroundColor: darkMode ? '#2a2a2a' : '#e5e7eb',
     display: 'flex',
     alignItems: 'center',
@@ -110,10 +104,35 @@ export default function PartnersPreview() {
     flexShrink: 0,
   }
 
+  const overflowWrapperStyle = {
+    overflow: 'hidden',
+    width: '100%',
+    ...(autoScroll ? {
+      maskImage: 'linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)',
+      WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)',
+    } : {}),
+  }
+
+  const hasSubheading = !!data.subheading
+
   return (
     <div ref={ref} style={sectionStyle}>
       {data.heading && (
-        <h2 style={headingStyle}>{data.heading}</h2>
+        <h2 style={{
+          ...headingStyle({ template, globalTheme, textColor: headingColor }),
+          marginBottom: hasSubheading ? '8px' : '32px',
+        }}>
+          {data.heading}
+        </h2>
+      )}
+
+      {hasSubheading && (
+        <p style={{
+          ...subheadingStyle({ template, globalTheme, textColor: headingColor }),
+          marginBottom: '32px',
+        }}>
+          {data.subheading}
+        </p>
       )}
 
       {items.length === 0 ? (
@@ -121,7 +140,7 @@ export default function PartnersPreview() {
           Add partner logos in the Content tab
         </div>
       ) : (
-        <div style={{ overflow: 'hidden', width: '100%' }}>
+        <div style={overflowWrapperStyle}>
           <div
             style={trackStyle}
             onMouseEnter={() => setHovered(true)}
@@ -138,7 +157,7 @@ export default function PartnersPreview() {
                       onUpload={url => handleLogoUpload(realIndex, url)}
                       onCrop={url => handleLogoUpload(realIndex, url)}
                       aspectRatio="1/1"
-                      style={{ height: logoHeight, width: logoHeight, borderRadius: '6px' }}
+                      style={{ height: logoHeight, width: 'auto', minWidth: logoHeight, borderRadius: '6px' }}
                     >
                       {item.image && (
                         <img

@@ -38,6 +38,15 @@ export default function PartnersBuilder({ activeTab = 'content' }) {
               onChange={e => handleData('heading', e.target.value)}
             />
           </label>
+          <label className="flex flex-col gap-1">
+            Subheading
+            <input
+              type="text"
+              value={data.subheading ?? ''}
+              placeholder="Trusted by leading organizations worldwide"
+              onChange={e => handleData('subheading', e.target.value)}
+            />
+          </label>
         </section>
 
         <section>
@@ -100,22 +109,25 @@ export default function PartnersBuilder({ activeTab = 'content' }) {
               onChange={v => handleTemplate('headingColor', v)}
             />
             <RangeField
-              label="Padding"
-              value={template.padding ?? 50}
-              onChange={v => handleTemplate('padding', v)}
-              min={0} max={180} step={5}
+              label="Vertical Padding"
+              value={parseInt(template.padding ?? 48)}
+              onChange={v => handleTemplate('padding', parseInt(v))}
+              min={0} max={120} step={4}
+              unit="px"
             />
             <RangeField
-              label={`Logo Height (${template.logoHeight ?? 60}px)`}
-              value={parseInt(template.logoHeight ?? 60)}
-              onChange={v => handleTemplate('logoHeight', `${v}px`)}
+              label="Logo Height"
+              value={parseInt(template.logoHeight ?? '56px')}
+              onChange={v => handleTemplate('logoHeight', `${parseInt(v)}px`)}
               min={30} max={120} step={2}
+              unit="px"
             />
             <RangeField
-              label={`Scroll Speed (${template.speed ?? 30}s)`}
-              value={template.speed ?? 30}
-              onChange={v => handleTemplate('speed', v)}
+              label="Scroll Speed"
+              value={parseInt(template.speed ?? 35)}
+              onChange={v => handleTemplate('speed', parseInt(v))}
               min={5} max={80} step={1}
+              unit="s"
             />
             <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px' }}>
               <input
