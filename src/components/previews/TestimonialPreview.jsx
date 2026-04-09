@@ -7,7 +7,7 @@ import { CONTENT_MAX_WIDTH } from '../../constants/layout.js'
 import { SECTION_PADDING_X, SECTION_PADDING_X_MOBILE } from '../../constants/design.js'
 import DotIndicators from '../ui/DotIndicators.jsx'
 import { parsePx } from '../../utils/style.js'
-import { headingStyle } from '../../utils/typography.js'
+import { headingStyle, subheadingStyle } from '../../utils/typography.js'
 
 function getInitials(name) {
   if (!name) return '?'
@@ -83,6 +83,7 @@ export default function TestimonialPreview() {
   }
 
   const hStyle = headingStyle({ template, globalTheme, textColor })
+  const sStyle = subheadingStyle({ template, globalTheme, textColor })
 
   const cardStyle = {
     backgroundColor: template.cardBg      || '#ffffff',
@@ -191,6 +192,9 @@ export default function TestimonialPreview() {
         ? <h2 style={hStyle}>{heading}</h2>
         : <div style={{ width: '280px', height: '28px', borderRadius: '6px', backgroundColor: '#d1d5db', margin: '0 auto 28px' }} />
       }
+      {data.subheading && (
+        <p style={sStyle}>{data.subheading}</p>
+      )}
 
       {count === 0 ? (
         skeletonCard

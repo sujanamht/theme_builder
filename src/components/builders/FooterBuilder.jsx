@@ -163,8 +163,9 @@ export default function FooterBuilder({ activeTab = 'content' }) {
       {activeTab === 'style' && (
         <section>
           <div className="space-y-3">
-            <ColorInput label="Background Color" value={template.bgColor    ?? '#000000'} onChange={v => handleTemplate('bgColor', v)} />
-            <ColorInput label="Text Color"        value={template.textColor  ?? '#000000'} onChange={v => handleTemplate('textColor', v)} />
+            <ColorInput label="Background Color" value={template.bgColor      ?? '#000000'} onChange={v => handleTemplate('bgColor', v)} />
+            <ColorInput label="Heading Color"     value={template.headingColor ?? ''} onChange={v => handleTemplate('headingColor', v)} />
+            <ColorInput label="Text Color"        value={template.textColor    ?? '#000000'} onChange={v => handleTemplate('textColor', v)} />
             <ColorInput label="Link Color"        value={template.linkColor  ?? '#000000'} onChange={v => handleTemplate('linkColor', v)} />
             <RangeField
               label="Vertical Padding"

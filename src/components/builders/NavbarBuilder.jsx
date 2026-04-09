@@ -299,9 +299,9 @@ export default function NavbarBuilder({ activeTab = 'content' }) {
             {/* Existing range fields */}
             <RangeField
               label="Vertical Padding"
-              value={parseInt(template.padding ?? 48)}
+              value={parseInt(template.padding ?? 12)}
               onChange={v => handleTemplate('padding', parseInt(v))}
-              min={30} max={180} step={10}
+              min={8} max={40} step={2}
               unit="px"
             />
             {textTemplateFields.map(({ key, label, min, max, step }) => (

@@ -113,6 +113,7 @@ export default function ServicesBuilder({ activeTab = 'content' }) {
         <section>
           <div className="space-y-3">
             <ColorInput label="Background Color" value={template.bgColor      ?? '#000000'} onChange={v => handleTemplate('bgColor', v)} />
+            <ColorInput label="Heading Color"     value={template.headingColor ?? ''} onChange={v => handleTemplate('headingColor', v)} />
             <ColorInput label="Text Color"        value={template.textColor    ?? '#000000'} onChange={v => handleTemplate('textColor', v)} />
             <ColorInput label="Card Background"   value={template.cardBg       ?? '#000000'} onChange={v => handleTemplate('cardBg', v)} />
             <ColorInput label="Accent Color"      value={template.accentColor  ?? '#000000'} onChange={v => handleTemplate('accentColor', v)} />

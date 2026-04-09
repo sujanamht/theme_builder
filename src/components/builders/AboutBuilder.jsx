@@ -70,22 +70,23 @@ export default function AboutBuilder({ activeTab = 'content' }) {
         <section>
           <div className="space-y-3">
             <ColorInput label="Background Color" value={template.bgColor     ?? '#000000'} onChange={v => handleTemplate('bgColor', v)} />
+            <ColorInput label="Heading Color"     value={template.headingColor ?? ''} onChange={v => handleTemplate('headingColor', v)} />
             <ColorInput label="Text Color"        value={template.textColor   ?? '#000000'} onChange={v => handleTemplate('textColor', v)} />
             <ColorInput label="Button Color"      value={template.buttonBg    ?? '#000000'} onChange={v => handleTemplate('buttonBg', v)} />
             <ColorInput label="Button Text Color" value={template.buttonText  ?? '#000000'} onChange={v => handleTemplate('buttonText', v)} />
 
-            <RangeField
-              label="Font Size"
-              value={template.fontSize ?? ''}
-              onChange={v => handleTemplate('fontSize', v)}
-              min={10} max={32} step={1}
-            />
             <RangeField
               label="Vertical Padding"
               value={parseInt(template.padding ?? 48)}
               onChange={v => handleTemplate('padding', parseInt(v))}
               min={30} max={180} step={10}
               unit="px"
+            />
+            <RangeField
+              label="Font Size"
+              value={template.fontSize ?? ''}
+              onChange={v => handleTemplate('fontSize', v)}
+              min={10} max={32} step={1}
             />
 
             <label className="flex flex-col gap-1">

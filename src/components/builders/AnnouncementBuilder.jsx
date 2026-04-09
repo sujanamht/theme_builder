@@ -58,6 +58,11 @@ export default function AnnouncementBuilder({ activeTab = 'content' }) {
               onChange={v => handleTemplate('bgColor', v)}
             />
             <ColorInput
+              label="Heading Color"
+              value={template.headingColor ?? ''}
+              onChange={v => handleTemplate('headingColor', v)}
+            />
+            <ColorInput
               label="Text Color"
               value={template.textColor ?? '#000000'}
               onChange={v => handleTemplate('textColor', v)}

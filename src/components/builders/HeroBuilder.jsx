@@ -59,6 +59,7 @@ export default function HeroBuilder({ activeTab = 'content' }) {
         <section>
           <div className="space-y-3">
             <ColorInput label="Background Color" value={template.bgColor     ?? '#ffffff'} onChange={v => handleTemplate('bgColor', v)} />
+            <ColorInput label="Heading Color"     value={template.headingColor ?? ''} onChange={v => handleTemplate('headingColor', v)} />
             <ColorInput label="Text Color"        value={template.textColor   ?? '#0a0a0a'} onChange={v => handleTemplate('textColor', v)} />
             <ColorInput label="Button Color"      value={template.btnBg       ?? '#0a0a0a'} onChange={v => handleTemplate('btnBg', v)} />
             <ColorInput label="Button Text Color" value={template.btnText     ?? '#ffffff'} onChange={v => handleTemplate('btnText', v)} />

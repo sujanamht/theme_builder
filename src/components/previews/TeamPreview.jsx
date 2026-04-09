@@ -95,7 +95,6 @@ export default function TeamPreview() {
         style={{
           maxWidth:  CONTENT_MAX_WIDTH,
           margin:    '0 auto',
-          padding:   '0 32px',
           boxSizing: 'border-box',
         }}
       >

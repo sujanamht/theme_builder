@@ -1,6 +1,8 @@
 import { useTheme } from '../../store/themeStore.jsx'
 import ResponsiveGrid from '../ui/ResponsiveGrid.jsx'
+import { useContainerWidth } from '../../hooks/useContainerWidth.js'
 import { CONTENT_MAX_WIDTH } from '../../constants/layout.js'
+import { SECTION_PADDING_X, SECTION_PADDING_X_MOBILE } from '../../constants/design.js'
 import { parsePx } from '../../utils/style.js'
 import { headingStyle, subheadingStyle } from '../../utils/typography.js'
 
@@ -71,10 +73,12 @@ export default function ContactPreview() {
   const { data, template } = theme.contact
   const { globalTheme } = theme
 
+  const { ref, width: containerWidth } = useContainerWidth()
+  const isMobile = containerWidth < 500
+
   const bg          = template.bgColor     || '#ffffff'
   const textColor   = template.textColor   || '#111827'
   const accentColor = template.accentColor || globalTheme.primaryColor || '#6366f1'
-  const padding     = `${template.padding ?? 64}px 32px`
 
   const fontSize = parsePx(template.fontSize || globalTheme.bodySize || '15px')
   const hStyle   = { ...headingStyle({ template, globalTheme, textColor }), textAlign: 'left', margin: '0 0 8px' }
@@ -100,7 +104,7 @@ export default function ContactPreview() {
   })
 
   return (
-    <section style={{ backgroundColor: bg, padding, width: '100%', boxSizing: 'border-box', fontFamily: template.fontFamily || globalTheme.fontFamily || 'inherit' }}>
+    <section ref={ref} style={{ backgroundColor: bg, paddingTop: `${template.padding ?? 64}px`, paddingBottom: `${template.padding ?? 64}px`, paddingLeft: isMobile ? `${SECTION_PADDING_X_MOBILE}px` : `${SECTION_PADDING_X}px`, paddingRight: isMobile ? `${SECTION_PADDING_X_MOBILE}px` : `${SECTION_PADDING_X}px`, width: '100%', boxSizing: 'border-box', fontFamily: template.fontFamily || globalTheme.fontFamily || 'inherit' }}>
       <div style={innerStyle}>
         <ResponsiveGrid
           cols={{ mobile: 1, tablet: 1, desktop: 2 }}

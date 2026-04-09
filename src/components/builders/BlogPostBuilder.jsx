@@ -126,11 +126,24 @@ export default function BlogPostBuilder({ activeTab = 'content' }) {
       <h2 className="text-lg font-semibold">Blog Post</h2>
       <section>
         <div className="space-y-3">
-          <ColorInput label="Background Color" value={template.bgColor    ?? '#000000'} onChange={v => handleTemplate('bgColor', v)} />
-          <ColorInput label="Text Color"        value={template.textColor  ?? '#000000'} onChange={v => handleTemplate('textColor', v)} />
-          <ColorInput label="Accent Color"      value={template.accentColor ?? '#000000'} onChange={v => handleTemplate('accentColor', v)} />
-          <RangeField label="Body Font Size"    value={template.fontSize   ?? ''} onChange={v => handleTemplate('fontSize', v)}  min={12} max={24} step={1} />
+          <ColorInput label="Background Color" value={template.bgColor     ?? '#000000'} onChange={v => handleTemplate('bgColor', v)} />
+          <ColorInput label="Heading Color"    value={template.headingColor ?? ''} onChange={v => handleTemplate('headingColor', v)} />
+          <ColorInput label="Text Color"       value={template.textColor   ?? '#000000'} onChange={v => handleTemplate('textColor', v)} />
+          <ColorInput label="Accent Color"     value={template.accentColor  ?? '#000000'} onChange={v => handleTemplate('accentColor', v)} />
+          <RangeField label="Body Font Size"   value={template.fontSize    ?? ''} onChange={v => handleTemplate('fontSize', v)}  min={12} max={24} step={1} />
           <RangeField label="Vertical Padding" value={parseInt(template.padding ?? 48)} onChange={v => handleTemplate('padding', parseInt(v))} min={30} max={180} step={10} unit="px" />
+          <button
+            onClick={() => updateSection('blogPost', 'template', {
+              ...template,
+              accentColor: null,
+              primaryBtnBg: null,
+              secondaryBtnBg: null,
+              fontFamily: null,
+            })}
+            style={{ background: 'none', border: 'none', color: '#6366f1', fontSize: '12px', cursor: 'pointer', padding: '4px 0', textDecoration: 'underline', opacity: 0.8 }}
+          >
+            ↺ Reset to global theme
+          </button>
         </div>
       </section>
     </div>

@@ -80,7 +80,7 @@ const initialState = {
       textColor:       '',
       accentColor:     '',
       fontSize:        16,
-      padding:         '12px 24px',
+      padding:         12,
       linkSpacing:     '24px',
       logoSize:        '28px',
       navbarHeight:    '',
@@ -246,7 +246,7 @@ const initialState = {
       borderRadius: 8,
       gap:          16,
       columns:      '3',
-      padding:      '64px 32px',
+      padding:      64,
     },
     data: {
       heading:    'Product in action',
@@ -453,7 +453,7 @@ const initialState = {
     },
     template: {
       sectionBackground: '#ffffff',
-      paddingY:          '80',
+      padding: 48,
       displayMode:       'grid',
       columns:           '3',
       imageHeight:          '280px',
@@ -514,8 +514,7 @@ const initialState = {
       backgroundRepeat:   'no-repeat',
       overlayColor:          '',
       overlayOpacity:        0,
-      contentTopSpacing:     '40px',
-      contentBottomSpacing:  '100px',
+      padding: 48,
     },
   },
 

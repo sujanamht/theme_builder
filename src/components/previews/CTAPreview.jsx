@@ -1,6 +1,7 @@
 import { useTheme } from '../../store/themeStore.jsx'
 import { useContainerWidth } from '../../hooks/useContainerWidth.js'
 import { CONTENT_MAX_WIDTH } from '../../constants/layout.js'
+import { SECTION_PADDING_X, SECTION_PADDING_X_MOBILE } from '../../constants/design.js'
 import { parsePx } from '../../utils/style.js'
 import { headingStyle, subheadingStyle } from '../../utils/typography.js'
 
@@ -19,7 +20,10 @@ export default function CTAPreview() {
 
   const sectionStyle = {
     backgroundColor: template.bgColor  || '#f9fafb',
-    padding:         isMobile ? '32px 20px' : (template.padding || '64px 32px'),
+    paddingTop:      `${parseInt(template.padding ?? 48)}px`,
+    paddingBottom:   `${parseInt(template.padding ?? 48)}px`,
+    paddingLeft:     isMobile ? `${SECTION_PADDING_X_MOBILE}px` : `${SECTION_PADDING_X}px`,
+    paddingRight:    isMobile ? `${SECTION_PADDING_X_MOBILE}px` : `${SECTION_PADDING_X}px`,
     width:           '100%',
     boxSizing:       'border-box',
     textAlign,

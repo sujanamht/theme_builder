@@ -3,6 +3,7 @@ import { useSelection } from '../../store/selectionContext.jsx'
 import CanvasUpload from '../ui/CanvasUpload.jsx'
 import { useContainerWidth } from '../../hooks/useContainerWidth.js'
 import { CONTENT_MAX_WIDTH } from '../../constants/layout.js'
+import { SECTION_PADDING_X, SECTION_PADDING_X_MOBILE } from '../../constants/design.js'
 import { parsePx } from '../../utils/style.js'
 import { headingStyle } from '../../utils/typography.js'
 
@@ -25,14 +26,13 @@ export default function AboutPreview() {
   const isEmpty       = !data.heading && !data.body
 
   const padV = isMobile ? '32px' : (template.padding ?? '64px')
-  const padH = isMobile ? '16px' : '48px'
 
   const sectionStyle = {
     backgroundColor: template.bgColor || '#ffffff',
     paddingTop:      padV,
     paddingBottom:   padV,
-    paddingLeft:     padH,
-    paddingRight:    padH,
+    paddingLeft:     isMobile ? `${SECTION_PADDING_X_MOBILE}px` : `${SECTION_PADDING_X}px`,
+    paddingRight:    isMobile ? `${SECTION_PADDING_X_MOBILE}px` : `${SECTION_PADDING_X}px`,
     width:           '100%',
     boxSizing:       'border-box',
     fontFamily:      template.fontFamily || globalTheme.fontFamily || 'inherit',

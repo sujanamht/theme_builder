@@ -1,8 +1,11 @@
 import { useSearchParams, useNavigate, useLocation } from 'react-router-dom'
 import { useTheme } from '../../store/themeStore.jsx'
 import { hexToRgba } from '../../utils/colorUtils.js'
+import { useContainerWidth } from '../../hooks/useContainerWidth.js'
 import { CONTENT_MAX_WIDTH } from '../../constants/layout.js'
+import { SECTION_PADDING_X, SECTION_PADDING_X_MOBILE } from '../../constants/design.js'
 import { parsePx } from '../../utils/style.js'
+import { headingStyle } from '../../utils/typography.js'
 
 export default function BlogPostPreview() {
   const { theme } = useTheme()
@@ -16,6 +19,9 @@ export default function BlogPostPreview() {
   const postId = searchParams.get('postId')
   const posts  = theme.bloglist?.data?.posts ?? []
   const post   = (postId ? posts.find(p => p.id === postId) : null) ?? data
+
+  const { ref, width: containerWidth } = useContainerWidth()
+  const isMobile = containerWidth < 500
 
   const textColor   = template.textColor   || '#111827'
   const accentColor = template.accentColor || globalTheme.primaryColor || '#6366f1'
@@ -32,7 +38,7 @@ export default function BlogPostPreview() {
   const tags       = post.tags       ?? []
 
   return (
-    <div style={{
+    <div ref={ref} style={{
       backgroundColor: bgColor,
       width:           '100%',
       boxSizing:       'border-box',
@@ -75,10 +81,13 @@ export default function BlogPostPreview() {
 
       {/* Content container */}
       <div style={{
-        maxWidth:  CONTENT_MAX_WIDTH,
-        margin:    '0 auto',
-        padding:   `${padding}px 32px`,
-        boxSizing: 'border-box',
+        maxWidth:      CONTENT_MAX_WIDTH,
+        margin:        '0 auto',
+        paddingTop:    `${padding}px`,
+        paddingBottom: `${padding}px`,
+        paddingLeft:   isMobile ? `${SECTION_PADDING_X_MOBILE}px` : `${SECTION_PADDING_X}px`,
+        paddingRight:  isMobile ? `${SECTION_PADDING_X_MOBILE}px` : `${SECTION_PADDING_X}px`,
+        boxSizing:     'border-box',
       }}>
         {/* Category tags */}
         {tags.length > 0 && (
@@ -101,11 +110,8 @@ export default function BlogPostPreview() {
         {/* Title */}
         {post.title && (
           <h1 style={{
-            color:      textColor,
-            fontSize:   'clamp(1.6rem, 4vw, 2.4rem)',
-            fontWeight: '800',
-            lineHeight: '1.2',
-            margin:     '0 0 16px',
+            ...headingStyle({ template, globalTheme, textColor }),
+            margin: '0 0 16px',
           }}>
             {post.title}
           </h1>

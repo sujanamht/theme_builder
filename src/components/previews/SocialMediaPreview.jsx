@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useTheme } from '../../store/themeStore.jsx'
 import { useContainerWidth } from '../../hooks/useContainerWidth.js'
 import { CONTENT_MAX_WIDTH } from '../../constants/layout.js'
+import { SECTION_PADDING_X, SECTION_PADDING_X_MOBILE } from '../../constants/design.js'
 import { parsePx } from '../../utils/style.js'
 import { headingStyle, subheadingStyle } from '../../utils/typography.js'
 
@@ -91,7 +92,6 @@ export default function SocialMediaPreview() {
   const fontSize  = parsePx(template.fontSize || globalTheme.bodySize || '15px')
   const bg        = template.bgColor   || '#ffffff'
   const textColor = template.textColor || '#111827'
-  const padding   = isMobile ? '32px 20px' : `${template.padding ?? 64}px 32px`
 
   const embeds       = (data.embeds || []).filter(e => e.enabled !== false && e.url)
   const count        = embeds.length
@@ -152,7 +152,7 @@ export default function SocialMediaPreview() {
   }
 
   return (
-    <section ref={ref} style={{ backgroundColor: bg, padding, width: '100%', boxSizing: 'border-box', fontFamily: template.fontFamily || globalTheme.fontFamily || 'inherit' }}>
+    <section ref={ref} style={{ backgroundColor: bg, paddingTop: isMobile ? '32px' : `${template.padding ?? 64}px`, paddingBottom: isMobile ? '32px' : `${template.padding ?? 64}px`, paddingLeft: isMobile ? `${SECTION_PADDING_X_MOBILE}px` : `${SECTION_PADDING_X}px`, paddingRight: isMobile ? `${SECTION_PADDING_X_MOBILE}px` : `${SECTION_PADDING_X}px`, width: '100%', boxSizing: 'border-box', fontFamily: template.fontFamily || globalTheme.fontFamily || 'inherit' }}>
       <div style={innerStyle}>
 
         {/* Heading */}

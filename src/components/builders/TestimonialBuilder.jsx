@@ -16,6 +16,10 @@ export default function TestimonialBuilder({ activeTab = 'content' }) {
   const heading = data.heading ?? ''
   const items   = data.items   ?? []
 
+  function handleData(key, value) {
+    updateSection('testimonial', 'data', { ...data, [key]: value })
+  }
+
   function handleHeading(value) {
     updateSection('testimonial', 'data', { ...data, heading: value })
   }
@@ -59,6 +63,15 @@ export default function TestimonialBuilder({ activeTab = 'content' }) {
               value={heading}
               placeholder="e.g. What our customers say"
               onChange={e => handleHeading(e.target.value)}
+            />
+          </label>
+          <label className="flex flex-col gap-1">
+            Subheading
+            <input
+              type="text"
+              value={data.subheading ?? ''}
+              placeholder="optional — leave blank to hide"
+              onChange={e => handleData('subheading', e.target.value)}
             />
           </label>
         </section>
@@ -109,6 +122,26 @@ export default function TestimonialBuilder({ activeTab = 'content' }) {
       {activeTab === 'style' && (
         <section>
           <div className="space-y-3">
+            <ColorInput
+              label="Background Color"
+              value={template.bgColor ?? '#000000'}
+              onChange={v => handleTemplate('bgColor', v)}
+            />
+            <ColorInput
+              label="Heading Color"
+              value={template.headingColor ?? ''}
+              onChange={v => handleTemplate('headingColor', v)}
+            />
+            <ColorInput
+              label="Text Color"
+              value={template.textColor ?? '#000000'}
+              onChange={v => handleTemplate('textColor', v)}
+            />
+            <ColorInput
+              label="Card Background"
+              value={template.cardBg ?? '#000000'}
+              onChange={v => handleTemplate('cardBg', v)}
+            />
             <div className="flex flex-col gap-1">
               <span className="text-sm">Cards visible at once</span>
               <div style={{ display: 'flex', gap: '8px' }}>
@@ -137,21 +170,6 @@ export default function TestimonialBuilder({ activeTab = 'content' }) {
                 })}
               </div>
             </div>
-            <ColorInput
-              label="Background Color"
-              value={template.bgColor ?? '#000000'}
-              onChange={v => handleTemplate('bgColor', v)}
-            />
-            <ColorInput
-              label="Text Color"
-              value={template.textColor ?? '#000000'}
-              onChange={v => handleTemplate('textColor', v)}
-            />
-            <ColorInput
-              label="Card Background"
-              value={template.cardBg ?? '#000000'}
-              onChange={v => handleTemplate('cardBg', v)}
-            />
             <RangeField
               label="Vertical Padding"
               value={parseInt(template.padding ?? 48)}

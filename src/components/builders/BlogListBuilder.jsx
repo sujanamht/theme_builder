@@ -202,9 +202,9 @@ export default function BlogListBuilder({ activeTab = 'content' }) {
             <ColorInput label="Card Background"   value={template.cardBg      ?? '#000000'} onChange={v => handleTemplate('cardBg', v)} />
             <ColorInput label="Accent Color"      value={template.accentColor ?? '#000000'} onChange={v => handleTemplate('accentColor', v)} />
 
-            <RangeField label="Font Size"       value={template.fontSize     ?? ''} onChange={v => handleTemplate('fontSize', v)}     min={12} max={24}  step={1} />
             <RangeField label="Vertical Padding" value={parseInt(template.padding ?? 48)} onChange={v => handleTemplate('padding', parseInt(v))} min={30} max={180} step={10} unit="px" />
-            <RangeField label="Card Radius"     value={template.borderRadius ?? ''} onChange={v => handleTemplate('borderRadius', v)} min={0}  max={24}  step={2} />
+            <RangeField label="Font Size"        value={template.fontSize     ?? ''} onChange={v => handleTemplate('fontSize', v)}     min={12} max={24}  step={1} />
+            <RangeField label="Card Radius"      value={template.borderRadius ?? ''} onChange={v => handleTemplate('borderRadius', v)} min={0}  max={24}  step={2} />
 
             <label className="flex flex-col gap-1">
               Columns

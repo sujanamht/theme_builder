@@ -3,6 +3,7 @@ import { useSelection } from '../../store/selectionContext.jsx'
 import CanvasUpload from '../ui/CanvasUpload.jsx'
 import { useContainerWidth } from '../../hooks/useContainerWidth.js'
 import { CONTENT_MAX_WIDTH } from '../../constants/layout.js'
+import { SECTION_PADDING_X, SECTION_PADDING_X_MOBILE } from '../../constants/design.js'
 
 export default function HeroPreview() {
   const { theme, updateSection } = useTheme()
@@ -36,8 +37,8 @@ export default function HeroPreview() {
           backgroundColor: bgColor,
           paddingTop:      isMobile ? '40px' : `${Number(template.padding ?? 64)}px`,
           paddingBottom:   isMobile ? '32px' : `${Number(template.padding ?? 64)}px`,
-          paddingLeft:     isMobile ? '20px' : '56px',
-          paddingRight:    isMobile ? '20px' : '56px',
+          paddingLeft:     isMobile ? `${SECTION_PADDING_X_MOBILE}px` : `${SECTION_PADDING_X}px`,
+          paddingRight:    isMobile ? `${SECTION_PADDING_X_MOBILE}px` : `${SECTION_PADDING_X}px`,
           width:           '100%',
           boxSizing:       'border-box',
           fontFamily:      template.fontFamily || globalTheme.fontFamily || 'inherit',

@@ -189,8 +189,16 @@ export default function SocialMediaBuilder({ activeTab = 'content' }) {
       {activeTab === 'style' && (
         <section>
           <div className="space-y-3">
-            <ColorInput label="Background Color" value={template.bgColor   ?? '#ffffff'} onChange={v => handleTemplate('bgColor', v)} />
-            <ColorInput label="Text Color"       value={template.textColor ?? '#111827'} onChange={v => handleTemplate('textColor', v)} />
+            <ColorInput label="Background Color" value={template.bgColor      ?? '#ffffff'} onChange={v => handleTemplate('bgColor', v)} />
+            <ColorInput label="Heading Color"    value={template.headingColor ?? ''} onChange={v => handleTemplate('headingColor', v)} />
+            <ColorInput label="Text Color"       value={template.textColor    ?? '#111827'} onChange={v => handleTemplate('textColor', v)} />
+            <RangeField
+              label="Font Size"
+              value={template.fontSize ?? 16}
+              onChange={v => handleTemplate('fontSize', v)}
+              min={12} max={28} step={1}
+              unit="px"
+            />
             <RangeField
               label="Vertical Padding"
               value={parseInt(template.padding ?? 48)}

@@ -4,6 +4,7 @@ import { useSelection } from '../../store/selectionContext.jsx'
 import CanvasUpload from '../ui/CanvasUpload.jsx'
 import { useContainerWidth } from '../../hooks/useContainerWidth.js'
 import { parsePx } from '../../utils/style.js'
+import { headingStyle, subheadingStyle } from '../../utils/typography.js'
 
 function ArrowLeft({ color, size }) {
   return (
@@ -105,21 +106,13 @@ export default function CarouselPreview() {
   }
 
   const titleStyle = {
-    color:        template.textColor || '#ffffff',
-    fontSize:     template.headingSize || globalTheme.headingSize || (isMobile ? '1.6rem' : '2.8rem'),
-    fontWeight:   800,
-    margin:       '0 0 12px',
-    lineHeight:   '1.15',
-    textShadow:   '0 2px 12px rgba(0,0,0,0.5)',
+    ...headingStyle({ template, globalTheme, textColor: template.textColor || '#ffffff' }),
+    margin: '0 0 12px',
   }
 
   const subtitleStyle = {
-    color:      template.textColor || '#ffffff',
-    fontSize:   isMobile ? '13px' : (template.bodySize || globalTheme.bodySize || `${fontSize}px`),
-    opacity:    0.85,
-    textShadow: '0 1px 6px rgba(0,0,0,0.4)',
-    maxWidth:   '600px',
-    margin:     '0 auto 20px',
+    ...subheadingStyle({ template, globalTheme, textColor: template.textColor || '#ffffff' }),
+    margin: 0,
   }
 
   const arrowBtnStyle = {

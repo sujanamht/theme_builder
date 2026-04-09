@@ -16,7 +16,8 @@
       "Bash(python3:*)",
       "Bash(grep -l \"label=\"\"Vertical Padding\"\"\" src/components/builders/*.jsx)",
       "Bash(python -c \":*)",
-      "Bash(grep -n \"darkMode\\\\|useDarkMode\" src/components/previews/*.jsx)"
+      "Bash(grep -n \"darkMode\\\\|useDarkMode\" src/components/previews/*.jsx)",
+      "Bash(find /c/Users/Suuzz/Documents/github/theme_builder/src -type f \\\\\\(-name *.jsx -o -name *.js -o -name *.json \\\\\\))"
     ]
   }
 }

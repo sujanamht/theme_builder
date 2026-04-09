@@ -1,12 +1,17 @@
 import { useTheme } from '../../store/themeStore.jsx'
+import { useContainerWidth } from '../../hooks/useContainerWidth.js'
 import ResponsiveGrid from '../ui/ResponsiveGrid.jsx'
 import { CONTENT_MAX_WIDTH } from '../../constants/layout.js'
+import { SECTION_PADDING_X, SECTION_PADDING_X_MOBILE } from '../../constants/design.js'
 import { parsePx } from '../../utils/style.js'
 
 export default function FooterPreview() {
   const { theme } = useTheme()
   const { data, template } = theme.footer
   const { globalTheme } = theme
+
+  const { ref, width: containerWidth } = useContainerWidth()
+  const isMobile = containerWidth < 500
 
   const brand        = data.brand        || 'Brand'
   const tagline      = data.tagline      || ''
@@ -29,8 +34,11 @@ export default function FooterPreview() {
   }
 
   const wrapStyle = {
-    padding:   template.padding || '80px 48px',
-    boxSizing: 'border-box',
+    paddingTop:    `${parseInt(template.padding ?? 48)}px`,
+    paddingBottom: `${parseInt(template.padding ?? 48)}px`,
+    paddingLeft:   isMobile ? `${SECTION_PADDING_X_MOBILE}px` : `${SECTION_PADDING_X}px`,
+    paddingRight:  isMobile ? `${SECTION_PADDING_X_MOBILE}px` : `${SECTION_PADDING_X}px`,
+    boxSizing:     'border-box',
   }
 
   const innerStyle = { maxWidth: CONTENT_MAX_WIDTH, margin: '0 auto', width: '100%', boxSizing: 'border-box' }
@@ -108,7 +116,10 @@ export default function FooterPreview() {
 
   const bottomBarStyle = {
     borderTop:     '1px solid rgba(255,255,255,0.06)',
-    padding:       '20px 48px',
+    paddingTop:    '20px',
+    paddingBottom: '20px',
+    paddingLeft:   isMobile ? `${SECTION_PADDING_X_MOBILE}px` : `${SECTION_PADDING_X}px`,
+    paddingRight:  isMobile ? `${SECTION_PADDING_X_MOBILE}px` : `${SECTION_PADDING_X}px`,
     textAlign:     'center',
     color:         '#374151',
     fontSize:      '12px',
@@ -153,7 +164,7 @@ export default function FooterPreview() {
 
   if (isEmpty) {
     return (
-      <footer style={footerStyle}>
+      <footer ref={ref} style={footerStyle}>
         <style>{scopedCSS}</style>
         <div style={wrapStyle}>
           <div style={innerStyle}>
@@ -186,7 +197,7 @@ export default function FooterPreview() {
   }
 
   return (
-    <footer style={footerStyle}>
+    <footer ref={ref} style={footerStyle}>
       <style>{scopedCSS}</style>
 
       <div style={wrapStyle}>

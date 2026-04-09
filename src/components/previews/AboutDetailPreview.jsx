@@ -3,6 +3,7 @@ import { CONTENT_MAX_WIDTH } from '../../constants/layout.js'
 import { SECTION_PADDING_X, SECTION_PADDING_X_MOBILE } from '../../constants/design.js'
 import { useContainerWidth } from '../../hooks/useContainerWidth.js'
 import { parsePx } from '../../utils/style.js'
+import { headingStyle, subheadingStyle } from '../../utils/typography.js'
 
 export default function AboutDetailPreview() {
   const { ref, width: containerWidth } = useContainerWidth()
@@ -46,38 +47,40 @@ export default function AboutDetailPreview() {
         style={{
           maxWidth:  CONTENT_MAX_WIDTH,
           margin:    '0 auto',
-          padding:   '0 32px',
           boxSizing: 'border-box',
         }}
       >
         {/* Heading + Description */}
         <div style={{ maxWidth: '720px', margin: '0 auto', textAlign: 'center', marginBottom: '56px' }}>
-          <h2
-            style={{
-              color:      headingColor,
-              fontSize:   headingSize,
-              fontWeight: 700,
-              margin:     '0 0 20px',
+          {(() => {
+            const hStyle = {
+              ...headingStyle({ template, globalTheme, textColor: headingColor }),
+              margin: '0 0 20px',
               lineHeight: 1.2,
-            }}
-          >
-            {data.heading || 'About Us'}
-          </h2>
-          <div style={{ margin: '0 auto', textAlign: 'center' }}>
-            {(data.descriptions?.length ? data.descriptions : data.description ? [data.description] : ['We build tools that help teams collaborate, move faster, and do their best work.']).map((para, i, arr) => (
-              <p
-                key={i}
-                style={{
-                  color:      descColor,
-                  fontSize:   descSize,
-                  lineHeight: 1.75,
-                  margin:     i < arr.length - 1 ? '0 0 1em' : 0,
-                }}
-              >
-                {para}
-              </p>
-            ))}
-          </div>
+            }
+            const sStyle = {
+              ...subheadingStyle({ template, globalTheme, textColor: descColor }),
+              lineHeight: 1.75,
+              margin: 0,
+            }
+            return (
+              <>
+                <h2 style={hStyle}>
+                  {data.heading || 'About Us'}
+                </h2>
+                <div style={{ margin: '0 auto', textAlign: 'center' }}>
+                  {(data.descriptions?.length ? data.descriptions : data.description ? [data.description] : ['We build tools that help teams collaborate, move faster, and do their best work.']).map((para, i, arr) => (
+                    <p
+                      key={i}
+                      style={{ ...sStyle, margin: i < arr.length - 1 ? '0 0 1em' : 0 }}
+                    >
+                      {para}
+                    </p>
+                  ))}
+                </div>
+              </>
+            )
+          })()}
         </div>
 
         {/* Cards */}

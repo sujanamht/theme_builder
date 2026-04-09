@@ -3,6 +3,7 @@ import { useTheme } from '../../store/themeStore.jsx'
 import { useSelection } from '../../store/selectionContext.jsx'
 import CanvasUpload from '../ui/CanvasUpload.jsx'
 import { CONTENT_MAX_WIDTH } from '../../constants/layout.js'
+import { SECTION_PADDING_X, SECTION_PADDING_X_MOBILE } from '../../constants/design.js'
 import { useContainerWidth } from '../../hooks/useContainerWidth.js'
 import { headingStyle, subheadingStyle } from '../../utils/typography.js'
 
@@ -30,6 +31,7 @@ export default function PartnersPreview() {
 
   const [hovered, setHovered] = useState(false)
   const { ref, width } = useContainerWidth()
+  const isMobile = width < 500
 
   ensureKeyframes()
 
@@ -59,8 +61,8 @@ export default function PartnersPreview() {
     backgroundColor: bgColor,
     paddingTop: `${padding}px`,
     paddingBottom: `${padding}px`,
-    paddingLeft: '24px',
-    paddingRight: '24px',
+    paddingLeft:  isMobile ? `${SECTION_PADDING_X_MOBILE}px` : `${SECTION_PADDING_X}px`,
+    paddingRight: isMobile ? `${SECTION_PADDING_X_MOBILE}px` : `${SECTION_PADDING_X}px`,
     fontFamily: globalTheme.fontFamily || 'inherit',
     boxSizing: 'border-box',
     width: '100%',

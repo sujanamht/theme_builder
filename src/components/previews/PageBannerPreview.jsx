@@ -1,5 +1,6 @@
 import { useTheme } from '../../store/themeStore.jsx'
 import { usePreviewPageId } from '../../store/selectionContext.jsx'
+import { headingStyle } from '../../utils/typography.js'
 
 export default function PageBannerPreview() {
   const { theme } = useTheme()
@@ -53,11 +54,10 @@ export default function PageBannerPreview() {
       >
         <h1
           style={{
-            color:      template.headingColor  || '#ffffff',
-            fontSize:   template.headingSize   || globalTheme.headingSize || '2.8rem',
+            ...headingStyle({ template, globalTheme, textColor: template.headingColor || '#ffffff' }),
+            fontSize:   template.headingSize   || '2.8rem',
             fontWeight: template.headingWeight || '700',
-            margin:     0,
-            lineHeight: 1.2,
+            margin:     '0 0 12px',
           }}
         >
           {pageData.heading || 'Page Title'}

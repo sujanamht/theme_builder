@@ -4,6 +4,7 @@ import { useLocation, Link } from 'react-router-dom'
 import ResponsiveGrid from '../ui/ResponsiveGrid.jsx'
 import { hexToRgba } from '../../utils/colorUtils.js'
 import { CONTENT_MAX_WIDTH } from '../../constants/layout.js'
+import { SECTION_PADDING_X, SECTION_PADDING_X_MOBILE } from '../../constants/design.js'
 import { parsePx } from '../../utils/style.js'
 import { headingStyle, subheadingStyle } from '../../utils/typography.js'
 
@@ -12,6 +13,7 @@ export default function BlogListPreview() {
   const { data, template } = theme.bloglist
   const { globalTheme } = theme
   const { ref, width } = useContainerWidth()
+  const isMobile = width < 500
   const location = useLocation()
 
   const isPreview = location.pathname.startsWith('/preview')
@@ -30,7 +32,10 @@ export default function BlogListPreview() {
 
   const sectionStyle = {
     backgroundColor: template.bgColor || '#f9fafb',
-    padding:         `${padding}px 32px`,
+    paddingTop:      `${padding}px`,
+    paddingBottom:   `${padding}px`,
+    paddingLeft:     isMobile ? `${SECTION_PADDING_X_MOBILE}px` : `${SECTION_PADDING_X}px`,
+    paddingRight:    isMobile ? `${SECTION_PADDING_X_MOBILE}px` : `${SECTION_PADDING_X}px`,
     width:           '100%',
     boxSizing:       'border-box',
     fontFamily:      template.fontFamily || globalTheme.fontFamily || 'inherit',
