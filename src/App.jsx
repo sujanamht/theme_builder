@@ -165,11 +165,11 @@ function generateId(type, currentOrder) {
 }
 
 const PRESET_MODES = [
-  { key: 'desktop', label: 'Desktop', width: 900 },
+  { key: 'desktop', label: 'Desktop', width: 960 },
   { key: 'tablet',  label: 'Tablet',  width: 768 },
   { key: 'mobile',  label: 'Mobile',  width: 390 },
 ]
-const PRESET_WIDTHS = { desktop: 900, tablet: 768, mobile: 390 }
+const PRESET_WIDTHS = { desktop: 960, tablet: 768, mobile: 390 }
 
 /* ─── theme tokens ─── */
 function tokens(isDark) {
@@ -961,7 +961,7 @@ function Shell({
               <DragHandle side="left"  onMouseDown={e => startResize(e, 'left')}  t={t} active={isResizing} />
 
               {/* Card wrapper */}
-              <div style={{ width: `${currentWidth}px`, maxWidth: '100%', transition: widthTransition, flexShrink: 0 }} data-canvas-width={currentWidth}>
+              <div style={{ width: `${currentWidth}px`, maxWidth: '100%', transition: widthTransition, flexShrink: 0, overflow: 'hidden' }} data-canvas-width={currentWidth}>
                 {isMobileView ? (
                   <div style={{
                     background: t.phoneShell, borderRadius: '44px', padding: '16px 10px',
@@ -981,14 +981,26 @@ function Shell({
                       <div style={{ width: '88px', height: '4px', background: t.phoneAccent, borderRadius: '2px' }} />
                     </div>
                   </div>
-                ) : (
-                  <div style={{
-                    background: t.card, borderRadius: '16px',
-                    boxShadow: t.cardShadow, overflow: 'hidden', transition: allTransition,
-                  }}>
-                    {cardContents}
-                  </div>
-                )}
+                ) : (() => {
+                  const PREVIEW_WIDTH = 1280
+                  const scale = currentWidth / PREVIEW_WIDTH
+                  return (
+                    <div
+                      data-canvas-width={PREVIEW_WIDTH}
+                      style={{
+                        width: `${PREVIEW_WIDTH}px`,
+                        zoom: scale,
+                        background: t.card,
+                        borderRadius: '16px',
+                        boxShadow: t.cardShadow,
+                        overflow: 'hidden',
+                        transition: allTransition,
+                      }}
+                    >
+                      {cardContents}
+                    </div>
+                  )
+                })()}
               </div>
 
               <DragHandle side="right" onMouseDown={e => startResize(e, 'right')} t={t} active={isResizing} />

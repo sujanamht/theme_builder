@@ -46,7 +46,7 @@ export default function AboutPreview() {
       ? 'column'
       : imagePosition === 'right' ? 'row-reverse' : 'row',
     gap:           isMobile ? '24px' : '48px',
-    alignItems:    'center',
+    alignItems:    isMobile ? 'flex-start' : 'stretch',
   }
 
   const colStyle = {
@@ -106,14 +106,14 @@ const btnStyle = {
       <section style={sectionStyle}>
         <div style={rowStyle}>
           {/* Image column */}
-          <div style={colStyle}>
+          <div style={{ ...colStyle, ...(isMobile ? { aspectRatio: '4/3' } : {}) }}>
             <CanvasUpload
               hasImage={hasImage}
               isActive={isActive}
               onUpload={v => updateSection('about', 'data', { ...data, image: v })}
               aspectRatio="4/3"
               onCrop={v => updateSection('about', 'data', { ...data, image: v })}
-              style={{ width: '100%', aspectRatio: '4/3', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 4px 24px rgba(0,0,0,0.10)' }}
+              style={{ width: '100%', height: '100%', minHeight: '280px', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 4px 24px rgba(0,0,0,0.10)' }}
             >
               <img src={data.image} alt="" style={imgStyle} />
             </CanvasUpload>

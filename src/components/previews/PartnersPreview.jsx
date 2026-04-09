@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useTheme, useDarkMode } from '../../store/themeStore.jsx'
 import { useSelection } from '../../store/selectionContext.jsx'
 import CanvasUpload from '../ui/CanvasUpload.jsx'
+import { CONTENT_MAX_WIDTH } from '../../constants/layout.js'
 import { useContainerWidth } from '../../hooks/useContainerWidth.js'
 import { headingStyle, subheadingStyle } from '../../utils/typography.js'
 
@@ -114,9 +115,11 @@ export default function PartnersPreview() {
   }
 
   const hasSubheading = !!data.subheading
+  const innerStyle = { maxWidth: CONTENT_MAX_WIDTH, margin: '0 auto', width: '100%', boxSizing: 'border-box' }
 
   return (
     <div ref={ref} style={sectionStyle}>
+      <div style={innerStyle}>
       {data.heading && (
         <h2 style={{
           ...headingStyle({ template, globalTheme, textColor: headingColor }),
@@ -185,6 +188,7 @@ export default function PartnersPreview() {
           </div>
         </div>
       )}
+      </div>
     </div>
   )
 }
