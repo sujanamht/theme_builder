@@ -1,9 +1,13 @@
 import { useState, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import CropOverlay from './CropOverlay.jsx'
+import AssetPickerModal from './AssetPickerModal.jsx'
+import { useAssets } from '../../store/themeStore.jsx'
 
 export default function ImageUploader({ label, value, onChange, textValue, onTextChange, aspectRatio = '16/9', onCrop }) {
-  const [mode, setMode] = useState('url')
+  const { addAsset } = useAssets()
+  const [mode,        setMode]        = useState('url')
+  const [showPicker,  setShowPicker]  = useState(false)
   const fileRef = useRef(null)
   const [cropSrc, setCropSrc] = useState(null)
 
@@ -14,6 +18,22 @@ export default function ImageUploader({ label, value, onChange, textValue, onTex
     reader.onload = ev => setCropSrc(ev.target.result)
     reader.readAsDataURL(file)
     e.target.value = ''
+  }
+
+  function handleSelect(dataUrl) {
+    onChange(dataUrl)
+    setShowPicker(false)
+  }
+
+  function handleUploadNew(file) {
+    const reader = new FileReader()
+    reader.onload = ev => {
+      const dataUrl = ev.target.result
+      addAsset({ name: file.name, dataUrl })
+      onChange(dataUrl)
+      setShowPicker(false)
+    }
+    reader.readAsDataURL(file)
   }
 
   const isImageValue = value && (value.startsWith('http') || value.startsWith('data:'))
@@ -34,6 +54,7 @@ export default function ImageUploader({ label, value, onChange, textValue, onTex
       <div style={{ display: 'flex', gap: '2px', padding: '2px', borderRadius: '6px', width: 'fit-content' }}>
         <button style={tabBtn('url')}    onClick={() => setMode('url')}>URL</button>
         <button style={tabBtn('upload')} onClick={() => setMode('upload')}>Upload</button>
+        <button style={tabBtn('assets')} onClick={() => setMode('assets')}>Assets</button>
       </div>
 
       {/* Tab content + thumbnail */}
@@ -52,6 +73,15 @@ export default function ImageUploader({ label, value, onChange, textValue, onTex
           <button onClick={() => fileRef.current?.click()} style={{ flex: 1, textAlign: 'left', cursor: 'pointer' }}>
             {isImageValue ? 'Replace image…' : 'Choose image…'}
             <input ref={fileRef} type="file" accept="image/*" style={{ display: 'none' }} onChange={handleFile} />
+          </button>
+        )}
+
+        {mode === 'assets' && (
+          <button
+            onClick={() => setShowPicker(true)}
+            style={{ flex: 1, textAlign: 'left', cursor: 'pointer' }}
+          >
+            {isImageValue ? 'Replace from library…' : 'Browse library…'}
           </button>
         )}
 
@@ -80,6 +110,7 @@ export default function ImageUploader({ label, value, onChange, textValue, onTex
           />
         </label>
       )}
+
       {cropSrc && createPortal(
         <CropOverlay
           src={cropSrc}
@@ -88,6 +119,14 @@ export default function ImageUploader({ label, value, onChange, textValue, onTex
           onClose={() => setCropSrc(null)}
         />,
         document.body
+      )}
+
+      {showPicker && (
+        <AssetPickerModal
+          onSelect={handleSelect}
+          onClose={() => setShowPicker(false)}
+          onUploadNew={handleUploadNew}
+        />
       )}
     </div>
   )

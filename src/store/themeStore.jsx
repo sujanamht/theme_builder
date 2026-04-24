@@ -585,6 +585,8 @@ const initialState = {
       speed:        30,
     },
   },
+
+  assets: [],
 }
 
 export const ThemeContext = createContext(null)
@@ -757,6 +759,30 @@ export function ThemeProvider({ children }) {
     })
   }
 
+  function addAsset({ name, dataUrl }) {
+    setTheme(prev => ({
+      ...prev,
+      assets: [
+        ...(prev.assets ?? []),
+        { id: crypto.randomUUID(), name, dataUrl, createdAt: Date.now() },
+      ],
+    }))
+  }
+
+  function deleteAsset(id) {
+    setTheme(prev => ({
+      ...prev,
+      assets: (prev.assets ?? []).filter(a => a.id !== id),
+    }))
+  }
+
+  function renameAsset(id, newName) {
+    setTheme(prev => ({
+      ...prev,
+      assets: (prev.assets ?? []).map(a => a.id === id ? { ...a, name: newName } : a),
+    }))
+  }
+
   return (
     <ThemeContext.Provider value={{
       theme, setTheme,
@@ -764,6 +790,7 @@ export function ThemeProvider({ children }) {
       updatePageOrder, setPageSections,
       addPage, addCustomPage, deletePage, setActivePage, renamePage, removeSectionFromAllPages, setActivePostId,
       addSection, removeSection,
+      addAsset, deleteAsset, renameAsset,
       saveStatus, triggerSave,
     }}>
       {children}
@@ -775,5 +802,10 @@ export function useTheme() {
   const ctx = useContext(ThemeContext)
   if (!ctx) throw new Error('useTheme must be used inside ThemeProvider')
   return ctx
+}
+
+export function useAssets() {
+  const { theme, addAsset, deleteAsset, renameAsset } = useTheme()
+  return { assets: theme.assets ?? [], addAsset, deleteAsset, renameAsset }
 }
 

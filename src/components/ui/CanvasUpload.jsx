@@ -1,6 +1,8 @@
 import { useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import CropOverlay from './CropOverlay.jsx'
+import AssetPickerModal from './AssetPickerModal.jsx'
+import { useAssets } from '../../store/themeStore.jsx'
 
 function UploadIcon({ size }) {
   return (
@@ -17,8 +19,8 @@ function UploadIcon({ size }) {
  * Wraps an image area with two visual states:
  *
  * hasImage = false  →  Placeholder (muted bg, dashed border, icon + label).
- *                      Always visible. Clicking uploads when `isActive`,
- *                      otherwise propagates to select the section.
+ *                      Always visible. Clicking opens the asset picker when
+ *                      `isActive`, otherwise propagates to select the section.
  *
  * hasImage = true   →  Renders children (the actual image) normally.
  *                      When `isActive` + hovered, shows a small "Replace" pill.
@@ -42,26 +44,35 @@ export default function CanvasUpload({
   aspectRatio,
   onCrop,
 }) {
-  const inputRef = useRef()
-  const [hovered, setHovered] = useState(false)
-  const [pendingSrc, setPendingSrc] = useState(null)
+  const { addAsset } = useAssets()
+  const [hovered,     setHovered]     = useState(false)
+  const [showPicker,  setShowPicker]  = useState(false)
+  const [pendingSrc,  setPendingSrc]  = useState(null)
 
-  function handleFile(e) {
-    const file = e.target.files?.[0]
-    if (!file) return
+  const borderRadius = shape === 'circle' ? '50%' : 'inherit'
+
+  /* Called when user picks an existing asset from the modal */
+  function handleSelect(dataUrl) {
+    onUpload(dataUrl)
+    setShowPicker(false)
+  }
+
+  /* Called when user uploads a new file via the modal's file input */
+  function handleUploadNew(file) {
     const reader = new FileReader()
     reader.onload = ev => {
+      const dataUrl = ev.target.result
+      addAsset({ name: file.name, dataUrl })
       if (onCrop) {
-        setPendingSrc(ev.target.result)
+        setShowPicker(false)
+        setPendingSrc(dataUrl)
       } else {
-        onUpload(ev.target.result)
+        onUpload(dataUrl)
+        setShowPicker(false)
       }
     }
     reader.readAsDataURL(file)
-    e.target.value = ''
   }
-
-  const borderRadius = shape === 'circle' ? '50%' : 'inherit'
 
   return (
     <div
@@ -75,30 +86,30 @@ export default function CanvasUpload({
           onClick={e => {
             if (isActive) {
               e.stopPropagation()
-              inputRef.current?.click()
+              setShowPicker(true)
             }
             // else: propagate so clicking the section selects it first
           }}
           style={{
-            position:        'absolute',
-            inset:           0,
-            background:      hovered && isActive
+            position:       'absolute',
+            inset:          0,
+            background:     hovered && isActive
               ? 'rgba(99,102,241,0.08)'
               : 'rgba(148,163,184,0.10)',
-            border:          `2px dashed ${hovered && isActive
+            border:         `2px dashed ${hovered && isActive
               ? 'rgba(99,102,241,0.50)'
               : 'rgba(148,163,184,0.40)'}`,
             borderRadius,
-            display:         'flex',
-            flexDirection:   'column',
-            alignItems:      'center',
-            justifyContent:  'center',
-            cursor:          isActive ? 'pointer' : 'default',
-            gap:             compact ? '2px' : '5px',
-            color:           hovered && isActive
+            display:        'flex',
+            flexDirection:  'column',
+            alignItems:     'center',
+            justifyContent: 'center',
+            cursor:         isActive ? 'pointer' : 'default',
+            gap:            compact ? '2px' : '5px',
+            color:          hovered && isActive
               ? 'rgba(99,102,241,0.85)'
               : 'rgba(148,163,184,0.70)',
-            transition:      'background 0.15s, border-color 0.15s, color 0.15s',
+            transition:     'background 0.15s, border-color 0.15s, color 0.15s',
           }}
         >
           {compact
@@ -124,7 +135,7 @@ export default function CanvasUpload({
 
           {isActive && hovered && (
             <button
-              onClick={e => { e.stopPropagation(); inputRef.current?.click() }}
+              onClick={e => { e.stopPropagation(); setShowPicker(true) }}
               style={{
                 position:      'absolute',
                 top:           6,
@@ -151,14 +162,16 @@ export default function CanvasUpload({
         </>
       )}
 
-      <input
-        ref={inputRef}
-        type="file"
-        accept="image/*"
-        style={{ display: 'none' }}
-        onChange={handleFile}
-      />
+      {/* Asset picker modal */}
+      {showPicker && (
+        <AssetPickerModal
+          onSelect={handleSelect}
+          onClose={() => setShowPicker(false)}
+          onUploadNew={handleUploadNew}
+        />
+      )}
 
+      {/* Crop overlay (triggered after upload-new when onCrop is present) */}
       {pendingSrc && createPortal(
         <CropOverlay
           src={pendingSrc}

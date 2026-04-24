@@ -12,7 +12,9 @@ import SortableCanvasItem  from './components/ui/SortableCanvasItem.jsx'
 import SortablePanelItem   from './components/ui/SortablePanelItem.jsx'
 import GlobalThemePanel    from './components/ui/GlobalThemePanel.jsx'
 import PagesPanel          from './components/ui/PagesPanel.jsx'
+import AssetsPanel         from './components/ui/AssetsPanel.jsx'
 import SaveButton          from './components/ui/SaveButton.jsx'
+import { tokens }         from './utils/tokens.js'
 
 import AnnouncementBuilder  from './components/builders/AnnouncementBuilder.jsx'
 import NavbarBuilder        from './components/builders/NavbarBuilder.jsx'
@@ -171,52 +173,7 @@ const PRESET_MODES = [
 ]
 const PRESET_WIDTHS = { desktop: 960, tablet: 768, mobile: 390 }
 
-/* ─── theme tokens ─── */
-function tokens(isDark) {
-  return isDark ? {
-    shell:        '#0f0f0f',
-    panel:        '#1a1a1a',
-    border:       '#2a2a2a',
-    toolbarBorder:'#1e1e1e',
-    canvasBg:     '#0f0f0f',
-    dotColor:     '#2a2a2a',
-    card:         '#0f0f11',
-    cardShadow:   '0 8px 40px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.05)',
-    urlBarBorder: '#2a2a2a',
-    textMuted:    '#888',
-    textActive:   '#ffffff',
-    textLabel:    '#444',
-    textVersion:  '#333',
-    activeItemBg: '#1e1e2e',
-    activeBorder: '#6366f1',
-    hoverBg:      '#222222',
-    canvasLabel:  '#333',
-    modeBtnHover: 'rgba(255,255,255,0.06)',
-    phoneShell:   '#1a1a1a',
-    phoneAccent:  '#2a2a2a',
-  } : {
-    shell:        '#f4f4f5',
-    panel:        '#ffffff',
-    border:       '#e4e4e7',
-    toolbarBorder:'#e4e4e7',
-    canvasBg:     '#e4e4e7',
-    dotColor:     '#c4c4c8',
-    card:         '#ffffff',
-    cardShadow:   '0 8px 40px rgba(0,0,0,0.12)',
-    urlBarBorder: '#d4d4d8',
-    textMuted:    '#71717a',
-    textActive:   '#111111',
-    textLabel:    '#71717a',
-    textVersion:  '#a1a1aa',
-    activeItemBg: '#eef2ff',
-    activeBorder: '#6366f1',
-    hoverBg:      '#f4f4f5',
-    canvasLabel:  '#a1a1aa',
-    modeBtnHover: 'rgba(0,0,0,0.05)',
-    phoneShell:   '#d4d4d8',
-    phoneAccent:  '#c4c4c8',
-  }
-}
+/* ─── theme tokens ─── (defined in src/utils/tokens.js, imported above) ─── */
 
 /* ─── icons ─── */
 function IconHamburger({ color }) {
@@ -719,7 +676,7 @@ function Shell({
 
               {/* Tab bar */}
               <div style={{ display: 'flex', borderBottom: `1px solid ${t.border}`, flexShrink: 0 }}>
-                {[['components', 'Components'], ['theme', 'Theme'], ['pages', 'Pages']].map(([key, label]) => {
+                {[['components', 'Components'], ['theme', 'Theme'], ['pages', 'Pages'], ['assets', 'Assets']].map(([key, label]) => {
                   const isActive = leftTab === key
                   return (
                     <button
@@ -803,6 +760,11 @@ function Shell({
               {/* Pages tab */}
               {leftTab === 'pages' && (
                 <PagesPanel t={t} />
+              )}
+
+              {/* Assets tab */}
+              {leftTab === 'assets' && (
+                <AssetsPanel t={t} />
               )}
 
             </div>
